@@ -4,6 +4,8 @@ import GameModule
 import com.lehaine.lib.fpsLabel
 import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
+import com.lehaine.pixelheist.entity.Hero
+import com.lehaine.pixelheist.entity.hero
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
