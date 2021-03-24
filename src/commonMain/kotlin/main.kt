@@ -1,3 +1,4 @@
+import com.lehaine.pixelheist.Assets
 import com.lehaine.pixelheist.LevelScene
 import com.lehaine.pixelheist.World
 import com.soywiz.korge.Korge
@@ -17,8 +18,9 @@ object GameModule : Module() {
     override val bgcolor = Colors["#2b2b2b"]
 
     override suspend fun AsyncInjector.configure() {
+        mapSingleton { Assets().apply { init() } }
         mapInstance(World().apply { loadAsync() })
         mapInstance(0) // load first level
-        mapPrototype { LevelScene(get(), get()) }
+        mapPrototype { LevelScene(get(), get(), get()) }
     }
 }

@@ -2,6 +2,7 @@ package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
 import com.lehaine.lib.registerState
+import com.lehaine.pixelheist.Assets
 import com.lehaine.pixelheist.Entity
 import com.lehaine.pixelheist.GameLevel
 import com.soywiz.klock.TimeSpan
@@ -12,32 +13,26 @@ import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
 import com.soywiz.korge.view.getSpriteAnimation
-import com.soywiz.korim.atlas.Atlas
 import kotlin.math.abs
 
 inline fun Container.hero(
     cx: Int = 0,
     cy: Int = 0,
-    atlas: Atlas,
+    assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(cx, cy, atlas, level).addTo(this, callback)
+): Hero = Hero(cx, cy, assets, level).addTo(this, callback)
 
-class Hero(cx: Int, cy: Int, atlas: Atlas, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
+class Hero(cx: Int, cy: Int, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
     Entity(cx, cy, level, anchorX, anchorY) {
 
-    val animations = Animations(atlas)
+    val animations = Animations(assets)
     val runSpeed = 0.03
 
     init {
         sprite.apply {
-            registerState(animations.run) {
-                abs(dx) >= 0.01
-            }
-
-            registerState(animations.idle) {
-                true
-            }
+            registerState(animations.run) { abs(dx) >= 0.01 }
+            registerState(animations.idle) { true }
         }
     }
 
@@ -70,9 +65,9 @@ class Hero(cx: Int, cy: Int, atlas: Atlas, level: GameLevel, anchorX: Double = 0
         }
     }
 
-    class Animations(atlas: Atlas) {
-        val run = atlas.getSpriteAnimation("heroRun", 150.milliseconds)
-        val idle = atlas.getSpriteAnimation("heroIdle", 450.milliseconds)
+    class Animations(assets: Assets) {
+        val run = assets.tiles.getSpriteAnimation("heroRun", 150.milliseconds)
+        val idle = assets.tiles.getSpriteAnimation("heroIdle", 450.milliseconds)
     }
 
 }

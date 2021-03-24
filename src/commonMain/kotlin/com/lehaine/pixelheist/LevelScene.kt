@@ -18,13 +18,12 @@ import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
 
 
-class LevelScene(val world: World, val levelIdx: Int = 0) : Scene() {
+class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : Scene() {
 
     override suspend fun Container.sceneInit() {
         val worldLevel = world.allLevels[levelIdx]
         val ldtkLevel = worldLevel.toLDtkLevel()
         val gameLevel = GameLevel(worldLevel)
-        val atlas = resourcesVfs["tiles.atlas.json"].readAtlas()
 
         lateinit var hero: Hero
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
@@ -33,7 +32,7 @@ class LevelScene(val world: World, val levelIdx: Int = 0) : Scene() {
             hero = hero(
                 playerData.cx,
                 playerData.cy,
-                atlas,
+                assets,
                 gameLevel
             ) {
                 anchor(playerData.pivotX.toDouble(), playerData.pivotY.toDouble())
