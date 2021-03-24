@@ -1,7 +1,7 @@
 package com.lehaine.pixelheist
 
 class GameLevel(val level: World.WorldLevel) {
-    val collisionLayers = intArrayOf(0)
+    val collisionLayers = intArrayOf(1)
 
     val width get() = level.layerCollisions.cWidth
     val height get() = level.layerCollisions.cHeight

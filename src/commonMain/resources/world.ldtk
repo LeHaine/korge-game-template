@@ -154,7 +154,7 @@
 			"tilesetId": null,
 			"tileId": null,
 			"tileRenderMode": "FitInside",
-			"maxCount": 0,
+			"maxCount": 1,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0.5,
@@ -227,7 +227,7 @@
 							"width": 8,
 							"height": 8,
 							"defUid": 1,
-							"px": [64,232],
+							"px": [68,232],
 							"fieldInstances": []
 						}
 					]

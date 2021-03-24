@@ -10,7 +10,7 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.pow
 
-open class Entity(cx: Int, cy: Int, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
+open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
     Container() {
 
     var cx = 0
@@ -70,25 +70,25 @@ open class Entity(cx: Int, cy: Int, level: GameLevel, anchorX: Double = 0.5, anc
         this.yr = yr
     }
 
-    open protected fun update(dt: TimeSpan) {
+    protected open fun update(dt: TimeSpan) {
         tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
 
         performXSteps(tmod)
     }
 
-    open protected fun postUpdate(dt: TimeSpan) {
+    protected open fun postUpdate(dt: TimeSpan) {
         x = (cx + xr) * GRID_SIZE
         y = (cy + yr) * GRID_SIZE
         sprite.scaleX = dir.toDouble()
     }
 
-    protected fun performXSteps(tmod: Double) {
+    private fun performXSteps(tmod: Double) {
         var steps = ceil(abs(dx * tmod))
         val step = dx * tmod / steps
         while (steps > 0) {
             xr += step
 
-            //    performXCollisionCheck()
+            performXCollisionCheck()
             while (xr > 1) {
                 xr--
                 cx++
@@ -103,6 +103,20 @@ open class Entity(cx: Int, cy: Int, level: GameLevel, anchorX: Double = 0.5, anc
         dx *= frictX.pow(tmod)
         if (abs(dx) <= 0.0005 * tmod) {
             dx = 0.0
+        }
+    }
+
+    private fun performXCollisionCheck() {
+        if (level.hasCollision(cx + 1, cy) && xr >= 0.7) {
+            xr = 0.7
+            dx *= 0.5.pow(tmod)
+            //  onCollision(1, 0);
+        }
+
+        if (level.hasCollision(cx - 1, cy) && xr <= 0.3) {
+            xr = 0.3
+            dx *= 0.5.pow(tmod)
+            //  onCollision(-1, 0);
         }
     }
 
