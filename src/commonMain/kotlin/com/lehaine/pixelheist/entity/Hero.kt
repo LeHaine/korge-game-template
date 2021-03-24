@@ -2,7 +2,6 @@ package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
 import com.lehaine.lib.registerState
-import com.lehaine.lib.removeAllStates
 import com.lehaine.pixelheist.Entity
 import com.lehaine.pixelheist.GameLevel
 import com.soywiz.klock.TimeSpan
@@ -14,6 +13,7 @@ import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
 import com.soywiz.korge.view.getSpriteAnimation
 import com.soywiz.korim.atlas.Atlas
+import kotlin.math.abs
 
 inline fun Container.hero(
     cx: Int = 0,
@@ -32,11 +32,11 @@ class Hero(cx: Int, cy: Int, atlas: Atlas, level: GameLevel, anchorX: Double = 0
     init {
         sprite.apply {
             registerState(animations.run) {
-                dx != 0.0
+                abs(dx) >= 0.01
             }
 
             registerState(animations.idle) {
-                dx == 0.0
+                true
             }
         }
     }
