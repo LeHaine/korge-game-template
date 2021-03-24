@@ -19,7 +19,7 @@ object GameModule : Module() {
 
     override suspend fun AsyncInjector.configure() {
         mapSingleton { Assets().apply { init() } }
-        mapInstance(World().apply { loadAsync() })
+        mapSingleton { World().apply { loadAsync() } }
         mapInstance(0) // load first level
         mapPrototype { LevelScene(get(), get(), get()) }
     }
