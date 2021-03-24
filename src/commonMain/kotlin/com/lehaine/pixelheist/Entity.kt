@@ -1,5 +1,6 @@
 package com.lehaine.pixelheist
 
+import com.lehaine.lib.enhancedSprite
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.korge.view.*
@@ -52,7 +53,7 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
         private set
 
 
-    val sprite = sprite {
+    val sprite = enhancedSprite {
         smoothing = false
         this.anchorX = anchorX
         this.anchorY = anchorY
