@@ -1,7 +1,9 @@
-package com.lehaine.ldtkbase
+package com.lehaine.pixelheist
 
-import com.lehaine.ldtkbase.ldtk.ldtkMapView
-import com.lehaine.ldtkbase.ldtk.toLDtkLevel
+import GameModule
+import com.lehaine.lib.fpsLabel
+import com.lehaine.lib.ldtk.ldtkMapView
+import com.lehaine.lib.ldtk.toLDtkLevel
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -19,17 +21,21 @@ class LevelScene(val world: World, val levelIdx: Int = 0) : Scene() {
     override suspend fun Container.sceneInit() {
         val worldLevel = world.allLevels[levelIdx]
         val ldtkLevel = worldLevel.toLDtkLevel()
+        val gameLevel = GameLevel(worldLevel)
         val atlas = resourcesVfs["tiles.atlas.json"].readAtlas()
 
         lateinit var hero: Hero
-        cameraContainer(480.0, 270.0, clip = true) {
+        cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
             val playerData = worldLevel.layerEntities.allPlayer[0]
             hero = hero(
-                playerData.pixelX.toDouble(),
-                playerData.pixelY.toDouble(),
-                atlas
-            )
+                playerData.cx,
+                playerData.cy,
+                atlas,
+                gameLevel
+            ) {
+                anchor(playerData.pivotX.toDouble(), playerData.pivotY.toDouble())
+            }
         }.follow(hero)
 
 

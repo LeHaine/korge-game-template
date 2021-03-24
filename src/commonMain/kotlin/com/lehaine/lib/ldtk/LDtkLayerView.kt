@@ -1,4 +1,4 @@
-package com.lehaine.ldtkbase.ldtk
+package com.lehaine.lib.ldtk
 
 import com.lehaine.ldtk.*
 import com.soywiz.kds.FastIdentityMap

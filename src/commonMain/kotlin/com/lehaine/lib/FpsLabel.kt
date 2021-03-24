@@ -1,4 +1,4 @@
-package com.lehaine.ldtkbase
+package com.lehaine.lib
 
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korge.view.*
