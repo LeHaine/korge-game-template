@@ -2,10 +2,7 @@ package com.lehaine.pixelheist
 
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
-import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.addUpdater
-import com.soywiz.korge.view.anchor
-import com.soywiz.korge.view.sprite
+import com.soywiz.korge.view.*
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor

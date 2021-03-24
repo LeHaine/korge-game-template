@@ -29,6 +29,7 @@ class Hero(cx: Int, cy: Int, atlas: Atlas, level: GameLevel, anchorX: Double = 0
     val animations = Animations(atlas)
     val runSpeed = 0.03
 
+
     override fun update(dt: TimeSpan) {
         super.update(dt)
         if (onGround) {
@@ -50,11 +51,10 @@ class Hero(cx: Int, cy: Int, atlas: Atlas, level: GameLevel, anchorX: Double = 0
             cd("jumpForce", 100.milliseconds)
             cd("jumpExtra", 100.milliseconds)
         } else if (input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")) {
-            dy -= 0.04.pow(tmod)
+            dy -= 0.04 * tmod
         }
 
         if (cd.has("jumpForce") && input.keys.pressing(Key.SPACE)) {
-            println(cd.ratio("jumpForce"))
             dy -= 0.05 * cd.ratio("jumpForce") * tmod
         }
 

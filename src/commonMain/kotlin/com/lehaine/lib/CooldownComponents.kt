@@ -16,14 +16,14 @@ private data class CooldownTimer(
     var callback: () -> Unit,
     var timerFinished: (String) -> Unit
 ) {
-    val ratio get() = elapsed / time
+    val ratio get() = 1 - elapsed / time
     var elapsed = 0.milliseconds
 
     fun update(dt: TimeSpan) {
         elapsed += dt
         while (elapsed >= time) {
             timerFinished(name)
-            elapsed -= time
+            elapsed = 0.milliseconds
             callback()
             break
         }
