@@ -8,14 +8,11 @@ import com.lehaine.pixelheist.entity.Hero
 import com.lehaine.pixelheist.entity.hero
 import com.lehaine.pixelheist.entity.mob
 import com.soywiz.kds.iterators.fastForEach
-import com.soywiz.korev.Key
-import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.alignLeftToLeftOf
 import com.soywiz.korge.view.alignTopToTopOf
 import com.soywiz.korge.view.camera.cameraContainer
-import com.soywiz.korio.async.launchImmediately
 
 
 class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : Scene() {
@@ -46,26 +43,6 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
         fpsLabel {
             alignTopToTopOf(this)
             alignLeftToLeftOf(this)
-        }
-
-        keys {
-            down(Key.N) {
-                launchImmediately {
-                    if (levelIdx < world.allUntypedLevels.lastIndex) {
-                        sceneContainer.changeTo<LevelScene>(world, levelIdx + 1)
-                    }
-                }
-            }
-            down(Key.B) {
-                launchImmediately {
-                    if (levelIdx > 0) {
-                        sceneContainer.changeTo<LevelScene>(world, levelIdx - 1)
-                    }
-                }
-            }
-            down(Key.ESCAPE) {
-                stage?.gameWindow?.close()
-            }
         }
     }
 }
