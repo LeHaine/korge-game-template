@@ -1,7 +1,7 @@
 package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
-import com.lehaine.lib.registerState
+import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
@@ -22,15 +22,28 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
 
     val runSpeed = 0.03
 
-    init {
-        sprite.apply {
-            registerState(assets.heroRun) { abs(dx) >= 0.01 }
-            registerState(assets.heroIdle) { true }
+    sealed class HeroState {
+        object Idle : HeroState()
+        object Run : HeroState()
+    }
+
+    private val fsm = stateMachine<HeroState> {
+        state(HeroState.Run) {
+            reason { abs(dx) >= 0.01 }
+            begin { sprite.playAnimationLooped(assets.heroRun) }
+        }
+        state(HeroState.Idle) {
+            reason { true }
+            begin { sprite.playAnimationLooped(assets.heroIdle) }
+        }
+        stateChanged {
+            println(it)
         }
     }
 
     override fun update(dt: TimeSpan) {
         super.update(dt)
+        fsm.update(dt)
         if (onGround) {
             cd("onGroundRecently", 150.milliseconds)
             cd("airControl", 10.seconds)
