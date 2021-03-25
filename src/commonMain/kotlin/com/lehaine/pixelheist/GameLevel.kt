@@ -27,7 +27,7 @@ class GameLevel(val level: World.WorldLevel) {
     }
 
     fun hasMark(cx: Int, cy: Int, mark: LevelMark, dir: Int = 0): Boolean {
-        return marks[mark]?.get(getCoordId(cx, cy)) == 0 && isValid(cx, cy)
+        return marks[mark]?.get(getCoordId(cx, cy)) == dir && isValid(cx, cy)
     }
 
     fun setMarks(cx: Int, cy: Int, marks: List<LevelMark>) {
@@ -49,13 +49,14 @@ class GameLevel(val level: World.WorldLevel) {
     private fun createLevelMarks() {
         for (cy in 0 until height) {
             for (cx in 0 until width) {
-                // no collision at current pos or north but has collsion south.
+                // no collision at current pos or north but has collision south.
                 if (!hasCollision(cx, cy) && hasCollision(cx, cy + 1) && !hasCollision(cx, cy - 1)) {
                     // if collision to the east of current pos and no collision to the northeast
                     if (hasCollision(cx + 1, cy) && !hasCollision(cx + 1, cy - 1)) {
                         setMark(cx, cy, LevelMark.SMALL_STEP, 1);
                     }
 
+                    // if collision to the west of current pos and no collision to the northwest
                     if (hasCollision(cx - 1, cy) && !hasCollision(cx - 1, cy - 1)) {
                         setMark(cx, cy, LevelMark.SMALL_STEP, -1);
                     }

@@ -1,7 +1,6 @@
 package com.lehaine.pixelheist
 
 import GameModule
-import com.lehaine.lib.fpsLabel
 import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.Hero
@@ -12,8 +11,6 @@ import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.alignLeftToLeftOf
-import com.soywiz.korge.view.alignTopToTopOf
 import com.soywiz.korge.view.camera.cameraContainer
 
 
@@ -40,13 +37,6 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
                 )
             }
         }.follow(hero)
-
-
-        fpsLabel {
-            alignTopToTopOf(this)
-            alignLeftToLeftOf(this)
-        }
-
 
         keys {
             down(Key.ESCAPE) {

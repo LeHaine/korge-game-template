@@ -3,6 +3,7 @@ package com.lehaine.pixelheist
 import com.lehaine.lib.enhancedSprite
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
+import com.soywiz.kmem.clamp
 import com.soywiz.korge.view.*
 import com.soywiz.korim.text.TextAlignment
 import kotlin.math.abs
@@ -43,17 +44,7 @@ open class Entity(
 
     var dir = 1
         set(value) {
-            field = when {
-                value > 1 -> {
-                    1
-                }
-                value < -1 -> {
-                    -1
-                }
-                else -> {
-                    value
-                }
-            }
+            field = value.clamp(-1, 1)
         }
 
     protected val gravityPulling get() = !onGround && hasGravity
