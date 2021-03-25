@@ -4,8 +4,11 @@ import com.lehaine.lib.enhancedSprite
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.kmem.clamp
+import com.soywiz.korge.debug.uiCollapsibleSection
+import com.soywiz.korge.debug.uiEditableValue
 import com.soywiz.korge.view.*
 import com.soywiz.korim.text.TextAlignment
+import com.soywiz.korui.UiContainer
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -183,6 +186,16 @@ open class Entity(
             dy = 0.0
             yr = 1.0
         }
+    }
+
+
+    override fun buildDebugComponent(views: Views, container: UiContainer) {
+        container.uiCollapsibleSection("Grid Info") {
+            uiEditableValue(listOf(this@Entity::cx, this@Entity::cy), name = "(cx, cy)", min = 0, max = 10000)
+            uiEditableValue(listOf(this@Entity::xr, this@Entity::yr), name = "(xr, yr)", min = 0.0, max = 1.0)
+        }
+
+        super.buildDebugComponent(views, container)
     }
 }
 
