@@ -21,11 +21,12 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
 
     val runSpeed = 0.03
 
-    private val running get() = input.keys[Key.D] || input.keys[Key.A]
+    private val runningLeft get() = input.keys[Key.A]
+    private val runningRight get() = input.keys[Key.D]
     private val jumping
-        get() = input.keys.justPressed(Key.SPACE) && onGround ||
-                input.keys.pressing(Key.SPACE) && cd.has("jumpExtra") ||
-                cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
+        get() = input.keys.justPressed(Key.SPACE) && cd.has("onGroundRecently")
+    private val jumpingExtra get() = input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")
+    private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
     sealed class HeroState {
         object Idle : HeroState()
@@ -40,14 +41,14 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             update { run() }
         }
         state(HeroState.Jump) {
-            reason { jumping }
+            reason { jumping || jumpingExtra || jumpingForce }
             update {
                 run()
                 jump()
             }
         }
         state(HeroState.Run) {
-            reason { running }
+            reason { runningLeft || runningRight }
             begin { sprite.playAnimationLooped(assets.heroRun) }
             update { run() }
         }
@@ -63,33 +64,34 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     override fun update(dt: TimeSpan) {
         super.update(dt)
         movementFsm.update(dt)
-    }
 
-    private fun run() {
         if (onGround) {
             cd("onGroundRecently", 150.milliseconds)
             cd("airControl", 10.seconds)
         }
-        if (input.keys[Key.D]) {
+    }
+
+    private fun run() {
+        if (runningRight) {
             dx += runSpeed
             dir = 1
         }
-        if (input.keys[Key.A]) {
+        if (runningLeft) {
             dx -= runSpeed
             dir = -1
         }
     }
 
     private fun jump() {
-        if (input.keys.justPressed(Key.SPACE) && onGround) {
+        if (jumping) {
             dy = -0.35
             cd("jumpForce", 100.milliseconds)
             cd("jumpExtra", 100.milliseconds)
-        } else if (input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")) {
+        } else if (jumpingExtra) {
             dy -= 0.04 * tmod
         }
 
-        if (cd.has("jumpForce") && input.keys.pressing(Key.SPACE)) {
+        if (jumpingForce) {
             dy -= 0.05 * cd.ratio("jumpForce") * tmod
         }
     }
