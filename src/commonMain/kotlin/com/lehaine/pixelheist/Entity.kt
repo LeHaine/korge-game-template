@@ -4,13 +4,21 @@ import com.lehaine.lib.enhancedSprite
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.korge.view.*
+import com.soywiz.korim.text.TextAlignment
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
 
 
-open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
+open class Entity(
+    cx: Int,
+    cy: Int,
+    val assets: Assets,
+    val level: GameLevel,
+    anchorX: Double = 0.5,
+    anchorY: Double = 1.0
+) :
     Container() {
 
     var enHeight = GRID_SIZE.toDouble()
@@ -58,6 +66,14 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
         smoothing = false
         this.anchorX = anchorX
         this.anchorY = anchorY
+    }
+
+    val debugLabel = text("") {
+        smoothing = false
+        font = assets.pixelFont
+        fontSize = 8.0
+        alignment = TextAlignment.CENTER
+        alignTopToBottomOf(sprite)
     }
 
     init {

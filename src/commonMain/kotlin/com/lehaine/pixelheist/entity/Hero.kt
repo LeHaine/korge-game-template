@@ -8,7 +8,6 @@ import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korev.Key
 import com.soywiz.korge.view.ViewDslMarker
-import kotlin.math.abs
 
 inline fun EntityContainer.hero(
     data: World.EntityHero,
@@ -18,32 +17,55 @@ inline fun EntityContainer.hero(
 ): Hero = Hero(data, assets, level).addEntityTo(this, callback)
 
 class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
-    Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+    Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
     val runSpeed = 0.03
+
+    private val running get() = input.keys[Key.D] || input.keys[Key.A]
+    private val jumping
+        get() = input.keys.justPressed(Key.SPACE) && onGround ||
+                input.keys.pressing(Key.SPACE) && cd.has("jumpExtra") ||
+                cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
     sealed class HeroState {
         object Idle : HeroState()
         object Run : HeroState()
+        object Jump : HeroState()
+        object Fall : HeroState()
     }
 
-    private val fsm = stateMachine<HeroState> {
+    private val movementFsm = stateMachine<HeroState> {
+        state(HeroState.Fall) {
+            reason { dy > 0.01 }
+            update { run() }
+        }
+        state(HeroState.Jump) {
+            reason { jumping }
+            update {
+                run()
+                jump()
+            }
+        }
         state(HeroState.Run) {
-            reason { abs(dx) >= 0.01 }
+            reason { running }
             begin { sprite.playAnimationLooped(assets.heroRun) }
+            update { run() }
         }
         state(HeroState.Idle) {
             reason { true }
             begin { sprite.playAnimationLooped(assets.heroIdle) }
         }
         stateChanged {
-            println(it)
+            debugLabel.text = it::class.simpleName ?: ""
         }
     }
 
     override fun update(dt: TimeSpan) {
         super.update(dt)
-        fsm.update(dt)
+        movementFsm.update(dt)
+    }
+
+    private fun run() {
         if (onGround) {
             cd("onGroundRecently", 150.milliseconds)
             cd("airControl", 10.seconds)
@@ -56,7 +78,9 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             dx -= runSpeed
             dir = -1
         }
+    }
 
+    private fun jump() {
         if (input.keys.justPressed(Key.SPACE) && onGround) {
             dy = -0.35
             cd("jumpForce", 100.milliseconds)
@@ -69,5 +93,4 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             dy -= 0.05 * cd.ratio("jumpForce") * tmod
         }
     }
-
 }

@@ -15,7 +15,7 @@ inline fun EntityContainer.mob(
 
 class Mob(
     data: World.EntityMob, assets: Assets, level: GameLevel,
-) : Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+) : Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
     val runSpeed = 0.03
 
