@@ -11,7 +11,7 @@ inline fun EntityContainer.mob(
     assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Mob.() -> Unit = {}
-): Mob = Mob(data, assets, level).addTo(this, callback)
+): Mob = Mob(data, assets, level).addEntityTo(this, callback)
 
 class Mob(
     data: World.EntityMob, assets: Assets, level: GameLevel,

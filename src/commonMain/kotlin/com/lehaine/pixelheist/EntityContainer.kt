@@ -11,11 +11,11 @@ class EntityContainer : Container() {
     val entities = arrayListOf<Entity>()
 }
 
-fun <T : Entity> T.addTo(parent: EntityContainer): T {
+fun <T : Entity> T.addEntityTo(parent: EntityContainer): T {
     parent += this
     parent.entities.add(this)
     return this
 }
 
-inline fun <T : Entity> T.addTo(instance: EntityContainer, callback: @ViewDslMarker T.() -> Unit = {}) =
+inline fun <T : Entity> T.addEntityTo(instance: EntityContainer, callback: @ViewDslMarker T.() -> Unit = {}) =
     this.addTo(instance).apply(callback)

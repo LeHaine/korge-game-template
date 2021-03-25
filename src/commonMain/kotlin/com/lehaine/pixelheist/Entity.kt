@@ -31,6 +31,7 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
     var hasGravity = true
     var gravityMul = 1.0
 
+    val input get() = stage!!.views.input
 
     var dir = 1
         set(value) {
@@ -74,11 +75,20 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
         return this
     }
 
-    fun toGridPosition(cx: Int, cy: Int, xr: Double = 0.5, yr: Double = 1.0) {
+    fun removeFromEntityContainer(): Entity {
+        if (parent == null) return this
+        val entityContainer = this.parent as? EntityContainer?
+        entityContainer?.entities?.remove(this)
+        removeFromParent()
+        return this
+    }
+
+    fun toGridPosition(cx: Int, cy: Int, xr: Double = 0.5, yr: Double = 1.0): Entity {
         this.cx = cx
         this.cy = cy
         this.xr = xr
         this.yr = yr
+        return this
     }
 
     protected open fun update(dt: TimeSpan) {
@@ -169,9 +179,3 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
     }
 }
 
-fun <T : Entity> T.removeFromEntityContainer() {
-    if (parent == null) return
-    val entityContainer = this.parent as? EntityContainer?
-    entityContainer?.entities?.remove(this)
-    removeFromParent()
-}

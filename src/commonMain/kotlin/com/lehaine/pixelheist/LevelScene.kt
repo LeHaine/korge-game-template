@@ -8,6 +8,8 @@ import com.lehaine.pixelheist.entity.Hero
 import com.lehaine.pixelheist.entity.hero
 import com.lehaine.pixelheist.entity.mob
 import com.soywiz.kds.iterators.fastForEach
+import com.soywiz.korev.Key
+import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.alignLeftToLeftOf
@@ -43,6 +45,13 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
         fpsLabel {
             alignTopToTopOf(this)
             alignLeftToLeftOf(this)
+        }
+
+
+        keys {
+            down(Key.ESCAPE) {
+                stage?.gameWindow?.close()
+            }
         }
     }
 }

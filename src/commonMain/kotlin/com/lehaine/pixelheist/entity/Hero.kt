@@ -15,7 +15,7 @@ inline fun EntityContainer.hero(
     assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(data, assets, level).addTo(this, callback)
+): Hero = Hero(data, assets, level).addEntityTo(this, callback)
 
 class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
     Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
@@ -35,7 +35,6 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             cd("onGroundRecently", 150.milliseconds)
             cd("airControl", 10.seconds)
         }
-        val input = stage?.views?.input!!
         if (input.keys[Key.D]) {
             dx += runSpeed
             dir = 1
