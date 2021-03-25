@@ -28,7 +28,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     private val jumpingExtra get() = input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")
     private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
-    sealed class HeroState {
+    private sealed class HeroState {
         object Idle : HeroState()
         object Run : HeroState()
         object Jump : HeroState()
@@ -61,13 +61,20 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         }
     }
 
+    companion object {
+        private const val ON_GROUND_RECENTLY = "onGroundRecently"
+        private const val AIR_CONTROL = "airControl"
+        private const val JUMP_FORCE = "jumpForce"
+        private const val JUMP_EXTRA = "jumpExtra"
+    }
+
     override fun update(dt: TimeSpan) {
         super.update(dt)
         movementFsm.update(dt)
 
         if (onGround) {
-            cd("onGroundRecently", 150.milliseconds)
-            cd("airControl", 10.seconds)
+            cd(ON_GROUND_RECENTLY, 150.milliseconds)
+            cd(AIR_CONTROL, 10.seconds)
         }
     }
 
@@ -85,14 +92,14 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     private fun jump() {
         if (jumping) {
             dy = -0.35
-            cd("jumpForce", 100.milliseconds)
-            cd("jumpExtra", 100.milliseconds)
+            cd(JUMP_FORCE, 100.milliseconds)
+            cd(JUMP_EXTRA, 100.milliseconds)
         } else if (jumpingExtra) {
             dy -= 0.04 * tmod
         }
 
         if (jumpingForce) {
-            dy -= 0.05 * cd.ratio("jumpForce") * tmod
+            dy -= 0.05 * cd.ratio(JUMP_FORCE) * tmod
         }
     }
 }
