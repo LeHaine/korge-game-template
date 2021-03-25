@@ -29,15 +29,17 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
 
-            worldLevel.layerEntities.allMob.fastForEach {
-                mob(it, assets, gameLevel)
-            }
+            entityContainer {
+                worldLevel.layerEntities.allMob.fastForEach {
+                    mob(it, assets, gameLevel)
+                }
 
-            hero = hero(
-                worldLevel.layerEntities.allHero[0],
-                assets,
-                gameLevel
-            )
+                hero = hero(
+                    worldLevel.layerEntities.allHero[0],
+                    assets,
+                    gameLevel
+                )
+            }
         }.follow(hero)
 
 

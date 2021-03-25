@@ -2,20 +2,15 @@ package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
 import com.lehaine.lib.registerState
-import com.lehaine.pixelheist.Assets
-import com.lehaine.pixelheist.Entity
-import com.lehaine.pixelheist.GameLevel
-import com.lehaine.pixelheist.World
+import com.lehaine.pixelheist.*
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korev.Key
-import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
-import com.soywiz.korge.view.addTo
 import kotlin.math.abs
 
-inline fun Container.hero(
+inline fun EntityContainer.hero(
     data: World.EntityHero,
     assets: Assets,
     level: GameLevel,

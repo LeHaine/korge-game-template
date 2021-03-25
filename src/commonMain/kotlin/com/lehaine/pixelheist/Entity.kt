@@ -167,5 +167,11 @@ open class Entity(cx: Int, cy: Int, val level: GameLevel, anchorX: Double = 0.5,
             yr = 1.0
         }
     }
+}
 
+fun <T : Entity> T.removeFromEntityContainer() {
+    if (parent == null) return
+    val entityContainer = this.parent as? EntityContainer?
+    entityContainer?.entities?.remove(this)
+    removeFromParent()
 }

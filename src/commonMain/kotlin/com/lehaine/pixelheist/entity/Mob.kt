@@ -1,17 +1,12 @@
 package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.registerState
-import com.lehaine.pixelheist.Assets
-import com.lehaine.pixelheist.Entity
-import com.lehaine.pixelheist.GameLevel
-import com.lehaine.pixelheist.World
-import com.soywiz.korge.view.Container
+import com.lehaine.pixelheist.*
 import com.soywiz.korge.view.ViewDslMarker
-import com.soywiz.korge.view.addTo
 import kotlin.math.abs
 
 
-inline fun Container.mob(
+inline fun EntityContainer.mob(
     data: World.EntityMob,
     assets: Assets,
     level: GameLevel,
