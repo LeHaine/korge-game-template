@@ -32,19 +32,34 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         object Idle : HeroState()
         object Run : HeroState()
         object Jump : HeroState()
+        object JumpExtra : HeroState()
         object Fall : HeroState()
     }
 
     private val movementFsm = stateMachine<HeroState> {
+        state(HeroState.Jump) {
+            reason { jumping }
+            update {
+                move()
+                jump()
+            }
+        }
+        state(HeroState.JumpExtra) {
+            reason { jumpingExtra || jumpingForce }
+            update {
+                move()
+                if (jumpingExtra) jumpExtra()
+                if (jumpingForce) jumpForce()
+            }
+        }
         state(HeroState.Fall) {
             reason { dy > 0.01 }
-        }
-        state(HeroState.Jump) {
-            reason { jumping || jumpingExtra || jumpingForce }
+            update { move() }
         }
         state(HeroState.Run) {
             reason { runningLeft || runningRight }
             begin { sprite.playAnimationLooped(assets.heroRun) }
+            update { move() }
         }
         state(HeroState.Idle) {
             reason { true }
@@ -64,13 +79,11 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
 
     override fun update(dt: TimeSpan) {
         super.update(dt)
-        movementFsm.update(dt)
-        move()
-
         if (onGround) {
             cd(ON_GROUND_RECENTLY, 150.milliseconds)
             cd(AIR_CONTROL, 10.seconds)
         }
+        movementFsm.update(dt)
     }
 
     private fun move() {
@@ -82,17 +95,20 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             dx -= runSpeed
             dir = -1
         }
-
-        if (jumping) {
-            dy = -0.35
-            cd(JUMP_FORCE, 100.milliseconds)
-            cd(JUMP_EXTRA, 100.milliseconds)
-        } else if (jumpingExtra) {
-            dy -= 0.04 * tmod
-        }
-
-        if (jumpingForce) {
-            dy -= 0.05 * cd.ratio(JUMP_FORCE) * tmod
-        }
     }
+
+    private fun jump() {
+        dy = -0.35
+        cd(JUMP_FORCE, 100.milliseconds)
+        cd(JUMP_EXTRA, 100.milliseconds)
+    }
+
+    private fun jumpExtra() {
+        dy -= 0.04 * tmod
+    }
+
+    private fun jumpForce() {
+        dy -= 0.05 * cd.ratio(JUMP_FORCE) * tmod
+    }
+
 }
