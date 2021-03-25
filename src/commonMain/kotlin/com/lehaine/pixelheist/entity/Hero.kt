@@ -38,19 +38,19 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     private val movementFsm = stateMachine<HeroState> {
         state(HeroState.Fall) {
             reason { dy > 0.01 }
-            update { run() }
+            update { move() }
         }
         state(HeroState.Jump) {
             reason { jumping || jumpingExtra || jumpingForce }
             update {
-                run()
+                move()
                 jump()
             }
         }
         state(HeroState.Run) {
             reason { runningLeft || runningRight }
             begin { sprite.playAnimationLooped(assets.heroRun) }
-            update { run() }
+            update { move() }
         }
         state(HeroState.Idle) {
             reason { true }
@@ -71,7 +71,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         }
     }
 
-    private fun run() {
+    private fun move() {
         if (runningRight) {
             dx += runSpeed
             dir = 1
