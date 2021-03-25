@@ -38,19 +38,13 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     private val movementFsm = stateMachine<HeroState> {
         state(HeroState.Fall) {
             reason { dy > 0.01 }
-            update { move() }
         }
         state(HeroState.Jump) {
             reason { jumping || jumpingExtra || jumpingForce }
-            update {
-                move()
-                jump()
-            }
         }
         state(HeroState.Run) {
             reason { runningLeft || runningRight }
             begin { sprite.playAnimationLooped(assets.heroRun) }
-            update { move() }
         }
         state(HeroState.Idle) {
             reason { true }
@@ -71,6 +65,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     override fun update(dt: TimeSpan) {
         super.update(dt)
         movementFsm.update(dt)
+        move()
 
         if (onGround) {
             cd(ON_GROUND_RECENTLY, 150.milliseconds)
@@ -87,9 +82,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             dx -= runSpeed
             dir = -1
         }
-    }
 
-    private fun jump() {
         if (jumping) {
             dy = -0.35
             cd(JUMP_FORCE, 100.milliseconds)

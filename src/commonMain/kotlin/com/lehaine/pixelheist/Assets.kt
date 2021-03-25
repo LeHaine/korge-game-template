@@ -8,7 +8,6 @@ import com.soywiz.korim.atlas.readAtlas
 import com.soywiz.korim.font.Font
 import com.soywiz.korim.font.TtfFont
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.stream.openSync
 
 class Assets {
 
