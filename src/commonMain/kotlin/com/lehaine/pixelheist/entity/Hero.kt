@@ -19,7 +19,7 @@ inline fun EntityContainer.hero(
 class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
     Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
-    val runSpeed = 0.03
+    private val moveSpeed = 0.03
 
     private val runningLeft get() = input.keys[Key.A]
     private val runningRight get() = input.keys[Key.D]
@@ -88,11 +88,11 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
 
     private fun move() {
         if (runningRight) {
-            dx += runSpeed
+            dx += moveSpeed
             dir = 1
         }
         if (runningLeft) {
-            dx -= runSpeed
+            dx -= moveSpeed
             dir = -1
         }
     }
