@@ -5,6 +5,7 @@ import com.lehaine.lib.registerState
 import com.lehaine.pixelheist.Assets
 import com.lehaine.pixelheist.Entity
 import com.lehaine.pixelheist.GameLevel
+import com.lehaine.pixelheist.World
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -12,27 +13,24 @@ import com.soywiz.korev.Key
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
-import com.soywiz.korge.view.getSpriteAnimation
 import kotlin.math.abs
 
 inline fun Container.hero(
-    cx: Int = 0,
-    cy: Int = 0,
+    data: World.EntityHero,
     assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(cx, cy, assets, level).addTo(this, callback)
+): Hero = Hero(data, assets, level).addTo(this, callback)
 
-class Hero(cx: Int, cy: Int, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
-    Entity(cx, cy, level, anchorX, anchorY) {
+class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
+    Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
-    val animations = Animations(assets)
     val runSpeed = 0.03
 
     init {
         sprite.apply {
-            registerState(animations.run) { abs(dx) >= 0.01 }
-            registerState(animations.idle) { true }
+            registerState(assets.heroRun) { abs(dx) >= 0.01 }
+            registerState(assets.heroIdle) { true }
         }
     }
 
@@ -63,11 +61,6 @@ class Hero(cx: Int, cy: Int, assets: Assets, level: GameLevel, anchorX: Double =
         if (cd.has("jumpForce") && input.keys.pressing(Key.SPACE)) {
             dy -= 0.05 * cd.ratio("jumpForce") * tmod
         }
-    }
-
-    class Animations(assets: Assets) {
-        val run = assets.tiles.getSpriteAnimation("heroRun", 150.milliseconds)
-        val idle = assets.tiles.getSpriteAnimation("heroIdle", 450.milliseconds)
     }
 
 }

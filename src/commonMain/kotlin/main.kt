@@ -18,7 +18,8 @@ object GameModule : Module() {
     override val bgcolor = Colors["#2b2b2b"]
 
     override suspend fun AsyncInjector.configure() {
-        mapSingleton { Assets().apply { init() } }
+        val assets = Assets().apply { init() }
+        mapSingleton { assets }
         mapSingleton { World().apply { loadAsync() } }
         mapInstance(0) // load first level
         mapPrototype { LevelScene(get(), get(), get()) }

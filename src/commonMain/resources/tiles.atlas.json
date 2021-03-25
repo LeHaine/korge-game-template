@@ -39,14 +39,54 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
 	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "mobIdle0.png",
+	"frame": {"x":61,"y":1,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "mobIdle1.png",
+	"frame": {"x":73,"y":1,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "mobRun0.png",
+	"frame": {"x":85,"y":1,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "mobRun1.png",
+	"frame": {"x":97,"y":1,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "mobRun2.png",
+	"frame": {"x":109,"y":1,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
 }],
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "tiles.atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":60,"h":12},
+	"size": {"w":120,"h":12},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:260eea976fd7db40488f40aed7f204f5:a95ac7d65d476228f399d04f1e0b62f6:5e5ef3518cc1a44e4ed4954a57ade08c$"
+	"smartupdate": "$TexturePacker:SmartUpdate:b329a6d0a6e34d467a6a0ad5fce07b94:2d1d734424990be921659414ba0e10bd:5e5ef3518cc1a44e4ed4954a57ade08c$"
 }
 }

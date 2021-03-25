@@ -6,6 +6,8 @@ import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.Hero
 import com.lehaine.pixelheist.entity.hero
+import com.lehaine.pixelheist.entity.mob
+import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -13,9 +15,7 @@ import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.alignLeftToLeftOf
 import com.soywiz.korge.view.alignTopToTopOf
 import com.soywiz.korge.view.camera.cameraContainer
-import com.soywiz.korim.atlas.readAtlas
 import com.soywiz.korio.async.launchImmediately
-import com.soywiz.korio.file.std.resourcesVfs
 
 
 class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : Scene() {
@@ -28,15 +28,16 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
         lateinit var hero: Hero
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
-            val playerData = worldLevel.layerEntities.allPlayer[0]
+
+            worldLevel.layerEntities.allMob.fastForEach {
+                mob(it, assets, gameLevel)
+            }
+
             hero = hero(
-                playerData.cx,
-                playerData.cy,
+                worldLevel.layerEntities.allHero[0],
                 assets,
                 gameLevel
-            ) {
-                anchor(playerData.pivotX.toDouble(), playerData.pivotY.toDouble())
-            }
+            )
         }.follow(hero)
 
 
