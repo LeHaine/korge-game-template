@@ -1,6 +1,7 @@
 package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
+import com.lehaine.lib.random
 import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.Assets
 import com.lehaine.pixelheist.Entity
@@ -33,23 +34,25 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     private val jumpingExtra get() = input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")
     private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
-    private sealed class HeroState {
-        object Idle : HeroState()
-        object Run : HeroState()
-        object Jump : HeroState()
-        object JumpExtra : HeroState()
-        object Fall : HeroState()
+    private var heldItem: Item? = null
+
+    private sealed class HeroMovementState {
+        object Idle : HeroMovementState()
+        object Run : HeroMovementState()
+        object Jump : HeroMovementState()
+        object JumpExtra : HeroMovementState()
+        object Fall : HeroMovementState()
     }
 
-    private val movementFsm = stateMachine<HeroState> {
-        state(HeroState.Jump) {
+    private val movementFsm = stateMachine<HeroMovementState> {
+        state(HeroMovementState.Jump) {
             reason { jumping }
             update {
                 move()
                 jump()
             }
         }
-        state(HeroState.JumpExtra) {
+        state(HeroMovementState.JumpExtra) {
             reason { jumpingExtra || jumpingForce }
             update {
                 move()
@@ -57,21 +60,53 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
                 if (jumpingForce) jumpForce()
             }
         }
-        state(HeroState.Fall) {
+        state(HeroMovementState.Fall) {
             reason { dy > 0.01 }
             update { move() }
         }
-        state(HeroState.Run) {
+        state(HeroMovementState.Run) {
             reason { runningLeft || runningRight }
             begin { sprite.playAnimationLooped(assets.heroRun) }
             update { move() }
         }
-        state(HeroState.Idle) {
+        state(HeroMovementState.Idle) {
             reason { true }
             begin { sprite.playAnimationLooped(assets.heroIdle) }
         }
         stateChanged {
             debugLabel.text = it::class.simpleName ?: ""
+        }
+    }
+
+    private sealed class HeroItemState {
+        object ThrowItem : HeroItemState()
+        object HoldItem : HeroItemState()
+        object NoItem : HeroItemState()
+    }
+
+    private val itemFsm = stateMachine<HeroItemState> {
+
+        state(HeroItemState.ThrowItem) {
+            reason { input.keys.justPressed(Key.E) && heldItem != null }
+            update {
+                heldItem?.let {
+                    it.dx = (0.7..1.0).random() * dir
+                    it.dy = -(0.3..0.35).random()
+                }
+                heldItem = null
+                cd("itemThrew", 250.milliseconds)
+            }
+
+        }
+        state(HeroItemState.HoldItem) {
+            reason { heldItem != null }
+            update {
+                heldItem?.toGridPosition(cx, cy - 1, xr, yr)
+            }
+        }
+
+        state(HeroItemState.NoItem) {
+            reason { true }
         }
     }
 
@@ -82,13 +117,12 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         private const val JUMP_EXTRA = "jumpExtra"
     }
 
-    override fun onEntityCollision(entity: Entity) {
-        super.onEntityCollision(entity)
-        println("colliding with ${entity::class.simpleName}")
-    }
 
-    override fun onEntityCollisionExit(entity: Entity) {
-        println("collision exit with ${entity::class.simpleName}")
+    override fun onEntityColliding(entity: Entity) {
+        super.onEntityColliding(entity)
+        if (heldItem == null && !cd.has("itemThrew") && entity is Item) {
+            heldItem = entity
+        }
     }
 
     override fun update(dt: TimeSpan) {
@@ -98,6 +132,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             cd(AIR_CONTROL, 10.seconds)
         }
         movementFsm.update(dt)
+        itemFsm.update(dt)
     }
 
     private fun move() {

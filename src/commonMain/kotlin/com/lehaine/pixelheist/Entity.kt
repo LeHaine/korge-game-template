@@ -130,6 +130,8 @@ open class Entity(
 
     protected open fun onEntityCollision(entity: Entity) {}
 
+    protected open fun onEntityColliding(entity: Entity) {}
+
     protected open fun onEntityCollisionExit(entity: Entity) {}
 
     protected open fun update(dt: TimeSpan) {
@@ -231,7 +233,9 @@ open class Entity(
             collisionFilter().fastForEach {
                 if (this != it) {
                     if (this.collidesWithShape(it)) {
-                        if (collisionState[it] != true) {
+                        if (collisionState[it] == true) {
+                            onEntityColliding(it)
+                        } else {
                             // we only need to call it once
                             onEntityCollision(it)
                             collisionState[it] = true

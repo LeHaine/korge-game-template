@@ -559,13 +559,13 @@
 					"entityInstances": [
 						{
 							"__identifier": "Hero",
-							"__grid": [8,35],
+							"__grid": [6,35],
 							"__pivot": [0.5,1],
 							"__tile": null,
 							"width": 8,
 							"height": 8,
 							"defUid": 1,
-							"px": [68,288],
+							"px": [52,288],
 							"fieldInstances": []
 						},
 						{
@@ -645,13 +645,13 @@
 						},
 						{
 							"__identifier": "Item",
-							"__grid": [11,35],
+							"__grid": [15,33],
 							"__pivot": [0.5,1],
 							"__tile": { "tilesetUid": 57, "srcRect": [0,0,8,8] },
 							"width": 8,
 							"height": 8,
 							"defUid": 55,
-							"px": [92,288],
+							"px": [124,272],
 							"fieldInstances": [{
 								"__identifier": "type",
 								"__value": "Ruby",
