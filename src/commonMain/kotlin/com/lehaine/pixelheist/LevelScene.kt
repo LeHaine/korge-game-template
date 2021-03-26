@@ -31,6 +31,7 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                 name = "EntityContainer"
 
                 val entities = arrayListOf<Entity>()
+
                 container MobContainer@{
                     name = "MobContainer"
                     worldLevel.layerEntities.allMob.fastForEach {
@@ -51,7 +52,11 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                     gameLevel
                 ) {
                     collisionFilter { entities }
-                }.also { entities += it }
+                }.also {
+                    entities += it
+                    gameLevel._hero = it
+                }
+
             }
         }.apply {
             follow(hero)

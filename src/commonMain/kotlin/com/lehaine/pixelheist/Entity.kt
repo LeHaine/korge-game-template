@@ -1,5 +1,6 @@
 package com.lehaine.pixelheist
 
+import com.lehaine.lib.castRay
 import com.lehaine.lib.enhancedSprite
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
@@ -89,6 +90,10 @@ open class Entity(
 
     val input get() = stage!!.views.input
 
+    private val canRayPass: (Int, Int) -> Boolean = { cx, cy ->
+        !level.hasCollision(cx, cy) || this.cx == cx && this.cy == cy
+    }
+
     private var initEntityCollisionChecks = false
     private var collisionFilter: () -> List<Entity> = { emptyList() }
         set(value) {
@@ -126,6 +131,14 @@ open class Entity(
     fun collisionFilter(filter: () -> List<Entity>): Entity {
         this.collisionFilter = filter
         return this
+    }
+
+    fun castRayTo(tcx: Int, tcy: Int): Boolean {
+        return castRay(cx, cy, tcx, tcy, canRayPass)
+    }
+
+    fun castRayTo(entity: Entity): Boolean {
+        return castRayTo(entity.cx, entity.cy)
     }
 
     protected open fun onEntityCollision(entity: Entity) {}

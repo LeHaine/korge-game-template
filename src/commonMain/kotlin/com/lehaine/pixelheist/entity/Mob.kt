@@ -37,12 +37,17 @@ class Mob(
         object Idle : MobState()
         object Patrol : MobState()
         object HopSmallStep : MobState()
+        object ChaseHero : MobState()
     }
 
     private val movementFsm = stateMachine<MobState> {
         state(MobState.HopSmallStep) {
             reason { hasSmallStep }
             update { hopSmallStep() }
+        }
+        state(MobState.ChaseHero) {
+            reason { castRayTo(level.hero) }
+            update { autoPatrol() }
         }
         state(MobState.Patrol) {
             reason { !cd.has(LOCK) }
