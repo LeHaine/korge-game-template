@@ -22,7 +22,7 @@ inline fun Container.hero(
     callback: @ViewDslMarker Hero.() -> Unit = {}
 ): Hero = Hero(data, assets, level).addTo(this, callback)
 
-class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
+class Hero(data: World.EntityHero, assets: Assets, level: GameLevel) :
     Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
     private val moveSpeed = 0.03
@@ -73,9 +73,6 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
             reason { true }
             begin { sprite.playAnimationLooped(assets.heroIdle) }
         }
-        stateChanged {
-            debugLabel.text = it::class.simpleName ?: ""
-        }
     }
 
     private sealed class HeroItemState {
@@ -94,7 +91,7 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
                     it.dy = -(0.3..0.35).random()
                 }
                 heldItem = null
-                cd("itemThrew", 250.milliseconds)
+                cd(ITEM_THREW, 250.milliseconds)
             }
 
         }
@@ -111,16 +108,18 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
     }
 
     companion object {
+        /** Cooldown flags **/
         private const val ON_GROUND_RECENTLY = "onGroundRecently"
         private const val AIR_CONTROL = "airControl"
         private const val JUMP_FORCE = "jumpForce"
         private const val JUMP_EXTRA = "jumpExtra"
+        private const val ITEM_THREW = "itemThrew"
     }
 
 
     override fun onEntityColliding(entity: Entity) {
         super.onEntityColliding(entity)
-        if (heldItem == null && !cd.has("itemThrew") && entity is Item) {
+        if (heldItem == null && !cd.has(ITEM_THREW) && entity is Item) {
             heldItem = entity
         }
     }
@@ -133,6 +132,9 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         }
         movementFsm.update(dt)
         itemFsm.update(dt)
+
+        debugLabel.text =
+            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
     }
 
     private fun move() {
