@@ -40,7 +40,11 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
 
         keys {
             down(Key.ESCAPE) {
-                stage?.gameWindow?.close()
+                stage?.views?.debugViews = false
+                stage?.gameWindow?.run {
+                    debug = false
+                    close()
+                }
             }
         }
     }
