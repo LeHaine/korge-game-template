@@ -87,8 +87,8 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel) :
             reason { input.keys.justPressed(Key.E) && heldItem != null }
             update {
                 heldItem?.let {
-                    it.dx = (0.7..1.0).random() * dir
-                    it.dy = -(0.3..0.35).random()
+                    it.dx = (1.2..1.5).random() * dir + dx
+                    it.dy = -(0.3..0.35).random() + dy
                 }
                 heldItem = null
                 cd(ITEM_THREW, 250.milliseconds)

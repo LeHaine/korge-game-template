@@ -115,6 +115,7 @@ open class Entity(
         }
     }
 
+    /**** Helper Functions ****/
     fun anchor(ax: Double, ay: Double): Entity {
         sprite.anchor(ax, ay)
         return this
@@ -141,6 +142,7 @@ open class Entity(
         return castRayTo(entity.cx, entity.cy)
     }
 
+    /**** Lifecycle and other callbacks ****/
     protected open fun onEntityCollision(entity: Entity) {}
 
     protected open fun onEntityColliding(entity: Entity) {}
