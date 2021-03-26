@@ -1,6 +1,7 @@
 package com.lehaine.pixelheist
 
 import com.lehaine.lib.enhancedSprite
+import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.kmem.clamp
@@ -8,6 +9,8 @@ import com.soywiz.korge.debug.uiCollapsibleSection
 import com.soywiz.korge.debug.uiEditableValue
 import com.soywiz.korge.view.*
 import com.soywiz.korim.text.TextAlignment
+import com.soywiz.korma.geom.vector.quad
+import com.soywiz.korma.geom.vector.rect
 import com.soywiz.korui.UiContainer
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -22,8 +25,7 @@ open class Entity(
     val level: GameLevel,
     anchorX: Double = 0.5,
     anchorY: Double = 1.0
-) :
-    Container() {
+) : Container() {
 
     var enHeight = GRID_SIZE.toDouble()
     var enWidth = enHeight
@@ -62,8 +64,6 @@ open class Entity(
     var hasGravity = true
     var gravityMul = 1.0
 
-    val input get() = stage!!.views.input
-
     var dir = 1
         set(value) {
             field = value.clamp(-1, 1)
@@ -74,13 +74,11 @@ open class Entity(
     var tmod = 1.0
         private set
 
-
     val sprite = enhancedSprite {
         smoothing = false
         this.anchorX = anchorX
         this.anchorY = anchorY
     }
-
 
     val debugLabel = text("") {
         smoothing = false
@@ -89,6 +87,15 @@ open class Entity(
         alignment = TextAlignment.CENTER
         alignTopToBottomOf(sprite)
     }
+
+    val input get() = stage!!.views.input
+
+    private var initEntityCollisionChecks = false
+    private var collisionFilter: () -> List<Entity> = { emptyList() }
+        set(value) {
+            field = value
+            addEntityCollisionChecks()
+        }
 
     init {
         toGridPosition(cx, cy)
@@ -112,6 +119,15 @@ open class Entity(
         this.yr = yr
         return this
     }
+
+    fun collisionFilter(filter: () -> List<Entity>): Entity {
+        this.collisionFilter = filter
+        return this
+    }
+
+    protected open fun onEntityCollision(entity: Entity) {}
+
+    protected open fun onEntityCollisionExit(entity: Entity) {}
 
     protected open fun update(dt: TimeSpan) {
         tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
@@ -204,6 +220,30 @@ open class Entity(
         }
     }
 
+    private fun addEntityCollisionChecks() {
+        if (initEntityCollisionChecks) return
+
+        hitShape {
+            rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
+        }
+        val collisionState = mutableMapOf<View, Boolean>()
+        addUpdater {
+            collisionFilter().fastForEach {
+                if (this != it) {
+                    if (this.collidesWithShape(it)) {
+                        if (collisionState[it] != true) {
+                            // we only need to call it once
+                            onEntityCollision(it)
+                            collisionState[it] = true
+                        }
+                    } else if (collisionState[it] == true) {
+                        onEntityCollisionExit(it)
+                        collisionState[it] = false
+                    }
+                }
+            }
+        }
+    }
 
     override fun buildDebugComponent(views: Views, container: UiContainer) {
         container.uiCollapsibleSection("Entity") {

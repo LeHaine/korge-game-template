@@ -27,20 +27,21 @@ class LevelScene(private val assets: Assets, private val world: World, private v
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
 
-            container {
+            container EntityContainer@{
                 name = "EntityContainer"
 
-                container {
+                val entities = arrayListOf<Entity>()
+                container MobContainer@{
                     name = "MobContainer"
                     worldLevel.layerEntities.allMob.fastForEach {
-                        mob(it, assets, gameLevel)
+                        entities += mob(it, assets, gameLevel) { collisionFilter { entities } }
                     }
                 }
 
-                container {
+                container ItemContainer@{
                     name = "ItemContainer"
                     worldLevel.layerEntities.allItem.fastForEach {
-                        item(it, assets, gameLevel)
+                        entities += item(it, assets, gameLevel) { collisionFilter { entities } }
                     }
                 }
 
@@ -48,9 +49,14 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                     worldLevel.layerEntities.allHero[0],
                     assets,
                     gameLevel
-                )
+                ) {
+                    collisionFilter { entities }
+                }.also { entities += it }
             }
-        }.follow(hero)
+        }.apply {
+            follow(hero)
+        }
+
 
         keys {
             down(Key.ESCAPE) {

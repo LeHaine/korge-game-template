@@ -82,6 +82,15 @@ class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Do
         private const val JUMP_EXTRA = "jumpExtra"
     }
 
+    override fun onEntityCollision(entity: Entity) {
+        super.onEntityCollision(entity)
+        println("colliding with ${entity::class.simpleName}")
+    }
+
+    override fun onEntityCollisionExit(entity: Entity) {
+        println("collision exit with ${entity::class.simpleName}")
+    }
+
     override fun update(dt: TimeSpan) {
         super.update(dt)
         if (onGround) {
