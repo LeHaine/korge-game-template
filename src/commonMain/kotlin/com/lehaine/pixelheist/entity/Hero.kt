@@ -2,19 +2,24 @@ package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
 import com.lehaine.lib.stateMachine
-import com.lehaine.pixelheist.*
+import com.lehaine.pixelheist.Assets
+import com.lehaine.pixelheist.Entity
+import com.lehaine.pixelheist.GameLevel
+import com.lehaine.pixelheist.World
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korev.Key
+import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
+import com.soywiz.korge.view.addTo
 
-inline fun EntityContainer.hero(
+inline fun Container.hero(
     data: World.EntityHero,
     assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(data, assets, level).addEntityTo(this, callback)
+): Hero = Hero(data, assets, level).addTo(this, callback)
 
 class Hero(data: World.EntityHero, assets: Assets, level: GameLevel, anchorX: Double = 0.5, anchorY: Double = 1.0) :
     Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {

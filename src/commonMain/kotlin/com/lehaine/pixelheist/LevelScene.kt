@@ -13,6 +13,7 @@ import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.camera.cameraContainer
+import com.soywiz.korge.view.container
 
 
 class LevelScene(private val assets: Assets, private val world: World, private val levelIdx: Int = 0) : Scene() {
@@ -26,13 +27,21 @@ class LevelScene(private val assets: Assets, private val world: World, private v
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
 
-            entityContainer {
-                worldLevel.layerEntities.allMob.fastForEach {
-                    mob(it, assets, gameLevel)
+            container {
+                name = "EntityContainer"
+
+                container {
+                    name = "MobContainer"
+                    worldLevel.layerEntities.allMob.fastForEach {
+                        mob(it, assets, gameLevel)
+                    }
                 }
 
-                worldLevel.layerEntities.allItem.fastForEach {
-                    item(it, assets, gameLevel)
+                container {
+                    name = "ItemContainer"
+                    worldLevel.layerEntities.allItem.fastForEach {
+                        item(it, assets, gameLevel)
+                    }
                 }
 
                 hero = hero(

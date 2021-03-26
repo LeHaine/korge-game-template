@@ -105,14 +105,6 @@ open class Entity(
         return this
     }
 
-    fun removeFromEntityContainer(): Entity {
-        if (parent == null) return this
-        val entityContainer = this.parent as? EntityContainer?
-        entityContainer?.entities?.remove(this)
-        removeFromParent()
-        return this
-    }
-
     fun toGridPosition(cx: Int, cy: Int, xr: Double = 0.5, yr: Double = 1.0): Entity {
         this.cx = cx
         this.cy = cy

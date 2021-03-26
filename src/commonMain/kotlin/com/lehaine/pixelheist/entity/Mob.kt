@@ -5,15 +5,17 @@ import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
+import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
+import com.soywiz.korge.view.addTo
 
 
-inline fun EntityContainer.mob(
+inline fun Container.mob(
     data: World.EntityMob,
     assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Mob.() -> Unit = {}
-): Mob = Mob(data, assets, level).addEntityTo(this, callback)
+): Mob = Mob(data, assets, level).addTo(this, callback)
 
 class Mob(
     data: World.EntityMob, assets: Assets, level: GameLevel,
