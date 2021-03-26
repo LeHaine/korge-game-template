@@ -5,6 +5,7 @@ import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.Hero
 import com.lehaine.pixelheist.entity.hero
+import com.lehaine.pixelheist.entity.item
 import com.lehaine.pixelheist.entity.mob
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
@@ -14,7 +15,7 @@ import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.camera.cameraContainer
 
 
-class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : Scene() {
+class LevelScene(private val assets: Assets, private val world: World, private val levelIdx: Int = 0) : Scene() {
 
     override suspend fun Container.sceneInit() {
         val worldLevel = world.allLevels[levelIdx]
@@ -28,6 +29,10 @@ class LevelScene(val assets: Assets, val world: World, val levelIdx: Int = 0) : 
             entityContainer {
                 worldLevel.layerEntities.allMob.fastForEach {
                     mob(it, assets, gameLevel)
+                }
+
+                worldLevel.layerEntities.allItem.fastForEach {
+                    item(it, assets, gameLevel)
                 }
 
                 hero = hero(

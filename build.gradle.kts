@@ -42,3 +42,20 @@ kotlin {
 }
 
 tasks.getByName("compileKotlinMetadata").dependsOn("kaptKotlinJvm")
+
+tasks {
+    create("regenerateLDtkCode") {
+        dependsOn("removeLDtkGeneratedCode")
+        dependsOn("generateLDtkCode")
+    }
+
+    create<Delete>("removeLDtkGeneratedCode") {
+        delete = setOf("$buildDir/generated")
+    }
+
+    create("generateLDtkCode") {
+        dependsOn("kaptKotlinJvm")
+        mustRunAfter("removeLDtkGeneratedCode")
+    }
+
+}
