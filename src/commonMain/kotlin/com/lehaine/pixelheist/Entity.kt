@@ -218,6 +218,7 @@ open class Entity(
             uiEditableValue(listOf(this@Entity::cx, this@Entity::cy), name = "(cx, cy)", min = 0, max = 10000)
             uiEditableValue(listOf(this@Entity::xr, this@Entity::yr), name = "(xr, yr)", min = 0.0, max = 1.0)
             uiEditableValue(listOf(this@Entity::dx, this@Entity::dy), name = "Velocity (dx, dy)")
+            uiEditableValue(listOf(this@Entity::_squashX, this@Entity::_squashY), name = "Squash (x, y)")
             uiEditableValue(this@Entity::hasGravity, name = "Gravity")
             uiEditableValue(this@Entity::gravityMul, name = "Gravity Multiplier")
             uiEditableValue(listOf(this@Entity::enWidth, this@Entity::enHeight), name = "Size (w, h)")
