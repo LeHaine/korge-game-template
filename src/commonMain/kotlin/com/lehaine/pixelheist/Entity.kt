@@ -9,7 +9,6 @@ import com.soywiz.korge.debug.uiCollapsibleSection
 import com.soywiz.korge.debug.uiEditableValue
 import com.soywiz.korge.view.*
 import com.soywiz.korim.text.TextAlignment
-import com.soywiz.korma.geom.vector.quad
 import com.soywiz.korma.geom.vector.rect
 import com.soywiz.korui.UiContainer
 import kotlin.math.abs
@@ -99,6 +98,10 @@ open class Entity(
 
     init {
         toGridPosition(cx, cy)
+
+        hitShape {
+            rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
+        }
 
         addUpdater {
             if (stage == null) return@addUpdater
@@ -223,9 +226,6 @@ open class Entity(
     private fun addEntityCollisionChecks() {
         if (initEntityCollisionChecks) return
 
-        hitShape {
-            rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
-        }
         val collisionState = mutableMapOf<View, Boolean>()
         addUpdater {
             collisionFilter().fastForEach {
