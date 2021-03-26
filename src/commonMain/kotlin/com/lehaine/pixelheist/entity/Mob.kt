@@ -70,6 +70,7 @@ class Mob(
 
         if ((hasPlatformLeft || hasPlatformRight) && !hasSmallStep) {
             cd(LOCK, 500.milliseconds)
+            squashX = 0.85
             dir *= -1
         }
     }

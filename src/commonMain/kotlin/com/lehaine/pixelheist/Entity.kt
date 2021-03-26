@@ -39,6 +39,25 @@ open class Entity(
     var frictX = 0.82
     var frictY = 0.82
 
+    private var _squashX = 1.0
+    private var _squashY = 1.0
+
+    var squashX: Double
+        get() = _squashX
+        set(value) {
+            _squashX = value
+            _squashY = 2 - value
+        }
+    var squashY: Double
+        get() = _squashY
+        set(value) {
+            _squashX = 2 - value
+            _squashY = value
+        }
+
+    var spriteScaleX = 1.0
+    var spriteScaleY = 1.0
+
     val onGround get() = dy == 0.0 && level.hasCollision(cx, cy + 1)
     var hasGravity = true
     var gravityMul = 1.0
@@ -61,6 +80,7 @@ open class Entity(
         this.anchorX = anchorX
         this.anchorY = anchorY
     }
+
 
     val debugLabel = text("") {
         smoothing = false
@@ -111,7 +131,11 @@ open class Entity(
     protected open fun postUpdate(dt: TimeSpan) {
         x = (cx + xr) * GRID_SIZE
         y = (cy + yr) * GRID_SIZE
-        sprite.scaleX = dir.toDouble()
+        sprite.scaleX = dir.toDouble() * spriteScaleX * squashX
+        sprite.scaleY = spriteScaleY * squashY
+
+        _squashX += (1 - _squashX) * 0.2
+        _squashY += (1 - _squashY) * 0.2
     }
 
     private fun performXSteps() {
