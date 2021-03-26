@@ -1,6 +1,7 @@
 package com.lehaine.pixelheist
 
 import com.lehaine.lib.castRay
+import com.lehaine.lib.dist
 import com.lehaine.lib.enhancedSprite
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
@@ -10,12 +11,10 @@ import com.soywiz.korge.debug.uiCollapsibleSection
 import com.soywiz.korge.debug.uiEditableValue
 import com.soywiz.korge.view.*
 import com.soywiz.korim.text.TextAlignment
+import com.soywiz.korma.geom.Rectangle
 import com.soywiz.korma.geom.vector.rect
 import com.soywiz.korui.UiContainer
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.pow
+import kotlin.math.*
 
 
 open class Entity(
@@ -30,6 +29,9 @@ open class Entity(
     var enHeight = GRID_SIZE.toDouble()
     var enWidth = enHeight
 
+    /**
+     * Grid location
+     */
     var cx = 0
     var cy = 0
     var xr = 0.5
@@ -40,6 +42,24 @@ open class Entity(
 
     var frictX = 0.82
     var frictY = 0.82
+
+    val moveAngle get() = atan2(dy, dx)
+
+    /**
+     * Pixel location
+     */
+    val px get() = (cx + xr) * GRID_SIZE
+    val py get() = (cy + yr) * GRID_SIZE
+    val centerX get() = px + (0.5 - anchorX) * enWidth
+    val centerY get() = py + (0.5 - anchorY) * enHeight
+    private var _bounds = Rectangle()
+    val bounds: Rectangle
+        get() = _bounds.apply {
+            top = py - anchorY * enWidth
+            right = px + (1 - px) * enWidth
+            bottom = py + (1 - anchorY) * enHeight
+            left = px - anchorX * enWidth
+        }
 
     private var _squashX = 1.0
     private var _squashY = 1.0
@@ -79,6 +99,9 @@ open class Entity(
         this.anchorX = anchorX
         this.anchorY = anchorY
     }
+
+    val anchorX by sprite::anchorX
+    val anchorY by sprite::anchorY
 
     val debugLabel = text("") {
         smoothing = false
@@ -134,13 +157,23 @@ open class Entity(
         return this
     }
 
-    fun castRayTo(tcx: Int, tcy: Int): Boolean {
-        return castRay(cx, cy, tcx, tcy, canRayPass)
-    }
+    /**
+     * Attempts to cast ray to target grid position. Can be used for Line-of-sight check.
+     * @return true if able to pass all the way through the the target point
+     */
+    fun castRayTo(tcx: Int, tcy: Int) = castRay(cx, cy, tcx, tcy, canRayPass)
 
-    fun castRayTo(entity: Entity): Boolean {
-        return castRayTo(entity.cx, entity.cy)
-    }
+    fun castRayTo(entity: Entity) = castRayTo(entity.cx, entity.cy)
+
+    fun dirTo(entity: Entity) = if (entity.centerX > centerX) 1 else -1
+
+    fun distGridTo(tcx: Int, tcy: Int, txr: Double = 0.5, tyr: Double = 0.5) =
+        dist(cx + xr, cy + yr, tcx + txr, tcy + tyr)
+
+    fun distGridTo(entity: Entity) = distGridTo(entity.cx, entity.cy, entity.xr, entity.yr)
+
+    fun distPxTo(x: Double, y: Double) = dist(px, py, x, y)
+    fun distPxTo(entity: Entity) = distPxTo(entity.px, entity.py)
 
     /**** Lifecycle and other callbacks ****/
     protected open fun onEntityCollision(entity: Entity) {}

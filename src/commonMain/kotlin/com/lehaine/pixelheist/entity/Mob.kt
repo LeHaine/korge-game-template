@@ -46,7 +46,7 @@ class Mob(
             update { hopSmallStep() }
         }
         state(MobState.ChaseHero) {
-            reason { castRayTo(level.hero) }
+            reason { castRayTo(level.hero) && dir == dirTo(level.hero) && distGridTo(level.hero) <= 15 }
             update { autoPatrol() }
         }
         state(MobState.Patrol) {
