@@ -71,6 +71,10 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                     close()
                 }
             }
+            down(Key.R) {
+                sceneContainer.changeTo<LevelScene>(assets, world, levelIdx)
+
+            }
         }
     }
 }
