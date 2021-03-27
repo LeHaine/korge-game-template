@@ -5,6 +5,7 @@ import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
+import com.soywiz.klock.seconds
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
@@ -33,11 +34,18 @@ class Mob(
             dir
         ) && ((dir == 1 && xr >= 0.5) || (dir == -1 && xr <= 0.5))
 
+    private val nearHero get() = castRayTo(level.hero) && distGridTo(level.hero) <= 15
+
+    private var aggroTarget: Entity? = null
+
     private sealed class MobState {
         object Idle : MobState()
         object Patrol : MobState()
         object HopSmallStep : MobState()
-        object ChaseHero : MobState()
+        object Alert : MobState()
+        object ChaseTarget : MobState()
+        object LostTarget : MobState()
+        object SearchingTarget : MobState()
     }
 
     private val movementFsm = stateMachine<MobState> {
@@ -45,9 +53,33 @@ class Mob(
             reason { hasSmallStep }
             update { hopSmallStep() }
         }
-        state(MobState.ChaseHero) {
-            reason { castRayTo(level.hero) && dir == dirTo(level.hero) && distGridTo(level.hero) <= 15 }
-            update { autoPatrol() }
+        state(MobState.LostTarget) {
+            reason { aggroTarget != null && !nearHero && !cd.has(KEEP_AGGRO) }
+            begin {
+                cd(LOST_TARGET, 5.seconds)
+                aggroTarget = null
+            }
+
+        }
+        state(MobState.ChaseTarget) {
+            reason { aggroTarget != null }
+            update {
+                chaseTarget()
+                cd(KEEP_AGGRO, 3.seconds)
+            }
+        }
+        state(MobState.Alert) {
+            reason { aggroTarget == null && nearHero && dir == dirTo(level.hero) }
+            begin {
+                aggroTarget = level.hero
+                squashX = 0.6
+                dir = dirTo(level.hero)
+            }
+        }
+        state(MobState.SearchingTarget) {
+            reason { cd.has(LOST_TARGET) }
+            update { search() }
+
         }
         state(MobState.Patrol) {
             reason { !cd.has(LOCK) }
@@ -65,6 +97,10 @@ class Mob(
 
     companion object {
         private const val LOCK = "lock"
+        private const val TURN = "turn"
+        private const val SEARCH = "search"
+        private const val KEEP_AGGRO = "keepAggro"
+        private const val LOST_TARGET = "lostTarget"
     }
 
     override fun update(dt: TimeSpan) {
@@ -82,6 +118,24 @@ class Mob(
         }
     }
 
+    private fun chaseTarget() {
+        aggroTarget?.let {
+            dir = dirTo(it)
+            dx += moveSpeed * 1.5 * dir * tmod
+        }
+    }
+
+    private fun search() {
+        if (!cd.has(TURN)) {
+            cd(TURN, (500..900).random().milliseconds)
+            cd(SEARCH, (100..400).random().milliseconds)
+            dir *= -1
+        }
+
+        if (cd.has(SEARCH)) {
+            dx += moveSpeed * 2 * dir * tmod
+        }
+    }
 
     private fun hopSmallStep() {
         dy = -0.25
