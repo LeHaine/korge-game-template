@@ -41,7 +41,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             container EntityContainer@{
                 name = "EntityContainer"
 
-
                 container MobContainer@{
                     name = "MobContainer"
                     worldLevel.layerEntities.allMob.fastForEach { entityMob ->
@@ -66,7 +65,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                         }
                     }
                 }
-
 
                 container PortalContainer@{
                     name = "PortalContainer"
