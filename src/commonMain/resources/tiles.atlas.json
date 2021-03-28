@@ -81,8 +81,24 @@
 	"sourceSize": {"w":10,"h":10}
 },
 {
-	"filename": "ruby0.png",
+	"filename": "portal0.png",
 	"frame": {"x":121,"y":1,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "portal1.png",
+	"frame": {"x":131,"y":1,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "ruby0.png",
+	"frame": {"x":141,"y":1,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -93,8 +109,8 @@
 	"version": "1.0",
 	"image": "tiles.atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":130,"h":12},
+	"size": {"w":150,"h":12},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0ae750f06e28f30e173178b4ad15ec83:ab129c5e14aa9c90f51e5e6dc4f82808:5e5ef3518cc1a44e4ed4954a57ade08c$"
+	"smartupdate": "$TexturePacker:SmartUpdate:b01cc055f706a217c24fe488d474e6f5:dc0d908710f34165e6977ae343253009:5e5ef3518cc1a44e4ed4954a57ade08c$"
 }
 }

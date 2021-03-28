@@ -3,7 +3,6 @@ package com.lehaine.pixelheist.entity
 import com.lehaine.lib.cd
 import com.lehaine.lib.random
 import com.lehaine.lib.stateMachine
-import com.lehaine.pixelheist.Assets
 import com.lehaine.pixelheist.Entity
 import com.lehaine.pixelheist.GameLevel
 import com.lehaine.pixelheist.World
@@ -17,13 +16,12 @@ import com.soywiz.korge.view.addTo
 
 inline fun Container.hero(
     data: World.EntityHero,
-    assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(data, assets, level).addTo(this, callback)
+): Hero = Hero(data, level).addTo(this, callback)
 
-class Hero(data: World.EntityHero, assets: Assets, level: GameLevel) :
-    Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+class Hero(data: World.EntityHero, level: GameLevel) :
+    Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
     private val moveSpeed = 0.03
 

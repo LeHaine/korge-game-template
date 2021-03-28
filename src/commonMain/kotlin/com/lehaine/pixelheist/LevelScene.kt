@@ -3,10 +3,7 @@ package com.lehaine.pixelheist
 import GameModule
 import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
-import com.lehaine.pixelheist.entity.Hero
-import com.lehaine.pixelheist.entity.hero
-import com.lehaine.pixelheist.entity.item
-import com.lehaine.pixelheist.entity.mob
+import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
@@ -14,9 +11,10 @@ import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.camera.cameraContainer
 import com.soywiz.korge.view.container
+import com.soywiz.korio.async.launchImmediately
 
 
-class LevelScene(private val assets: Assets, private val world: World, private val levelIdx: Int = 0) : Scene() {
+class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scene() {
 
     override suspend fun Container.sceneInit() {
         val worldLevel = world.allLevels[levelIdx]
@@ -24,31 +22,64 @@ class LevelScene(private val assets: Assets, private val world: World, private v
         val gameLevel = GameLevel(worldLevel)
 
         lateinit var hero: Hero
+
+        val entities = arrayListOf<Entity>()
+        val mobs = arrayListOf<Mob>()
+        val items = arrayListOf<Item>()
+
+        fun removeEntity(entity: Entity) {
+            entities.remove(entity)
+            if (entity is Mob) {
+                mobs.remove(entity)
+            } else if (entity is Item) {
+                items.remove(entity)
+            }
+        }
         cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
             ldtkMapView(ldtkLevel)
 
             container EntityContainer@{
                 name = "EntityContainer"
 
-                val entities = arrayListOf<Entity>()
 
                 container MobContainer@{
                     name = "MobContainer"
-                    worldLevel.layerEntities.allMob.fastForEach {
-                        entities += mob(it, assets, gameLevel) { collisionFilter { entities } }
+                    worldLevel.layerEntities.allMob.fastForEach { entityMob ->
+                        entities += mob(entityMob, gameLevel) {
+                            collisionFilter { entities }
+                            onDestroy { removeEntity(it) }
+                        }.also {
+                            entities += it
+                            mobs += it
+                        }
                     }
                 }
 
                 container ItemContainer@{
                     name = "ItemContainer"
-                    worldLevel.layerEntities.allItem.fastForEach {
-                        entities += item(it, assets, gameLevel) { collisionFilter { entities } }
+                    worldLevel.layerEntities.allItem.fastForEach { entityItem ->
+                        item(entityItem, gameLevel) {
+                            onDestroy { removeEntity(it) }
+                        }.also {
+                            entities += it
+                            items += it
+                        }
+                    }
+                }
+
+
+                container PortalContainer@{
+                    name = "PortalContainer"
+                    worldLevel.layerEntities.allPortal.fastForEach { entityPortal ->
+                        entities += portal(entityPortal, gameLevel) {
+                            collisionFilter { items }
+                            onDestroy { removeEntity(it) }
+                        }
                     }
                 }
 
                 hero = hero(
                     worldLevel.layerEntities.allHero[0],
-                    assets,
                     gameLevel
                 ) {
                     collisionFilter { entities }
@@ -56,12 +87,10 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                     entities += it
                     gameLevel._hero = it
                 }
-
             }
         }.apply {
             follow(hero)
         }
-
 
         keys {
             down(Key.ESCAPE) {
@@ -72,8 +101,9 @@ class LevelScene(private val assets: Assets, private val world: World, private v
                 }
             }
             down(Key.R) {
-                sceneContainer.changeTo<LevelScene>(assets, world, levelIdx)
-
+                launchImmediately {
+                    sceneContainer.changeTo<LevelScene>(world, levelIdx)
+                }
             }
         }
     }

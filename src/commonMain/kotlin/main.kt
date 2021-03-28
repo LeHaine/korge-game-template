@@ -20,10 +20,9 @@ object GameModule : Module() {
     override val scaleMode = ScaleMode.COVER
 
     override suspend fun AsyncInjector.configure() {
-        val assets = Assets().apply { init() }
-        mapSingleton { assets }
+        Assets.init()
         mapSingleton { World().apply { loadAsync() } }
         mapInstance(0) // load first level
-        mapPrototype { LevelScene(get(), get(), get()) }
+        mapPrototype { LevelScene(get(), get()) }
     }
 }

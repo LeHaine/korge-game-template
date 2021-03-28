@@ -20,7 +20,6 @@ import kotlin.math.*
 open class Entity(
     cx: Int,
     cy: Int,
-    val assets: Assets,
     val level: GameLevel,
     anchorX: Double = 0.5,
     anchorY: Double = 1.0
@@ -29,19 +28,26 @@ open class Entity(
     var enHeight = GRID_SIZE.toDouble()
     var enWidth = enHeight
 
+    var destroyed = false
+
+    private var onDestroyedCallback: ((Entity) -> Unit)? = null
+
     /**
      * Grid location
      */
     var cx = 0
     var cy = 0
     var xr = 0.5
-    var yr = 1.0
+    var yr = 0.5
 
     var dx = 0.0
     var dy = 0.0
 
     var frictX = 0.82
     var frictY = 0.82
+
+    val assets get() = Assets
+    val tiles get() = Assets.tiles
 
     val moveAngle get() = atan2(dy, dx)
 
@@ -174,6 +180,16 @@ open class Entity(
 
     fun distPxTo(x: Double, y: Double) = dist(px, py, x, y)
     fun distPxTo(entity: Entity) = distPxTo(entity.px, entity.py)
+
+    fun destroy() {
+        destroyed = true
+        removeFromParent()
+        onDestroyedCallback?.invoke(this)
+    }
+
+    fun onDestroy(action: (Entity) -> Unit) {
+        onDestroyedCallback = action
+    }
 
     /**** Lifecycle and other callbacks ****/
     protected open fun onEntityCollision(entity: Entity) {}

@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.8.1",
-	"nextUid": 60,
+	"nextUid": 61,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -483,6 +483,31 @@
 					"textLangageMode": null
 				}
 			]
+		},
+		{
+			"identifier": "Portal",
+			"uid": 60,
+			"tags": [],
+			"width": 8,
+			"height": 8,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#461FDB",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileId": null,
+			"tileRenderMode": "FitInside",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 1,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -662,6 +687,17 @@
 									"params": ["Ruby"]
 								}]
 							}]
+						},
+						{
+							"__identifier": "Portal",
+							"__grid": [1,32],
+							"__pivot": [0.5,1],
+							"__tile": null,
+							"width": 8,
+							"height": 8,
+							"defUid": 60,
+							"px": [12,264],
+							"fieldInstances": []
 						}
 					]
 				},

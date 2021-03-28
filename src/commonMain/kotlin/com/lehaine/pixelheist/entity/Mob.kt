@@ -2,7 +2,10 @@ package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
 import com.lehaine.lib.stateMachine
-import com.lehaine.pixelheist.*
+import com.lehaine.pixelheist.Entity
+import com.lehaine.pixelheist.GameLevel
+import com.lehaine.pixelheist.LevelMark
+import com.lehaine.pixelheist.World
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -13,14 +16,13 @@ import com.soywiz.korge.view.addTo
 
 inline fun Container.mob(
     data: World.EntityMob,
-    assets: Assets,
     level: GameLevel,
     callback: @ViewDslMarker Mob.() -> Unit = {}
-): Mob = Mob(data, assets, level).addTo(this, callback)
+): Mob = Mob(data, level).addTo(this, callback)
 
 class Mob(
-    data: World.EntityMob, assets: Assets, level: GameLevel,
-) : Entity(data.cx, data.cy, assets, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+    data: World.EntityMob, level: GameLevel,
+) : Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
 
     private val moveSpeed = 0.015
 

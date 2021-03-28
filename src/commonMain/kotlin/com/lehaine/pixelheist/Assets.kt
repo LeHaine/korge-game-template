@@ -9,7 +9,7 @@ import com.soywiz.korim.font.Font
 import com.soywiz.korim.font.TtfFont
 import com.soywiz.korio.file.std.resourcesVfs
 
-class Assets {
+object Assets {
 
     lateinit var tiles: Atlas
 
@@ -21,6 +21,8 @@ class Assets {
     lateinit var mobRun: SpriteAnimation
     lateinit var mobIdle: SpriteAnimation
 
+    lateinit var portalIdle: SpriteAnimation
+
     suspend fun init() {
         tiles = resourcesVfs["tiles.atlas.json"].readAtlas()
 
@@ -29,6 +31,8 @@ class Assets {
 
         mobRun = tiles.getSpriteAnimation("mobRun", 150.milliseconds)
         mobIdle = tiles.getSpriteAnimation("mobIdle", 450.milliseconds)
+
+        portalIdle = tiles.getSpriteAnimation("portal", 200.milliseconds)
 
         pixelFont = TtfFont(resourcesVfs["m5x7.ttf"].readAll())
     }
