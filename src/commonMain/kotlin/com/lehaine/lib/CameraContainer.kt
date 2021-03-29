@@ -129,7 +129,6 @@ class CameraContainer(
     private var transitionTime = 1.0.seconds
     private var elapsedTime = 0.0.milliseconds
 
-    //var easing = Easing.EASE_OUT
     private var easing = Easing.LINEAR
 
     private var following: View? = null
@@ -192,6 +191,7 @@ class CameraContainer(
     }
 
     private val tempPoint = Point()
+    private var shakeFrames = 0
 
     init {
         block(this)
@@ -236,8 +236,9 @@ class CameraContainer(
             }
 
             if (cd.has(SHAKE)) {
-                cameraX += cos(dt.milliseconds * 1.1) * 2.5 * shakePower * cd.ratio(SHAKE)
-                cameraY += sin(0.3 + dt.milliseconds * 1.7) * 2.5 * shakePower * cd.ratio(SHAKE)
+                cameraX += cos(shakeFrames * 1.1) * 2.5 * shakePower * cd.ratio(SHAKE)
+                cameraY += sin(0.3 + shakeFrames * 1.7) * 2.5 * shakePower * cd.ratio(SHAKE)
+                shakeFrames++
             }
 
             sourceCamera.x = cameraX
