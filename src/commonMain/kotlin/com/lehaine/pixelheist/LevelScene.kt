@@ -4,10 +4,8 @@ import GameModule
 import com.lehaine.lib.cameraContainer
 import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
-import com.lehaine.lib.random
 import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
-import com.soywiz.klock.milliseconds
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -15,8 +13,6 @@ import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.container
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korma.geom.Rectangle
-import com.soywiz.korma.geom.radians
-import kotlin.math.PI
 
 
 class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scene() {
@@ -116,24 +112,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 launchImmediately {
                     sceneContainer.changeTo<LevelScene>(world, levelIdx)
                 }
-            }
-
-            down(Key.K) {
-                cam.shake(250.milliseconds)
-            }
-
-            down(Key.Q) {
-                cam.cameraZoom += 0.1
-            }
-            down(Key.E) {
-                cam.cameraZoom -= 0.1
-
-            }
-            down(Key.Z) {
-                cam.bump((-10..10).random(), (-10..10).random())
-            }
-            down(Key.X) {
-                cam.bump((-PI..PI).random().radians, (1..10).random())
             }
         }
     }
