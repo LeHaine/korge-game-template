@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist
+package com.lehaine.lib
 
 import com.lehaine.lib.dist
 import com.soywiz.klock.TimeSpan
