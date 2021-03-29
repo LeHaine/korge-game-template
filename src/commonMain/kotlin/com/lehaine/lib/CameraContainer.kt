@@ -1,6 +1,5 @@
 package com.lehaine.lib
 
-import com.lehaine.lib.dist
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -13,9 +12,7 @@ import com.soywiz.korma.geom.*
 import com.soywiz.korma.interpolation.Easing
 import com.soywiz.korma.interpolation.MutableInterpolable
 import com.soywiz.korma.interpolation.interpolate
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 inline fun Container.cameraContainer(
     width: Double,
@@ -34,7 +31,7 @@ class CameraContainer(
     width: Double = 100.0,
     height: Double = 100.0,
     var deadZone: Int = 5,
-    viewBounds: Rectangle = Rectangle(),
+    val viewBounds: Rectangle = Rectangle(),
     clampToViewBounds: Boolean = false,
     clip: Boolean = true,
     contentBuilder: (camera: CameraContainer) -> Container = { FixedSizeContainer(it.width, it.height) },
@@ -42,15 +39,6 @@ class CameraContainer(
 ) : FixedSizeContainer(width, height, clip), View.Reference {
 
     private val contentContainer = Container()
-
-    class ContentContainer(val cameraContainer: CameraContainer) :
-        FixedSizeContainer(cameraContainer.width, cameraContainer.height),
-        Reference {
-        override fun getLocalBoundsInternal(out: Rectangle) {
-            //out.setTo(0, 0, cameraContainer.width, cameraContainer.height)
-            out.setTo(0.0, 0.0, width, height)
-        }
-    }
 
     val content: Container by lazy { contentBuilder(this) }
 
@@ -106,6 +94,10 @@ class CameraContainer(
         }
         get() = currentCamera.anchorY
 
+    val cameraWidth get() = width / cameraZoom
+    val cameraHeight get() = height / cameraZoom
+
+
     private fun manualSet() {
         elapsedTime = transitionTime
         sync()
@@ -142,6 +134,8 @@ class CameraContainer(
 
     private var following: View? = null
 
+    private var shakePower = 1.0
+
     fun follow(view: View?, setImmediately: Boolean = false) {
         following = view
         if (setImmediately) {
@@ -151,6 +145,11 @@ class CameraContainer(
             sourceCamera.x = cameraX
             sourceCamera.y = cameraY
         }
+    }
+
+    fun shake(time: TimeSpan, power: Double = 1.0) {
+        cd(SHAKE, time)
+        shakePower = power
     }
 
     fun unfollow() {
@@ -187,8 +186,8 @@ class CameraContainer(
     fun getFollowingXY(out: Point = Point()): Point {
         val followGlobalX = following!!.globalX
         val followGlobalY = following!!.globalY
-        val localToContentX = content!!.globalToLocalX(followGlobalX, followGlobalY)
-        val localToContentY = content!!.globalToLocalY(followGlobalX, followGlobalY)
+        val localToContentX = content.globalToLocalX(followGlobalX, followGlobalY)
+        val localToContentY = content.globalToLocalY(followGlobalX, followGlobalY)
         return out.setTo(localToContentX, localToContentY)
     }
 
@@ -198,39 +197,21 @@ class CameraContainer(
         block(this)
         contentContainer.addTo(this)
         content.addTo(contentContainer)
-        addUpdater {
+        addUpdater { dt ->
             when {
                 following != null -> {
                     val point = getFollowingXY(tempPoint)
                     val dist = dist(currentCamera.x, currentCamera.y, point.x, point.y)
                     if (dist >= deadZone) {
                         // TODO fix this (dist-deadZone) issue causing infinity results
-                        val speed = 0.06// * (dist - deadZone)
+                        val speed = 0.03 * cameraZoom// * (dist - deadZone)
                         cameraX = speed.interpolate(currentCamera.x, point.x)
                         cameraY = speed.interpolate(currentCamera.y, point.y)
                     }
-
-                    if (clampToViewBounds) {
-                        cameraX = if (viewBounds.width < width) {
-                            viewBounds.width * 0.5
-                        } else {
-                            cameraX.clamp(width * 0.5, viewBounds.width - width * 0.5)
-                        }
-
-                        cameraY = if (viewBounds.height < height) {
-                            viewBounds.height * 0.5
-                        } else {
-                            cameraY.clamp(height * 0.5, viewBounds.height - height * 0.5)
-                        }
-                    }
-
-                    sourceCamera.x = cameraX
-                    sourceCamera.y = cameraY
-
                     sync()
                 }
                 elapsedTime < transitionTime -> {
-                    elapsedTime += it
+                    elapsedTime += dt
                     val ratio = (elapsedTime / transitionTime).coerceIn(0.0, 1.0)
                     currentCamera.setToInterpolated(easing(ratio), sourceCamera, targetCamera)
                     sync()
@@ -239,6 +220,28 @@ class CameraContainer(
                     }
                 }
             }
+
+            if (clampToViewBounds) {
+                cameraX = if (viewBounds.width < cameraWidth) {
+                    viewBounds.width * 0.5
+                } else {
+                    cameraX.clamp(cameraWidth * 0.5, viewBounds.width - cameraWidth * 0.5)
+                }
+
+                cameraY = if (viewBounds.height < cameraHeight) {
+                    viewBounds.height * 0.5
+                } else {
+                    cameraY.clamp(cameraHeight * 0.5, viewBounds.height - cameraHeight * 0.5)
+                }
+            }
+
+            if (cd.has(SHAKE)) {
+                cameraX += cos(dt.milliseconds * 1.1) * 2.5 * shakePower * cd.ratio(SHAKE)
+                cameraY += sin(0.3 + dt.milliseconds * 1.7) * 2.5 * shakePower * cd.ratio(SHAKE)
+            }
+
+            sourceCamera.x = cameraX
+            sourceCamera.y = cameraY
         }
     }
 
@@ -279,6 +282,10 @@ class CameraContainer(
     fun setAnchorRatioKeepingPos(ratioX: Double, ratioY: Double) {
         currentCamera.setAnchorRatioKeepingPos(ratioX, ratioY, width, height)
         sync()
+    }
+
+    companion object {
+        private const val SHAKE = "shake"
     }
 }
 

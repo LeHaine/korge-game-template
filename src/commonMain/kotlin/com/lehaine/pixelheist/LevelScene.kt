@@ -6,6 +6,7 @@ import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
+import com.soywiz.klock.milliseconds
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -36,7 +37,8 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 items.remove(entity)
             }
         }
-        cameraContainer(
+
+        val cam = cameraContainer(
             GameModule.size.width.toDouble(), GameModule.size.height.toDouble(),
             deadZone = 10,
             viewBounds = Rectangle(0, 0, worldLevel.pxWidth, worldLevel.pxHeight),
@@ -109,6 +111,18 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 launchImmediately {
                     sceneContainer.changeTo<LevelScene>(world, levelIdx)
                 }
+            }
+
+            down(Key.K) {
+                cam.shake(250.milliseconds)
+            }
+
+            down(Key.Z) {
+                cam.cameraZoom += 0.5
+            }
+            down(Key.X) {
+                cam.cameraZoom -= 0.5
+
             }
         }
     }
