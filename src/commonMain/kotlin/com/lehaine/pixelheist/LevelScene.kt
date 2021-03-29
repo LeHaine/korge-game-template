@@ -9,9 +9,9 @@ import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.camera.cameraContainer
 import com.soywiz.korge.view.container
 import com.soywiz.korio.async.launchImmediately
+import com.soywiz.korma.geom.Rectangle
 
 
 class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scene() {
@@ -35,7 +35,13 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 items.remove(entity)
             }
         }
-        cameraContainer(GameModule.size.width.toDouble(), GameModule.size.height.toDouble(), clip = true) {
+        cameraContainer(
+            GameModule.size.width.toDouble(), GameModule.size.height.toDouble(),
+            deadZone = 10,
+            viewBounds = Rectangle(0, 0, worldLevel.pxWidth, worldLevel.pxHeight),
+            clampToViewBounds = true,
+            clip = true
+        ) {
             ldtkMapView(ldtkLevel)
 
             container EntityContainer@{
@@ -87,7 +93,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 }
             }
         }.apply {
-            follow(hero)
+            follow(hero, true)
         }
 
         keys {
