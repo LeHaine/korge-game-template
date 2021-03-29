@@ -1,11 +1,14 @@
 package com.lehaine.pixelheist
 
+import com.lehaine.lib.CameraContainer
 import com.lehaine.pixelheist.entity.Hero
 import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) {
     var _hero: Hero? = null
+    var _camera:CameraContainer? = null
     val hero get() = _hero!!
+    val camera get() = _camera!!
     val entities: ArrayList<Entity> = arrayListOf()
 
     val width get() = level.layerCollisions.cWidth

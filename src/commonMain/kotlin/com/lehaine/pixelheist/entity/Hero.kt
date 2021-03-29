@@ -49,7 +49,10 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private val movementFsm = stateMachine<HeroMovementState> {
         state(HeroMovementState.JumpOnMob) {
             reason { lastMobJumpedOn != null }
-            begin { lastMobJumpedOn?.stretchX = 2.0 }
+            begin {
+                lastMobJumpedOn?.stretchX = 2.0
+                level.camera.bump(y = 0.7)
+            }
             update {
                 dy -= 0.7
                 lastMobJumpedOn = null

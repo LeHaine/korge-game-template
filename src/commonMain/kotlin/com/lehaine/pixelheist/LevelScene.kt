@@ -100,6 +100,8 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             }
         }.apply {
             follow(hero, true)
+        }.also {
+            gameLevel._camera = it
         }
 
         keys {
