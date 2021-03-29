@@ -97,6 +97,8 @@ class CameraContainer(
     val cameraWidth get() = width / cameraZoom
     val cameraHeight get() = height / cameraZoom
 
+    private var bumpX = 0.0
+    private var bumpY = 0.0
 
     private fun manualSet() {
         elapsedTime = transitionTime
@@ -149,6 +151,18 @@ class CameraContainer(
     fun shake(time: TimeSpan, power: Double = 1.0) {
         cd(SHAKE, time)
         shakePower = power
+    }
+
+    fun bump(x: Double = 0.0, y: Double = 0.0) {
+        bumpX += x
+        bumpY += y
+    }
+
+    fun bump(x: Int = 0, y: Int = 0) = bump(x.toDouble(), y.toDouble())
+
+    fun bump(angle: Angle, distance: Int) {
+        bumpX += cos(angle.radians) * distance
+        bumpY += sin(angle.radians) * distance
     }
 
     fun unfollow() {
@@ -234,6 +248,13 @@ class CameraContainer(
                     cameraY.clamp(cameraHeight * 0.5, viewBounds.height - cameraHeight * 0.5)
                 }
             }
+
+
+            bumpX *= 0.75
+            bumpY *= 0.75
+
+            cameraX += bumpX
+            cameraY += bumpY
 
             if (cd.has(SHAKE)) {
                 cameraX += cos(shakeFrames * 1.1) * 2.5 * shakePower * cd.ratio(SHAKE)
