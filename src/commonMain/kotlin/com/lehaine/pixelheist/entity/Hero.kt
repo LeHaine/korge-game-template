@@ -13,6 +13,9 @@ import com.soywiz.korev.Key
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
+import com.soywiz.korma.geom.degrees
+import com.soywiz.korma.geom.radians
+import kotlin.math.abs
 
 inline fun Container.hero(
     data: World.EntityHero,
@@ -33,6 +36,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
     private var heldItem: Item? = null
+    private var lastMobJumpedOn: Entity? = null
 
     private sealed class HeroMovementState {
         object Idle : HeroMovementState()
@@ -40,9 +44,15 @@ class Hero(data: World.EntityHero, level: GameLevel) :
         object Jump : HeroMovementState()
         object JumpExtra : HeroMovementState()
         object Fall : HeroMovementState()
+        object JumpOnMob : HeroMovementState()
     }
 
     private val movementFsm = stateMachine<HeroMovementState> {
+        state(HeroMovementState.JumpOnMob) {
+            reason { lastMobJumpedOn != null }
+            begin { lastMobJumpedOn = null }
+            update { dy -= 0.7 }
+        }
         state(HeroMovementState.Jump) {
             reason { jumping }
             update {
@@ -114,6 +124,16 @@ class Hero(data: World.EntityHero, level: GameLevel) :
         private const val ITEM_THREW = "itemThrew"
     }
 
+
+    override fun onEntityCollision(entity: Entity) {
+        super.onEntityCollision(entity)
+        if (entity is Mob && lastMobJumpedOn == null) {
+            val angle = angleTo(entity).radians
+            if (angle.degrees in (0.0..180.0) || abs(angle.degrees) in (0.0..180.0) && dy > 0) {
+                lastMobJumpedOn = entity
+            }
+        }
+    }
 
     override fun onEntityColliding(entity: Entity) {
         super.onEntityColliding(entity)

@@ -181,6 +181,9 @@ open class Entity(
     fun distPxTo(x: Double, y: Double) = dist(px, py, x, y)
     fun distPxTo(entity: Entity) = distPxTo(entity.px, entity.py)
 
+    fun angleTo(x: Double, y: Double) = atan2(y - py, x - px)
+    fun angleTo(entity: Entity) = angleTo(entity.centerX, entity.centerY)
+
     fun destroy() {
         destroyed = true
         removeFromParent()
