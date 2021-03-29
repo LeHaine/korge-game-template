@@ -67,20 +67,20 @@ open class Entity(
             left = px - anchorX * enWidth
         }
 
-    private var _squashX = 1.0
-    private var _squashY = 1.0
+    private var _stretchX = 1.0
+    private var _stretchY = 1.0
 
-    var squashX: Double
-        get() = _squashX
+    var stretchX: Double
+        get() = _stretchX
         set(value) {
-            _squashX = value
-            _squashY = 2 - value
+            _stretchX = value
+            _stretchY = 2 - value
         }
-    var squashY: Double
-        get() = _squashY
+    var stretchY: Double
+        get() = _stretchY
         set(value) {
-            _squashX = 2 - value
-            _squashY = value
+            _stretchX = 2 - value
+            _stretchY = value
         }
 
     var spriteScaleX = 1.0
@@ -211,11 +211,11 @@ open class Entity(
     protected open fun postUpdate(dt: TimeSpan) {
         x = (cx + xr) * GRID_SIZE
         y = (cy + yr) * GRID_SIZE
-        sprite.scaleX = dir.toDouble() * spriteScaleX * squashX
-        sprite.scaleY = spriteScaleY * squashY
+        sprite.scaleX = dir.toDouble() * spriteScaleX * stretchX
+        sprite.scaleY = spriteScaleY * stretchY
 
-        _squashX += (1 - _squashX) * 0.2
-        _squashY += (1 - _squashY) * 0.2
+        _stretchX += (1 - _stretchX) * 0.2
+        _stretchY += (1 - _stretchY) * 0.2
     }
 
     private fun performXSteps() {
@@ -321,7 +321,7 @@ open class Entity(
             uiEditableValue(listOf(this@Entity::cx, this@Entity::cy), name = "(cx, cy)", min = 0, max = 10000)
             uiEditableValue(listOf(this@Entity::xr, this@Entity::yr), name = "(xr, yr)", min = 0.0, max = 1.0)
             uiEditableValue(listOf(this@Entity::dx, this@Entity::dy), name = "Velocity (dx, dy)")
-            uiEditableValue(listOf(this@Entity::_squashX, this@Entity::_squashY), name = "Squash (x, y)")
+            uiEditableValue(listOf(this@Entity::_stretchX, this@Entity::_stretchY), name = "Squash (x, y)")
             uiEditableValue(this@Entity::hasGravity, name = "Gravity")
             uiEditableValue(this@Entity::gravityMul, name = "Gravity Multiplier")
             uiEditableValue(listOf(this@Entity::enWidth, this@Entity::enHeight), name = "Size (w, h)")

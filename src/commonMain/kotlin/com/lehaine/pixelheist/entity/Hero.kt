@@ -15,7 +15,6 @@ import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
 import com.soywiz.korma.geom.degrees
 import com.soywiz.korma.geom.radians
-import kotlin.math.abs
 
 inline fun Container.hero(
     data: World.EntityHero,
@@ -50,8 +49,11 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private val movementFsm = stateMachine<HeroMovementState> {
         state(HeroMovementState.JumpOnMob) {
             reason { lastMobJumpedOn != null }
-            begin { lastMobJumpedOn = null }
-            update { dy -= 0.7 }
+            begin { lastMobJumpedOn?.stretchX = 2.0 }
+            update {
+                dy -= 0.7
+                lastMobJumpedOn = null
+            }
         }
         state(HeroMovementState.Jump) {
             reason { jumping }
@@ -127,9 +129,9 @@ class Hero(data: World.EntityHero, level: GameLevel) :
 
     override fun onEntityCollision(entity: Entity) {
         super.onEntityCollision(entity)
-        if (entity is Mob && lastMobJumpedOn == null) {
+        if (lastMobJumpedOn == null && entity is Mob) {
             val angle = angleTo(entity).radians
-            if (angle.degrees in (0.0..180.0) || abs(angle.degrees) in (0.0..180.0) && dy > 0) {
+            if (angle.degrees in (0.0..180.0) && dy > 0) {
                 lastMobJumpedOn = entity
             }
         }

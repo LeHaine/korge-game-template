@@ -74,7 +74,7 @@ class Mob(
             reason { aggroTarget == null && nearHero && dir == dirTo(level.hero) }
             begin {
                 aggroTarget = level.hero
-                squashX = 0.6
+                stretchX = 0.6
                 dir = dirTo(level.hero)
             }
         }
@@ -115,7 +115,7 @@ class Mob(
 
         if ((hasPlatformLeft || hasPlatformRight) && !hasSmallStep) {
             cd(LOCK, 500.milliseconds)
-            squashX = 0.85
+            stretchX = 0.85
             dir *= -1
         }
     }
