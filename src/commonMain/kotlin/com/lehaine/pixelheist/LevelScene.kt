@@ -8,6 +8,7 @@ import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
+import com.soywiz.korge.input.mouse
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.*
 import com.soywiz.korge.view.fast.*
@@ -110,7 +111,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         addUpdater {
             if (views.input.mouseButtons != 0 && !added) {
                 added = true
-                fx.dots(hero.x, hero.y)
+                fx.bloodSplatter(hero.x , hero.y)
             } else if (views.input.mouseButtons == 0) {
                 added = false
             }

@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 fun ClosedFloatingPointRange<Double>.random() = Random.nextDouble(start, endInclusive)
 fun ClosedFloatingPointRange<Float>.random() = Random.nextDouble(start.toDouble(), endInclusive.toDouble()).toFloat()
-fun IntRange.random(): Double {
+fun IntRange.randomD(): Double {
     return random(Random).toDouble()
 }
 

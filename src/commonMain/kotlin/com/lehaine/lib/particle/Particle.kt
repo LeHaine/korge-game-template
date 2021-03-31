@@ -62,6 +62,11 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
 
     var timeStamp: Double = 0.0
 
+    var data0 = 0
+    var data1 = 0
+    var data2 = 0
+    var data3 = 0
+
     fun moveAwayFrom(x: Double, y: Double, speed: Double) {
         val angle = atan2(y - this.y, x - this.x)
         xDelta = -cos(angle) * speed
