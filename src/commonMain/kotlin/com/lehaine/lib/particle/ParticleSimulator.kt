@@ -139,12 +139,11 @@ class ParticleSimulator(maxParticles: Int) {
             rotationDelta *= rotationFriction.fastPow(tmod)
             scaleX += (scaleDelta + scaleDeltaX) * tmod
             scaleY += (scaleDelta + scaleDeltaY) * tmod
-            // TODO fix
-//            val scaleMulTmod = scaleMultiplier.fastPow(tmod)
-//            scaleX *= scaleMulTmod
-//            scaleX *= scaleXMultiplier.fastPow(tmod)
-//            scaleY *= scaleMulTmod
-//            scaleY *= scaleYMultiplier.fastPow(tmod)
+            val scaleMulTmod = scaleMultiplier.fastPow(tmod)
+            scaleX *= scaleMulTmod
+            scaleX *= scaleXMultiplier.fastPow(tmod)
+            scaleY *= scaleMulTmod
+            scaleY *= scaleYMultiplier.fastPow(tmod)
             val scaleFrictPow = scaleFriction.fastPow(tmod)
             scaleDelta *= scaleFrictPow
             scaleDeltaX *= scaleFrictPow
