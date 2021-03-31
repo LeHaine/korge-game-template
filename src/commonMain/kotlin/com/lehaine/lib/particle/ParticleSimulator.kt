@@ -50,6 +50,7 @@ class ParticleSimulator(maxParticles: Int) {
             rotationRadiansf = 0f
             color = Colors.WHITE
             visible = true
+            alpha = 1f
 
             xDelta = 0.0
             yDelta = 0.0
@@ -57,14 +58,14 @@ class ParticleSimulator(maxParticles: Int) {
             scaleDelta = 0.0
             scaleDeltaX = 0.0
             scaleDeltaY = 0.0
-            scaleFriction = 0.0
-            scaleMultiplier = 0.0
-            scaleXMultiplier = 0.0
-            scaleYMultiplier = 0.0
+            scaleFriction = 1.0
+            scaleMultiplier = 1.0
+            scaleXMultiplier = 1.0
+            scaleYMultiplier = 1.0
             rotationDelta = 0.0
-            rotationFriction = 0.0
-            frictionX = 0.0
-            frictionY = 0.0
+            rotationFriction = 1.0
+            frictionX = 1.0
+            frictionY = 1.0
             gravityX = 0.0
             gravityY = 0.0
             fadeOutSpeed = 0.1
@@ -78,7 +79,6 @@ class ParticleSimulator(maxParticles: Int) {
             colorGdelta = 0.0
             colorBdelta = 0.0
             colorAdelta = 0.0
-            alpha = 1f
 
             onStart = null
             onUpdate = null

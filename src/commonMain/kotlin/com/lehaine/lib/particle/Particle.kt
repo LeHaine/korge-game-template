@@ -1,6 +1,7 @@
 package com.lehaine.lib.particle
 
 import com.soywiz.klock.TimeSpan
+import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
 import kotlin.math.atan2
@@ -16,10 +17,10 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
     var scaleDelta: Double = 0.0
     var scaleDeltaX: Double = 0.0
     var scaleDeltaY: Double = 0.0
-    var scaleFriction: Double = 0.0
-    var scaleMultiplier: Double = 0.0
-    var scaleXMultiplier: Double = 0.0
-    var scaleYMultiplier: Double = 0.0
+    var scaleFriction: Double = 1.0
+    var scaleMultiplier: Double = 1.0
+    var scaleXMultiplier: Double = 1.0
+    var scaleYMultiplier: Double = 1.0
     var rotationDelta: Double = 0.0
     var rotationFriction: Double = 1.0
     var friction
@@ -34,7 +35,7 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
     var gravityX: Double = 0.0
     var gravityY: Double = 0.0
     var fadeOutSpeed: Double = 0.1
-    var life: TimeSpan = TimeSpan.NIL
+    var life: TimeSpan = 1.seconds
         set(value) {
             field = value
             remainingLife = value
