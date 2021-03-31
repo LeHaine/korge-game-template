@@ -135,8 +135,11 @@ class ParticleSimulator(maxParticles: Int) {
                 yDelta *= frictionY.fastPow(tmod)
             }
 
+            // rotation
             rotation += rotationDelta * tmod
             rotationDelta *= rotationFriction.fastPow(tmod)
+
+            // scale
             scaleX += (scaleDelta + scaleDeltaX) * tmod
             scaleY += (scaleDelta + scaleDeltaY) * tmod
             val scaleMulTmod = scaleMultiplier.fastPow(tmod)
@@ -149,12 +152,14 @@ class ParticleSimulator(maxParticles: Int) {
             scaleDeltaX *= scaleFrictPow
             scaleDeltaY *= scaleFrictPow
 
+            // color
             colorR += particle.colorRdelta * tmod
             colorG += particle.colorGdelta * tmod
             colorB += particle.colorBdelta * tmod
             colorA += particle.colorAdelta * tmod
             alpha -= alphaDelta.toFloat()
 
+            // life
             remainingLife -= dt
             if (remainingLife <= 0.milliseconds) {
                 alpha -= (fadeOutSpeed * tmod).toFloat()
