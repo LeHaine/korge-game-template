@@ -25,7 +25,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     fun dots(x: Double, y: Double) {
         for (i in 0..80) {
             val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
-          //  p.moveAwayFrom(x, y, (1..3).random())
+            p.moveAwayFrom(x, y, (1..3).random())
             p.alpha = (0.4f..1f).random()
             p.friction = (0.8..0.9).random()
             p.gravityY = (0.0..0.02).random()
@@ -34,16 +34,6 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             if (i == 0) {
                 p.onStart = {
                     println("particle started!")
-
-                }
-
-                p.onUpdate = {
-                    println(it)
-                }
-
-                p.onKill = {
-                    println("Its dead!!!!!!!!!")
-
                 }
             }
         }

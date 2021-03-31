@@ -111,6 +111,9 @@ class ParticleSimulator(maxParticles: Int) {
     private fun advance(particle: Particle, dt: TimeSpan) {
         if (particle.killed) return
 
+        particle.onStart?.invoke()
+        particle.onStart = null
+
         val tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
         with(particle) {
             // gravity

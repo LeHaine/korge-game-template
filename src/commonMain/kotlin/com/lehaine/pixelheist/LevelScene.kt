@@ -8,6 +8,7 @@ import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
+import com.soywiz.korge.input.mouse
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.addUpdater
@@ -24,7 +25,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         val worldLevel = world.allLevels[levelIdx]
         val ldtkLevel = worldLevel.toLDtkLevel()
         val gameLevel = GameLevel(worldLevel)
-
 
         lateinit var hero: Hero
         lateinit var fx: Fx
@@ -99,13 +99,16 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                     gameLevel._hero = it
                 }
             }
+
+
+            val particleContainer = fastSpriteContainer(useRotation = true)
+            fx = Fx(gameLevel, particleContainer).also { gameLevel._fx = it }
         }.apply {
             follow(hero, true)
         }.also {
             gameLevel._camera = it
         }
-        val particleContainer = fastSpriteContainer(useRotation = true)
-        fx = Fx(gameLevel, particleContainer).also { gameLevel._fx = it }
+
 
         val mouse = text("")
         var added = false
@@ -113,6 +116,8 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             if (views.input.mouseButtons != 0 && !added) {
                 added = true
                 fx.dots(hero.x, hero.y)
+            } else if(views.input.mouseButtons == 0) {
+                added = false
             }
 
             mouse.text = "${views.input.mouse.x}, ${views.input.mouse.y}"
@@ -132,6 +137,13 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 launchImmediately {
                     sceneContainer.changeTo<LevelScene>(world, levelIdx)
                 }
+            }
+
+            down(Key.PAGE_UP) {
+                cam.cameraZoom += 0.1
+            }
+            down(Key.PAGE_DOWN) {
+                cam.cameraZoom -= 0.1
             }
         }
     }
