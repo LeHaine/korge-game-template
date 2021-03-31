@@ -6,9 +6,13 @@ import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) {
     var _hero: Hero? = null
-    var _camera:CameraContainer? = null
+    var _camera: CameraContainer? = null
+    var _fx: Fx? = null
+
     val hero get() = _hero!!
     val camera get() = _camera!!
+    val fx get() = _fx!!
+
     val entities: ArrayList<Entity> = arrayListOf()
 
     val width get() = level.layerCollisions.cWidth

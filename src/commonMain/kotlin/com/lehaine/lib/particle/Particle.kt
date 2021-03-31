@@ -1,8 +1,11 @@
 package com.lehaine.lib.particle
 
 import com.soywiz.klock.TimeSpan
-import com.soywiz.korge.view.fast.FastSprite
+import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Particle(tex: BmpSlice) : FastSprite(tex) {
     var index: Int = 0
@@ -19,6 +22,13 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
     var scaleYMultiplier: Double = 0.0
     var rotationDelta: Double = 0.0
     var rotationFriction: Double = 1.0
+    var friction
+        get() = (frictionX + frictionY) * 0.5
+        set(value) {
+            frictionX = value
+            frictionY = value
+        }
+
     var frictionX: Double = 1.0
     var frictionY: Double = 1.0
     var gravityX: Double = 0.0
@@ -50,4 +60,14 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
     var colorAdelta: Double = 0.0
 
     var timeStamp: Double = 0.0
+
+    fun moveAwayFrom(x: Double, y: Double, speed: Double) {
+        val angle = atan2(y - this.y, x - this.x)
+        xDelta = -cos(angle) * speed
+        yDelta = -sin(angle) * speed
+    }
+
+    override fun toString(): String {
+        return "Particle(index=$index, x:${x}, y:${y}, xDelta=$xDelta, yDelta=$yDelta, alphaDelta=$alphaDelta, scaleX=${scaleX}, scaleY=${scaleY}, scaleDelta=$scaleDelta, scaleDeltaX=$scaleDeltaX, scaleDeltaY=$scaleDeltaY, scaleFriction=$scaleFriction, scaleMultiplier=$scaleMultiplier, scaleXMultiplier=$scaleXMultiplier, scaleYMultiplier=$scaleYMultiplier, rotationDelta=$rotationDelta, rotationFriction=$rotationFriction, frictionX=$frictionX, frictionY=$frictionY, gravityX=$gravityX, gravityY=$gravityY, fadeOutSpeed=$fadeOutSpeed, life=$life, remainingLife=$remainingLife, killed=$killed, onStart=$onStart, onUpdate=$onUpdate, onKill=$onKill, colorR=$colorR, colorG=$colorG, colorB=$colorB, colorA=$colorA, colorRdelta=$colorRdelta, colorGdelta=$colorGdelta, colorBdelta=$colorBdelta, colorAdelta=$colorAdelta, alpha=$alpha, timeStamp=$timeStamp)"
+    }
 }

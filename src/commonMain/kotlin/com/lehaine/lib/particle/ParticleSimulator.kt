@@ -11,7 +11,7 @@ import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.Colors
 import kotlin.math.pow
 
-class ParticleSimulator(val maxParticles: Int) {
+class ParticleSimulator(maxParticles: Int) {
 
     val particles = List(maxParticles) { init(Particle(Bitmaps.white).apply { index = it }) }
 
@@ -19,8 +19,11 @@ class ParticleSimulator(val maxParticles: Int) {
 
 
     fun alloc(fastSpriteContainer: FastSpriteContainer, bmpSlice: BmpSlice, x: Double, y: Double): Particle {
-        return if (numAlloc < particles.size) {
-            val particle = reset(particles[numAlloc], fastSpriteContainer, bmpSlice)
+        return if (numAlloc < particles.size - 1) {
+            val particle = reset(particles[numAlloc], fastSpriteContainer, bmpSlice).also {
+                it.x = x
+                it.y = y
+            }
             numAlloc++
             particle
         } else {
@@ -32,7 +35,11 @@ class ParticleSimulator(val maxParticles: Int) {
                 }
             }
             best?.onKill?.invoke()
-            best?.let { reset(it, fastSpriteContainer, bmpSlice) }
+            best?.let {
+                reset(it, fastSpriteContainer, bmpSlice)
+                it.x = x
+                it.y = y
+            }
             best!!
         }
     }
@@ -60,7 +67,7 @@ class ParticleSimulator(val maxParticles: Int) {
             frictionY = 0.0
             gravityX = 0.0
             gravityY = 0.0
-            fadeOutSpeed = 0.0
+            fadeOutSpeed = 0.1
             life = 1.seconds
 
             colorR = 1.0
@@ -71,6 +78,7 @@ class ParticleSimulator(val maxParticles: Int) {
             colorGdelta = 0.0
             colorBdelta = 0.0
             colorAdelta = 0.0
+            alpha = 1f
 
             onStart = null
             onUpdate = null
@@ -94,7 +102,7 @@ class ParticleSimulator(val maxParticles: Int) {
     }
 
     private fun kill(particle: Particle) {
-        particle.colorA = 0.0
+        particle.alpha = 0f
         particle.life = TimeSpan.ZERO
         particle.killed = true
         particle.visible = false
@@ -127,11 +135,12 @@ class ParticleSimulator(val maxParticles: Int) {
             rotationDelta *= rotationFriction.fastPow(tmod)
             scaleX += (scaleDelta + scaleDeltaX) * tmod
             scaleY += (scaleDelta + scaleDeltaY) * tmod
-            val scaleMulTmod = scaleMultiplier.fastPow(tmod)
-            scaleX *= scaleMulTmod
-            scaleX *= scaleXMultiplier.fastPow(tmod)
-            scaleY *= scaleMulTmod
-            scaleY *= scaleYMultiplier.fastPow(tmod)
+            // TODO fix
+//            val scaleMulTmod = scaleMultiplier.fastPow(tmod)
+//            scaleX *= scaleMulTmod
+//            scaleX *= scaleXMultiplier.fastPow(tmod)
+//            scaleY *= scaleMulTmod
+//            scaleY *= scaleYMultiplier.fastPow(tmod)
             val scaleFrictPow = scaleFriction.fastPow(tmod)
             scaleDelta *= scaleFrictPow
             scaleDeltaX *= scaleFrictPow
@@ -140,14 +149,14 @@ class ParticleSimulator(val maxParticles: Int) {
             colorR += particle.colorRdelta * tmod
             colorG += particle.colorGdelta * tmod
             colorB += particle.colorBdelta * tmod
-            // TODO    colorA += particle.colorAdelta * tmod
+            colorA += particle.colorAdelta * tmod
 
             remainingLife -= dt
-            if (remainingLife.milliseconds <= 0) {
-                colorA -= fadeOutSpeed * tmod
+            if (remainingLife <= 0.milliseconds) {
+                alpha -= (fadeOutSpeed * tmod).toFloat()
             }
 
-            if (remainingLife.milliseconds <= 0 && colorA <= 0) {
+            if (remainingLife <= 0.milliseconds && alpha <= 0) {
                 onKill?.invoke()
                 kill(particle)
             } else {

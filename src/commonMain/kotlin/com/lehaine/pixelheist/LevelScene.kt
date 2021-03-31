@@ -10,7 +10,10 @@ import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Container
+import com.soywiz.korge.view.addUpdater
 import com.soywiz.korge.view.container
+import com.soywiz.korge.view.fast.fastSpriteContainer
+import com.soywiz.korge.view.text
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korma.geom.Rectangle
 
@@ -22,7 +25,9 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         val ldtkLevel = worldLevel.toLDtkLevel()
         val gameLevel = GameLevel(worldLevel)
 
+
         lateinit var hero: Hero
+        lateinit var fx: Fx
 
         val entities = arrayListOf<Entity>()
         val mobs = arrayListOf<Mob>()
@@ -98,6 +103,21 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             follow(hero, true)
         }.also {
             gameLevel._camera = it
+        }
+        val particleContainer = fastSpriteContainer(useRotation = true)
+        fx = Fx(gameLevel, particleContainer).also { gameLevel._fx = it }
+
+        val mouse = text("")
+        var added = false
+        addUpdater {
+            if (views.input.mouseButtons != 0 && !added) {
+                added = true
+                fx.dots(hero.x, hero.y)
+            }
+
+            mouse.text = "${views.input.mouse.x}, ${views.input.mouse.y}"
+
+            fx.update(it)
         }
 
         keys {
