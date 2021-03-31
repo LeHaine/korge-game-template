@@ -1,12 +1,15 @@
 package com.lehaine.pixelheist
 
 import com.lehaine.lib.getByPrefix
+import com.lehaine.lib.particle.Particle
 import com.lehaine.lib.particle.ParticleSimulator
 import com.lehaine.lib.random
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.FastSpriteContainer
 import com.soywiz.korge.view.fast.alpha
+import com.soywiz.korge.view.fast.x
+import com.soywiz.korge.view.fast.y
 import com.soywiz.korim.bitmap.BmpSlice
 
 class Fx(val level: GameLevel, private val particleContainer: FastSpriteContainer) {
@@ -30,6 +33,17 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             p.friction = (0.8..0.9).random()
             p.gravityY = (0.0..0.02).random()
             p.life = (2..3).random().seconds
+            val grav = p.gravityY
+            p.onUpdate = {
+                if (it.isColliding()) {
+                    it.gravityY = 0.0
+                } else {
+                    it.gravityY = grav
+                }
+
+            }
         }
     }
+
+    private fun Particle.isColliding() = level.hasCollision((x / GRID_SIZE).toInt(), (y / GRID_SIZE).toInt())
 }
