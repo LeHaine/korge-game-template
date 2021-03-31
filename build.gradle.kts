@@ -1,6 +1,6 @@
 plugins {
     id("com.soywiz.korge")
-    kotlin("kapt") version "1.4.31"
+    kotlin("kapt") version "1.4.32"
 }
 
 korge {
