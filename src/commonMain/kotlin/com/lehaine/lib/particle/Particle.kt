@@ -41,6 +41,7 @@ class Particle(tex: BmpSlice) : FastSprite(tex) {
             remainingLife = value
         }
     var remainingLife: TimeSpan = TimeSpan.NIL
+    var delay: TimeSpan = TimeSpan.ZERO
 
     var killed = false
 

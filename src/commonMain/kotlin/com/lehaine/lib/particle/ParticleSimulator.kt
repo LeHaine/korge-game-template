@@ -109,7 +109,8 @@ class ParticleSimulator(maxParticles: Int) {
     }
 
     private fun advance(particle: Particle, dt: TimeSpan) {
-        if (particle.killed) return
+        particle.delay -= dt
+        if (particle.killed || particle.delay > 0.milliseconds) return
 
         particle.onStart?.invoke()
         particle.onStart = null

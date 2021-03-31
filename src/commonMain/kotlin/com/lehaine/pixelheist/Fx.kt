@@ -48,13 +48,14 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
     fun bloodSplatter(x: Double, y: Double) {
-        for (i in 0..2) {
+        for (i in 0..50) {
             val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
-            p.xDelta = sin(x + frame * 0.03) * 0.02
+            p.xDelta = sin(x + frame * 0.03) * 0.2
             p.gravityY = (0.1..0.2).random()
             p.friction = (0.85..0.96).random()
             p.life = (1..3).random().seconds
+            p.delay = (0.0..0.1).random().seconds
             p.onUpdate = ::bloodPhysics
         }
     }
@@ -70,10 +71,10 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             particle.rotation = 0.0
             particle.rotationDelta = 0.0
             if (particle.isColliding(-5) || particle.isColliding(5)) {
-                particle.scaleY *= (2..3).random()
+                particle.scaleY *= (1.0..1.5).random()
             }
             if (particle.isColliding(offsetY = -5) || particle.isColliding(offsetY = 5)) {
-                particle.scaleX *= (2..3).random()
+                particle.scaleX *= (1.0..1.5).random()
             }
         }
     }

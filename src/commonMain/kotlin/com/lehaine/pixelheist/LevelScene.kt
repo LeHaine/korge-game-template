@@ -111,7 +111,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         addUpdater {
             if (views.input.mouseButtons != 0 && !added) {
                 added = true
-                fx.bloodSplatter(hero.x , hero.y)
+                fx.bloodSplatter(hero.x , hero.y - hero.enHeight)
             } else if (views.input.mouseButtons == 0) {
                 added = false
             }
