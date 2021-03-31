@@ -93,7 +93,7 @@ class Mob(
             begin { sprite.playAnimationLooped(assets.mobIdle) }
         }
         stateChanged {
-            debugLabel.text = it::class.simpleName ?: ""
+         //   debugLabel.text = it::class.simpleName ?: ""
         }
     }
 

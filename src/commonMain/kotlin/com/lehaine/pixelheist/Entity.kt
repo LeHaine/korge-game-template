@@ -25,6 +25,9 @@ open class Entity(
     anchorY: Double = 1.0
 ) : Container() {
 
+    val fx get() = level.fx
+    val hero get() = level.hero
+
     var enHeight = GRID_SIZE.toDouble()
     var enWidth = enHeight
 

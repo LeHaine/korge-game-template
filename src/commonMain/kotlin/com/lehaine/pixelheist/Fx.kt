@@ -10,6 +10,7 @@ import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.RGBA
+import kotlin.math.PI
 import kotlin.math.sin
 
 class Fx(val level: GameLevel, private val particleContainer: FastSpriteContainer) {
@@ -48,12 +49,13 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
     fun bloodSplatter(x: Double, y: Double) {
-        for (i in 0..50) {
+        for (i in 0..10) {
             val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
-            p.xDelta = sin(x + frame * 0.03) * 0.2
+            p.xDelta = sin(x + frame * 0.03) * 0.5
             p.gravityY = (0.1..0.2).random()
             p.friction = (0.85..0.96).random()
+            p.rotation = (0.0..PI * 2).random()
             p.life = (1..3).random().seconds
             p.delay = (0.0..0.1).random().seconds
             p.onUpdate = ::bloodPhysics
@@ -71,10 +73,10 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             particle.rotation = 0.0
             particle.rotationDelta = 0.0
             if (particle.isColliding(-5) || particle.isColliding(5)) {
-                particle.scaleY *= (1.0..1.5).random()
+                particle.scaleY *= (1.0..1.25).random()
             }
             if (particle.isColliding(offsetY = -5) || particle.isColliding(offsetY = 5)) {
-                particle.scaleX *= (1.0..1.5).random()
+                particle.scaleX *= (1.0..1.25).random()
             }
         }
     }

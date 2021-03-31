@@ -51,6 +51,9 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             reason { lastMobJumpedOn != null }
             begin {
                 lastMobJumpedOn?.stretchX = 2.0
+                lastMobJumpedOn?.let {
+                    fx.bloodSplatter(it.px, it.py - it.enHeight)
+                }
                 level.camera.bump(y = 0.7)
             }
             update {
@@ -156,8 +159,8 @@ class Hero(data: World.EntityHero, level: GameLevel) :
         movementFsm.update(dt)
         itemFsm.update(dt)
 
-        debugLabel.text =
-            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
+//        debugLabel.text =
+//            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
     }
 
     private fun move() {
