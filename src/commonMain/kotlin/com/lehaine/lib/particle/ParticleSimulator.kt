@@ -9,6 +9,7 @@ import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.Bitmaps
 import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.Colors
+import com.soywiz.korim.color.RGBA
 import kotlin.math.pow
 
 class ParticleSimulator(maxParticles: Int) {
@@ -54,7 +55,6 @@ class ParticleSimulator(maxParticles: Int) {
 
             xDelta = 0.0
             yDelta = 0.0
-            alphaDelta = 0.0
             scaleDelta = 0.0
             scaleDeltaX = 0.0
             scaleDeltaY = 0.0
@@ -71,14 +71,10 @@ class ParticleSimulator(maxParticles: Int) {
             fadeOutSpeed = 0.1
             life = 1.seconds
 
-            colorR = 1.0
-            colorG = 1.0
-            colorB = 1.0
-            colorA = 1.0
             colorRdelta = 0.0
             colorGdelta = 0.0
             colorBdelta = 0.0
-            colorAdelta = 0.0
+            alphaDelta = 0.0
 
             onStart = null
             onUpdate = null
@@ -153,11 +149,11 @@ class ParticleSimulator(maxParticles: Int) {
             scaleDeltaY *= scaleFrictPow
 
             // color
-            colorR += particle.colorRdelta * tmod
-            colorG += particle.colorGdelta * tmod
-            colorB += particle.colorBdelta * tmod
-            colorA += particle.colorAdelta * tmod
-            alpha -= alphaDelta.toFloat()
+           val colorR = color.rd + particle.colorRdelta * tmod
+           val colorG =color.gd + particle.colorGdelta * tmod
+           val colorB = color.bd + particle.colorBdelta * tmod
+           val colorA = color.ad + particle.alphaDelta * tmod
+            color = RGBA.float(colorR, colorG, colorB, colorA)
 
             // life
             remainingLife -= dt
