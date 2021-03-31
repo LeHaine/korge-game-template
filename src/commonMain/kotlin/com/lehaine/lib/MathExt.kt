@@ -5,9 +5,7 @@ import kotlin.random.Random
 
 fun ClosedFloatingPointRange<Double>.random() = Random.nextDouble(start, endInclusive)
 fun ClosedFloatingPointRange<Float>.random() = Random.nextDouble(start.toDouble(), endInclusive.toDouble()).toFloat()
-fun IntRange.randomD(): Double {
-    return random(Random).toDouble()
-}
+fun IntRange.randomd() = Random.nextDouble(start.toDouble(), endInclusive.toDouble())
 
 
 fun distSqr(ax: Double, ay: Double, bx: Double, by: Double) =

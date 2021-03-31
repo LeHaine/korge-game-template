@@ -52,7 +52,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             begin {
                 lastMobJumpedOn?.stretchX = 2.0
                 lastMobJumpedOn?.let {
-                    fx.bloodSplatter(it.px, it.py - it.enHeight)
+                    fx.gutsSplatter(it.px, it.py - it.enHeight, -it.dir)
                 }
                 level.camera.bump(y = 0.7)
             }

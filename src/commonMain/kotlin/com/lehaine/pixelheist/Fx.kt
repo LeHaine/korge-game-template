@@ -1,10 +1,11 @@
 package com.lehaine.pixelheist
 
 import com.lehaine.lib.getByPrefix
+import com.lehaine.lib.getRandomByPrefix
 import com.lehaine.lib.particle.Particle
 import com.lehaine.lib.particle.ParticleSimulator
 import com.lehaine.lib.random
-import com.lehaine.lib.randomD
+import com.lehaine.lib.randomd
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.*
@@ -31,7 +32,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     fun dots(x: Double, y: Double) {
         for (i in 0..80) {
             val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
-            p.moveAwayFrom(x, y, (1..3).randomD())
+            p.moveAwayFrom(x, y, (1..3).randomd())
             p.alpha = (0.4f..1f).random()
             p.friction = (0.8..0.9).random()
             p.gravityY = (0.0..0.02).random()
@@ -45,6 +46,22 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
                 }
 
             }
+        }
+    }
+
+    fun gutsSplatter(x: Double, y: Double, dir: Int) {
+        for (i in 0..50) {
+            val p = alloc(Assets.tiles.getRandomByPrefix("fxGib"), x, y)
+            p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
+            p.xDelta = dir * (3..7).randomd()
+            p.yDelta = (-1..0).randomd()
+            p.gravityY = (0.07..0.1).random()
+            p.rotation = (0.0..PI * 2).random()
+            p.friction = (0.92..0.96).random()
+            p.rotation = (0.0..PI * 2).random()
+            p.scale(0.7)
+            p.life = (3..10).random().seconds
+            p.onUpdate = ::bloodPhysics
         }
     }
 
