@@ -30,12 +30,6 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             p.friction = (0.8..0.9).random()
             p.gravityY = (0.0..0.02).random()
             p.life = (2..3).random().seconds
-
-            if (i == 0) {
-                p.onStart = {
-                    println("particle started!")
-                }
-            }
         }
     }
 }

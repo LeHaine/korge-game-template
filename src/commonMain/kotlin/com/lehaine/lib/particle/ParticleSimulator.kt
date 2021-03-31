@@ -153,6 +153,7 @@ class ParticleSimulator(maxParticles: Int) {
             colorG += particle.colorGdelta * tmod
             colorB += particle.colorBdelta * tmod
             colorA += particle.colorAdelta * tmod
+            alpha -= alphaDelta.toFloat()
 
             remainingLife -= dt
             if (remainingLife <= 0.milliseconds) {

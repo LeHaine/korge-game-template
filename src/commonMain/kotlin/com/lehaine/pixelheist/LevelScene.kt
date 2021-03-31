@@ -8,13 +8,9 @@ import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
-import com.soywiz.korge.input.mouse
 import com.soywiz.korge.scene.Scene
-import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.addUpdater
-import com.soywiz.korge.view.container
-import com.soywiz.korge.view.fast.fastSpriteContainer
-import com.soywiz.korge.view.text
+import com.soywiz.korge.view.*
+import com.soywiz.korge.view.fast.*
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korma.geom.Rectangle
 
@@ -100,8 +96,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 }
             }
 
-
-            val particleContainer = fastSpriteContainer(useRotation = true)
+            val particleContainer = fastSpriteContainer(useRotation = true, smoothing = false)
             fx = Fx(gameLevel, particleContainer).also { gameLevel._fx = it }
         }.apply {
             follow(hero, true)
@@ -116,7 +111,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             if (views.input.mouseButtons != 0 && !added) {
                 added = true
                 fx.dots(hero.x, hero.y)
-            } else if(views.input.mouseButtons == 0) {
+            } else if (views.input.mouseButtons == 0) {
                 added = false
             }
 
