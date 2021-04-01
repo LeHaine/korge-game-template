@@ -22,9 +22,9 @@ private data class CooldownTimer(
     fun update(dt: TimeSpan) {
         elapsed += dt
         while (elapsed >= time) {
-            timerFinished(name)
             elapsed = 0.milliseconds
             callback()
+            timerFinished(name)
             break
         }
     }

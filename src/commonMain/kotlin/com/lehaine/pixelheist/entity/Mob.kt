@@ -56,7 +56,7 @@ class Mob(
         state(MobState.Attack) {
             reason { attack && !cd.has(ATTACK) }
             begin {
-                cd("attack", 500.milliseconds)
+                cd(ATTACK, 500.milliseconds)
                 fx.swipe(centerX, centerY, dir)
                 attack = false
             }
