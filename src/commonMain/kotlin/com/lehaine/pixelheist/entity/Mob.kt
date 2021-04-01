@@ -156,6 +156,8 @@ class Mob(
     }
 
     fun stun() {
+        stretchX = 2.0
+        fx.bloodSplatter(centerX, bounds.top)
         cd(STUNNED, 100.milliseconds)
     }
 
