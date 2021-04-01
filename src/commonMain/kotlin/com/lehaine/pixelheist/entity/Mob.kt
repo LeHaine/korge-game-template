@@ -50,9 +50,18 @@ class Mob(
         object SearchingTarget : MobState()
         object PrepareAttack : MobState()
         object Attack : MobState()
+        object Stunned : MobState()
     }
 
     private val movementFsm = stateMachine<MobState> {
+        state(MobState.Stunned) {
+            reason { cd.has(STUNNED) }
+            begin {
+                dx = 0.0
+                attack = false
+                cd(ATTACK, 250.milliseconds)
+            }
+        }
         state(MobState.Attack) {
             reason { attack && !cd.has(ATTACK) }
             begin {
@@ -75,6 +84,9 @@ class Mob(
             }
             update {
                 stretchY = 1.25
+            }
+            end {
+                cd.remove(PREPARE_ATTACK)
             }
         }
         state(MobState.HopSmallStep) {
@@ -131,11 +143,16 @@ class Mob(
         private const val LOST_TARGET = "lostTarget"
         private const val ATTACK = "attack"
         private const val PREPARE_ATTACK = "prepareAttack"
+        private const val STUNNED = "stunned"
     }
 
     override fun update(dt: TimeSpan) {
         super.update(dt)
         movementFsm.update(dt)
+    }
+
+    fun stun() {
+        cd(STUNNED, 100.milliseconds)
     }
 
     private fun autoPatrol() {

@@ -83,6 +83,8 @@ class CooldownComponents(override val view: View) : UpdateComponent {
 
     fun has(name: String) = nameCheck[name] ?: false
 
+    fun remove(name: String) = removeTimer(name)
+
     fun ratio(name: String): Double {
         if (!has(name)) return 0.0
         return timers.find { it.name == name }?.ratio ?: 0.0

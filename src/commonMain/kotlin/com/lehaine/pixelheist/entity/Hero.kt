@@ -35,7 +35,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
     private var heldItem: Item? = null
-    private var lastMobJumpedOn: Entity? = null
+    private var lastMobJumpedOn: Mob? = null
 
     private sealed class HeroMovementState {
         object Idle : HeroMovementState()
@@ -55,6 +55,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
                     fx.bloodSplatter(it.px, it.py - it.enHeight)
                 }
                 level.camera.bump(y = 0.7)
+                lastMobJumpedOn?.stun()
             }
             update {
                 dy -= 0.7
