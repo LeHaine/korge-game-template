@@ -27,7 +27,7 @@ class Item(
     }
 
     fun teleport() {
-        level._fx?.itemTeleported(x, y, Colors.RED)
+        fx.itemTeleported(x, y, Colors.RED)
         destroy()
     }
 }

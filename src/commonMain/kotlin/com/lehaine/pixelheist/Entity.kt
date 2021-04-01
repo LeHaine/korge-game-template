@@ -135,6 +135,7 @@ open class Entity(
 
     init {
         toGridPosition(cx, cy)
+        sync()
 
         hitShape {
             rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
@@ -212,13 +213,16 @@ open class Entity(
     }
 
     protected open fun postUpdate(dt: TimeSpan) {
+        sync()
+        _stretchX += (1 - _stretchX) * 0.2
+        _stretchY += (1 - _stretchY) * 0.2
+    }
+
+    private fun sync() {
         x = (cx + xr) * GRID_SIZE
         y = (cy + yr) * GRID_SIZE
         sprite.scaleX = dir.toDouble() * spriteScaleX * stretchX
         sprite.scaleY = spriteScaleY * stretchY
-
-        _stretchX += (1 - _stretchX) * 0.2
-        _stretchY += (1 - _stretchY) * 0.2
     }
 
     private fun performXSteps() {
