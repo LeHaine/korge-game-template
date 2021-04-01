@@ -106,7 +106,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             begin {
                 forceDropItem = false
                 heldItem?.let {
-                    it.dx = (0.6..0.75).random() * dir
+                    it.dx = (0.6..0.75).random() * -dir
                     it.dy = -(0.15..0.2).random()
                 }
                 heldItem = null
