@@ -31,34 +31,49 @@ private data class CooldownTimer(
 }
 
 class CooldownComponents(override val view: View) : UpdateComponent {
-    // TODO impl pool
-    private val _cooldownTimerPool = Pool { CooldownTimer(0.milliseconds, "", {}, {}) }
+    private val cooldownTimerPool = Pool(
+        reset = {
+            it.elapsed = 0.milliseconds
+            it.time = 0.milliseconds
+            it.name = ""
+            it.callback = {}
+            it.timerFinished = {}
+        },
+        gen = { CooldownTimer(0.milliseconds, "", {}, {}) })
 
-    private val _timers = arrayListOf<CooldownTimer>()
-    private val _nameCheck = mutableMapOf<String, Boolean>()
+    private val timers = arrayListOf<CooldownTimer>()
+    private val nameCheck = mutableMapOf<String, Boolean>()
 
     override fun update(dt: TimeSpan) {
-        _timers.fastForEach {
+        timers.fastForEach {
             it.update(dt)
         }
     }
 
     private fun addTimer(name: String, timer: CooldownTimer) {
-        if (_nameCheck[name] != true) {
-            _timers.add(timer)
-            _nameCheck[name] = true
+        if (nameCheck[name] != true) {
+            timers.add(timer)
+            nameCheck[name] = true
         }
     }
 
     private fun removeTimer(name: String) {
-        if (_nameCheck[name] == true) {
-            _timers.find { it.name == name }?.also { _timers.remove(it) }
-            _nameCheck.remove(name)
+        if (nameCheck[name] == true) {
+            timers.find { it.name == name }?.also {
+                timers.remove(it)
+                cooldownTimerPool.free(it)
+            }
+            nameCheck.remove(name)
         }
     }
 
     private fun interval(name: String, time: TimeSpan, callback: () -> Unit = {}): Closeable {
-        val timer = CooldownTimer(time, name, callback) { removeTimer(it) }
+        val timer = cooldownTimerPool.alloc().apply {
+            this.time = time
+            this.name = name
+            this.callback = callback
+            this.timerFinished = ::removeTimer
+        }
         addTimer(name, timer)
         return Closeable { removeTimer(name) }
     }
@@ -66,11 +81,11 @@ class CooldownComponents(override val view: View) : UpdateComponent {
     fun timeout(name: String, time: TimeSpan, callback: () -> Unit = { }): Closeable =
         interval(name, time, callback)
 
-    fun has(name: String) = _nameCheck[name] ?: false
+    fun has(name: String) = nameCheck[name] ?: false
 
     fun ratio(name: String): Double {
         if (!has(name)) return 0.0
-        return _timers.find { it.name == name }?.ratio ?: 0.0
+        return timers.find { it.name == name }?.ratio ?: 0.0
     }
 }
 
