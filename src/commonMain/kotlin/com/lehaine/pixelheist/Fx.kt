@@ -7,11 +7,13 @@ import com.lehaine.lib.particle.ParticleSimulator
 import com.lehaine.lib.random
 import com.lehaine.lib.randomd
 import com.soywiz.klock.TimeSpan
+import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.RGBA
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.sin
 
 class Fx(val level: GameLevel, private val particleContainer: FastSpriteContainer) {
@@ -19,13 +21,27 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     private val particleSimulator = ParticleSimulator(2048)
     private var frame = 0
 
-
     private fun alloc(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(particleContainer, slice, x, y)
-
 
     fun update(dt: TimeSpan) {
         particleSimulator.simulate(dt)
         frame++
+    }
+
+
+    fun itemTeleported(x: Double, y: Double, color: RGBA) {
+        create(20) {
+            val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
+            p.color = color
+            p.alphaDelta = 0.05
+            p.alpha = (0.8f..1f).random()
+            p.scaleX = (0.2..0.4).random()
+            p.scaleY = (0.2..0.4).random()
+            p.xDelta = cos(PI / 8 * it) * 2
+            p.yDelta = sin(PI / 8 * it) * 2
+            p.scaleDelta = 0.05
+            p.life = 100.milliseconds
+        }
     }
 
 
@@ -48,7 +64,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
     fun gutsSplatter(x: Double, y: Double, dir: Int) {
-        for (i in 0..50) {
+        create(50) {
             val p = alloc(Assets.tiles.getRandomByPrefix("fxGib"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
             p.xDelta = dir * (3..7).randomd()
@@ -64,7 +80,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
     fun bloodSplatter(x: Double, y: Double) {
-        for (i in 0..10) {
+        create(10) {
             val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
             p.xDelta = sin(x + frame * 0.03) * 0.5
@@ -93,6 +109,12 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             if (particle.isColliding(offsetY = -5) || particle.isColliding(offsetY = 5)) {
                 particle.scaleX *= (1.0..1.25).random()
             }
+        }
+    }
+
+    private fun create(num: Int, createParticle: (index: Int) -> Unit) {
+        for (i in 0..num) {
+            createParticle(i)
         }
     }
 

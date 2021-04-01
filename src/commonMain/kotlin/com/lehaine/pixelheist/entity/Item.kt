@@ -7,6 +7,7 @@ import com.lehaine.pixelheist.World
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
 import com.soywiz.korge.view.addTo
+import com.soywiz.korim.color.Colors
 
 
 inline fun Container.item(
@@ -23,5 +24,10 @@ class Item(
         when (data.type) {
             World.ItemType.Ruby -> sprite.bitmap = assets.tiles.getByPrefix("ruby")
         }
+    }
+
+    fun teleport() {
+        level._fx?.itemTeleported(x, y, Colors.RED)
+        destroy()
     }
 }

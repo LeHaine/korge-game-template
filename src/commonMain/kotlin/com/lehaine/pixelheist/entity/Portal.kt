@@ -25,7 +25,7 @@ class Portal(
     override fun onEntityCollision(entity: Entity) {
         super.onEntityCollision(entity)
         if (entity is Item) {
-            entity.destroy()
+            entity.teleport()
         }
     }
 }
