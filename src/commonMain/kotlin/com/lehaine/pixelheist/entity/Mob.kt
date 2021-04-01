@@ -40,6 +40,8 @@ class Mob(
     private var aggroTarget: Entity? = null
     private var attack = false
 
+    val canStun get() = !cd.has(STUN_IMMUNE)
+
     private sealed class MobState {
         object Idle : MobState()
         object Patrol : MobState()
@@ -60,6 +62,7 @@ class Mob(
                 dx = 0.0
                 attack = false
                 cd(ATTACK, 250.milliseconds)
+                cd(STUN_IMMUNE, 500.milliseconds)
             }
         }
         state(MobState.Attack) {
@@ -144,6 +147,7 @@ class Mob(
         private const val ATTACK = "attack"
         private const val PREPARE_ATTACK = "prepareAttack"
         private const val STUNNED = "stunned"
+        private const val STUN_IMMUNE = "stunImmune"
     }
 
     override fun update(dt: TimeSpan) {

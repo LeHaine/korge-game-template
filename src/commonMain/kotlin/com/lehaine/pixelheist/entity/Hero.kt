@@ -136,7 +136,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
 
     override fun onEntityCollision(entity: Entity) {
         super.onEntityCollision(entity)
-        if (lastMobJumpedOn == null && entity is Mob) {
+        if (lastMobJumpedOn == null && entity is Mob && entity.canStun) {
             val angle = angleTo(entity).radians
             if (angle.degrees in (0.0..180.0) && dy > 0) {
                 lastMobJumpedOn = entity
