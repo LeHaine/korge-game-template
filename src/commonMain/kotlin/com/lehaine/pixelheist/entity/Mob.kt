@@ -37,6 +37,7 @@ class Mob(
     private val canSeeHero: Boolean get() = castRayTo(hero) && distGridTo(hero) <= 15
     private val nearHero: Boolean get() = canSeeHero && distGridTo(hero) <= 1
 
+    private var attackRange = 2 // grid cells
     private var aggroTarget: Entity? = null
     private var attack = false
 
@@ -59,7 +60,6 @@ class Mob(
         state(MobState.Stunned) {
             reason { cd.has(STUNNED) }
             begin {
-                dx = 0.0
                 attack = false
                 cd(ATTACK, 250.milliseconds)
                 cd(STUN_IMMUNE, 500.milliseconds)
@@ -70,6 +70,9 @@ class Mob(
             begin {
                 cd(ATTACK, 500.milliseconds)
                 fx.swipe(centerX, centerY, dir)
+                if (distGridTo(hero) <= attackRange) {
+                    hero.hit(this@Mob)
+                }
                 attack = false
             }
         }

@@ -34,6 +34,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private val jumpingExtra get() = input.keys.pressing(Key.SPACE) && cd.has("jumpExtra")
     private val jumpingForce get() = cd.has("jumpForce") && input.keys.pressing(Key.SPACE)
 
+    private var forceDropItem = false
     private var heldItem: Item? = null
     private var lastMobJumpedOn: Mob? = null
 
@@ -44,9 +45,13 @@ class Hero(data: World.EntityHero, level: GameLevel) :
         object JumpExtra : HeroMovementState()
         object Fall : HeroMovementState()
         object JumpOnMob : HeroMovementState()
+        object Stunned : HeroMovementState()
     }
 
     private val movementFsm = stateMachine<HeroMovementState> {
+        state(HeroMovementState.Stunned) {
+            reason { cd.has(STUNNED) }
+        }
         state(HeroMovementState.JumpOnMob) {
             reason { lastMobJumpedOn != null }
             begin {
@@ -91,11 +96,24 @@ class Hero(data: World.EntityHero, level: GameLevel) :
     private sealed class HeroItemState {
         object ThrowItem : HeroItemState()
         object HoldItem : HeroItemState()
+        object DropItem : HeroItemState()
         object NoItem : HeroItemState()
     }
 
     private val itemFsm = stateMachine<HeroItemState> {
+        state(HeroItemState.DropItem) {
+            reason { heldItem != null && forceDropItem }
+            begin {
+                forceDropItem = false
+                heldItem?.let {
+                    it.dx = (0.6..0.75).random() * dir
+                    it.dy = -(0.15..0.2).random()
+                }
+                heldItem = null
+                cd(ITEM_THREW, 250.milliseconds)
+            }
 
+        }
         state(HeroItemState.ThrowItem) {
             reason { input.keys.justPressed(Key.E) && heldItem != null }
             update {
@@ -127,12 +145,17 @@ class Hero(data: World.EntityHero, level: GameLevel) :
         private const val JUMP_FORCE = "jumpForce"
         private const val JUMP_EXTRA = "jumpExtra"
         private const val ITEM_THREW = "itemThrew"
+        private const val STUNNED = "stunned"
+        private const val MOB_JUMP_LOCK = "mobJumpLock"
+        private const val HIT_IMMUNE = "hitImmune"
     }
 
 
     override fun onEntityCollision(entity: Entity) {
         super.onEntityCollision(entity)
-        if (lastMobJumpedOn == null && entity is Mob && entity.canStun) {
+        if (lastMobJumpedOn == null && !cd.has(MOB_JUMP_LOCK)
+            && entity is Mob && entity.canStun
+        ) {
             val angle = angleTo(entity).radians
             if (angle.degrees in (0.0..180.0) && dy > 0) {
                 lastMobJumpedOn = entity
@@ -158,6 +181,17 @@ class Hero(data: World.EntityHero, level: GameLevel) :
 
 //        debugLabel.text =
 //            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
+    }
+
+    fun hit(from: Entity) {
+        if (cd.has(HIT_IMMUNE)) return
+        val hitDir = dirTo(from)
+        dx = -hitDir * 0.25
+        dy = -0.3
+        forceDropItem = true
+        cd(STUNNED, 500.milliseconds)
+        cd(MOB_JUMP_LOCK, 500.milliseconds)
+        cd(HIT_IMMUNE, 1.seconds)
     }
 
     private fun move() {
