@@ -70,7 +70,7 @@ class Mob(
                 cd(PREPARE_ATTACK, 500.milliseconds) {
                     attack = true
                 }
-                sprite.playOverlap(Assets.tiles.getByPrefix("mobIdle"))
+                sprite.playOverlap(Assets.tiles.getByPrefix("mobIdle"), 500.milliseconds)
                 dx = 0.0
             }
             update {
@@ -91,7 +91,6 @@ class Mob(
         }
         state(MobState.ChaseTarget) {
             reason { aggroTarget != null }
-            begin { sprite.playAnimationLooped(assets.mobRun) }
             update {
                 chaseTarget()
                 cd(KEEP_AGGRO, 3.seconds)
@@ -107,7 +106,6 @@ class Mob(
         }
         state(MobState.SearchingTarget) {
             reason { cd.has(LOST_TARGET) }
-            begin { sprite.playAnimationLooped(assets.mobRun) }
             update { search() }
 
         }

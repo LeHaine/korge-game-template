@@ -121,6 +121,7 @@ class EnhancedSprite(
         lastAnimation = currentAnimation
         lastLooped = animationLooped
         lastReversed = reversed
+        overlapPlaying = true
         playAnimation(spriteAnimation, spriteDisplayTime, startFrame = 0)
     }
 
