@@ -1,11 +1,9 @@
 package com.lehaine.pixelheist.entity
 
 import com.lehaine.lib.cd
+import com.lehaine.lib.getByPrefix
 import com.lehaine.lib.stateMachine
-import com.lehaine.pixelheist.Entity
-import com.lehaine.pixelheist.GameLevel
-import com.lehaine.pixelheist.LevelMark
-import com.lehaine.pixelheist.World
+import com.lehaine.pixelheist.*
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -36,9 +34,11 @@ class Mob(
             dir
         ) && ((dir == 1 && xr >= 0.5) || (dir == -1 && xr <= 0.5))
 
-    private val nearHero get() = castRayTo(level.hero) && distGridTo(level.hero) <= 15
+    private val canSeeHero: Boolean get() = castRayTo(hero) && distGridTo(hero) <= 15
+    private val nearHero: Boolean get() = canSeeHero && distGridTo(hero) <= 1
 
     private var aggroTarget: Entity? = null
+    private var attack = false
 
     private sealed class MobState {
         object Idle : MobState()
@@ -48,15 +48,41 @@ class Mob(
         object ChaseTarget : MobState()
         object LostTarget : MobState()
         object SearchingTarget : MobState()
+        object PrepareAttack : MobState()
+        object Attack : MobState()
     }
 
     private val movementFsm = stateMachine<MobState> {
+        state(MobState.Attack) {
+            reason { attack && !cd.has(ATTACK) }
+            begin {
+                cd("attack", 500.milliseconds)
+                fx.swipe(centerX, centerY, dir)
+                attack = false
+            }
+        }
+        state(MobState.PrepareAttack) {
+            reason {
+                (aggroTarget != null && nearHero || cd.has(PREPARE_ATTACK))
+                        && !attack && !cd.has(ATTACK)
+            }
+            begin {
+                cd(PREPARE_ATTACK, 500.milliseconds) {
+                    attack = true
+                }
+                sprite.playOverlap(Assets.tiles.getByPrefix("mobIdle"))
+                dx = 0.0
+            }
+            update {
+                stretchY = 1.25
+            }
+        }
         state(MobState.HopSmallStep) {
             reason { hasSmallStep }
             update { hopSmallStep() }
         }
         state(MobState.LostTarget) {
-            reason { aggroTarget != null && !nearHero && !cd.has(KEEP_AGGRO) }
+            reason { aggroTarget != null && !canSeeHero && !cd.has(KEEP_AGGRO) }
             begin {
                 cd(LOST_TARGET, 5.seconds)
                 aggroTarget = null
@@ -65,13 +91,14 @@ class Mob(
         }
         state(MobState.ChaseTarget) {
             reason { aggroTarget != null }
+            begin { sprite.playAnimationLooped(assets.mobRun) }
             update {
                 chaseTarget()
                 cd(KEEP_AGGRO, 3.seconds)
             }
         }
         state(MobState.Alert) {
-            reason { aggroTarget == null && nearHero && dir == dirTo(level.hero) }
+            reason { aggroTarget == null && canSeeHero && dir == dirTo(level.hero) }
             begin {
                 aggroTarget = level.hero
                 stretchX = 0.6
@@ -80,6 +107,7 @@ class Mob(
         }
         state(MobState.SearchingTarget) {
             reason { cd.has(LOST_TARGET) }
+            begin { sprite.playAnimationLooped(assets.mobRun) }
             update { search() }
 
         }
@@ -93,7 +121,7 @@ class Mob(
             begin { sprite.playAnimationLooped(assets.mobIdle) }
         }
         stateChanged {
-         //   debugLabel.text = it::class.simpleName ?: ""
+            debugLabel.text = it::class.simpleName ?: ""
         }
     }
 
@@ -103,6 +131,8 @@ class Mob(
         private const val SEARCH = "search"
         private const val KEEP_AGGRO = "keepAggro"
         private const val LOST_TARGET = "lostTarget"
+        private const val ATTACK = "attack"
+        private const val PREPARE_ATTACK = "prepareAttack"
     }
 
     override fun update(dt: TimeSpan) {

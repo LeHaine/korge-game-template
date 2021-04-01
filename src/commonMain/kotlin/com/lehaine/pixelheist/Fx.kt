@@ -29,24 +29,22 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
 
-    fun dots(x: Double, y: Double) {
-        for (i in 0..80) {
-            val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
-            p.moveAwayFrom(x, y, (1..3).randomd())
-            p.alpha = (0.4f..1f).random()
-            p.friction = (0.8..0.9).random()
-            p.gravityY = (0.0..0.02).random()
-            p.life = (2..3).random().seconds
-            val grav = p.gravityY
-            p.onUpdate = {
-                if (it.isColliding()) {
-                    it.gravityY = 0.0
-                } else {
-                    it.gravityY = grav
-                }
-
-            }
+    fun swipe(x: Double, y: Double, dir: Int) {
+        val p = alloc(
+            Assets.tiles.getRandomByPrefix("fxSwipe"),
+            x + dir + (0..8).random(), y + (0..4).random()
+        )
+        p.scaleX = (0.8..1.2).random()
+        p.scaleY = (0.7..0.9).random()
+        p.rotationDelta = (0.2..0.3).random() * dir
+        p.rotationFriction = 0.8
+        if (dir == 1) {
+            p.rotation = -1 + (0.0..0.5).random()
+        } else {
+            p.rotation = PI + 1 - (0.0..0.5).random()
         }
+        p.life = (0.03..0.06).random().seconds
+
     }
 
     fun gutsSplatter(x: Double, y: Double, dir: Int) {
