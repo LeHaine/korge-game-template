@@ -1,4 +1,4 @@
-package com.lehaine.lib.components
+package com.lehaine.lib.component
 
 import com.soywiz.korma.geom.Rectangle
 import kotlin.math.abs
@@ -60,7 +60,7 @@ open class DynamicComponentDefault : DynamicComponent {
             left = px - anchorX * height
         }
 
-    override fun update(tmod: Double) {
+    override fun updateComponent(tmod: Double) {
         updateX(tmod)
         updateY(tmod)
     }

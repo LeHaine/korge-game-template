@@ -1,4 +1,4 @@
-package com.lehaine.lib.components
+package com.lehaine.lib.component
 
 import com.lehaine.pixelheist.LevelMark
 

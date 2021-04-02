@@ -1,4 +1,4 @@
-package com.lehaine.lib.components
+package com.lehaine.lib.component
 
 import com.soywiz.korma.geom.Rectangle
 
@@ -9,8 +9,8 @@ interface GridPositionComponent : UpdatableComponent {
     var yr: Double
 
     var gridCellSize: Int
-    var width: Int
-    var height: Int
+    var width: Double
+    var height: Double
 
     var anchorX: Double
     var anchorY: Double
@@ -21,8 +21,32 @@ interface GridPositionComponent : UpdatableComponent {
     val centerY: Double
     val bounds: Rectangle
 
-    fun updateX(tmod: Double)
-    fun updateY(tmod: Double)
+    override fun updateComponent(tmod: Double) {
+        updateX(tmod)
+        updateY(tmod)
+    }
+
+    fun updateX(tmod: Double) {
+        while (xr > 1) {
+            xr--
+            cx++
+        }
+        while (xr < 0) {
+            xr++
+            cx--
+        }
+    }
+
+    fun updateY(tmod: Double) {
+        while (yr > 1) {
+            yr--
+            cy++
+        }
+        while (yr < 0) {
+            yr++
+            cy--
+        }
+    }
 
 
     companion object {
@@ -39,8 +63,8 @@ open class GridPositionComponentDefault : GridPositionComponent {
     override var yr: Double = 0.5
 
     override var gridCellSize: Int = 16
-    override var width: Int = 16
-    override var height: Int = 16
+    override var width: Double = 16.0
+    override var height: Double = 16.0
 
     override var anchorX: Double = 0.5
     override var anchorY: Double = 0.5
@@ -58,31 +82,4 @@ open class GridPositionComponentDefault : GridPositionComponent {
             bottom = py + (1 - anchorY) * height
             left = px - anchorX * height
         }
-
-    override fun update(tmod: Double) {
-        updateX(tmod)
-        updateY(tmod)
-    }
-
-    override fun updateX(tmod: Double) {
-        while (xr > 1) {
-            xr--
-            cx++
-        }
-        while (xr < 0) {
-            xr++
-            cx--
-        }
-    }
-
-    override fun updateY(tmod: Double) {
-        while (yr > 1) {
-            yr--
-            cy++
-        }
-        while (yr < 0) {
-            yr++
-            cy--
-        }
-    }
 }
