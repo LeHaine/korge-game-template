@@ -10,7 +10,7 @@
 },
 {
 	"filename": "fxDot0.png",
-	"frame": {"x":94,"y":35,"w":3,"h":3},
+	"frame": {"x":47,"y":95,"w":3,"h":3},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
@@ -18,31 +18,31 @@
 },
 {
 	"filename": "fxGib0.png",
-	"frame": {"x":78,"y":51,"w":8,"h":5},
-	"rotated": false,
+	"frame": {"x":47,"y":65,"w":8,"h":5},
+	"rotated": true,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxGib1.png",
-	"frame": {"x":88,"y":57,"w":8,"h":5},
-	"rotated": false,
+	"frame": {"x":47,"y":75,"w":8,"h":5},
+	"rotated": true,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxGib2.png",
-	"frame": {"x":78,"y":58,"w":8,"h":5},
-	"rotated": false,
+	"frame": {"x":47,"y":85,"w":8,"h":5},
+	"rotated": true,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxImpact0.png",
-	"frame": {"x":47,"y":35,"w":15,"h":9},
+	"frame": {"x":47,"y":1,"w":15,"h":9},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":9},
@@ -50,7 +50,7 @@
 },
 {
 	"filename": "fxLine0.png",
-	"frame": {"x":1,"y":60,"w":33,"h":3},
+	"frame": {"x":1,"y":47,"w":33,"h":3},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":3},
@@ -58,7 +58,7 @@
 },
 {
 	"filename": "fxLineDir0.png",
-	"frame": {"x":54,"y":46,"w":33,"h":3},
+	"frame": {"x":1,"y":52,"w":33,"h":3},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":3},
@@ -66,7 +66,7 @@
 },
 {
 	"filename": "fxSmallCircle0.png",
-	"frame": {"x":98,"y":57,"w":6,"h":6},
+	"frame": {"x":55,"y":145,"w":6,"h":6},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":6,"h":6},
@@ -82,7 +82,7 @@
 },
 {
 	"filename": "fxSwipe0.png",
-	"frame": {"x":47,"y":1,"w":32,"h":32},
+	"frame": {"x":1,"y":57,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -90,7 +90,7 @@
 },
 {
 	"filename": "fxSwipe1.png",
-	"frame": {"x":81,"y":1,"w":32,"h":32},
+	"frame": {"x":1,"y":91,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -98,7 +98,7 @@
 },
 {
 	"filename": "fxSwipe2.png",
-	"frame": {"x":115,"y":1,"w":32,"h":32},
+	"frame": {"x":1,"y":125,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -106,15 +106,15 @@
 },
 {
 	"filename": "fxTail0.png",
-	"frame": {"x":1,"y":47,"w":33,"h":11},
-	"rotated": false,
+	"frame": {"x":47,"y":12,"w":33,"h":11},
+	"rotated": true,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":11},
 	"sourceSize": {"w":33,"h":11}
 },
 {
 	"filename": "heroIdle0.png",
-	"frame": {"x":89,"y":45,"w":10,"h":10},
+	"frame": {"x":35,"y":65,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -122,7 +122,7 @@
 },
 {
 	"filename": "heroIdle1.png",
-	"frame": {"x":54,"y":51,"w":10,"h":10},
+	"frame": {"x":35,"y":77,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -130,7 +130,7 @@
 },
 {
 	"filename": "heroRun0.png",
-	"frame": {"x":66,"y":51,"w":10,"h":10},
+	"frame": {"x":35,"y":89,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -138,7 +138,7 @@
 },
 {
 	"filename": "heroRun1.png",
-	"frame": {"x":101,"y":35,"w":10,"h":10},
+	"frame": {"x":52,"y":97,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -146,7 +146,7 @@
 },
 {
 	"filename": "heroRun2.png",
-	"frame": {"x":106,"y":47,"w":10,"h":10},
+	"frame": {"x":35,"y":101,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -154,7 +154,7 @@
 },
 {
 	"filename": "mobIdle0.png",
-	"frame": {"x":113,"y":35,"w":10,"h":10},
+	"frame": {"x":47,"y":109,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -162,7 +162,7 @@
 },
 {
 	"filename": "mobIdle1.png",
-	"frame": {"x":118,"y":47,"w":10,"h":10},
+	"frame": {"x":35,"y":113,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -170,7 +170,7 @@
 },
 {
 	"filename": "mobRun0.png",
-	"frame": {"x":125,"y":35,"w":10,"h":10},
+	"frame": {"x":47,"y":121,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -178,7 +178,7 @@
 },
 {
 	"filename": "mobRun1.png",
-	"frame": {"x":130,"y":47,"w":10,"h":10},
+	"frame": {"x":35,"y":125,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -186,7 +186,7 @@
 },
 {
 	"filename": "mobRun2.png",
-	"frame": {"x":137,"y":35,"w":10,"h":10},
+	"frame": {"x":47,"y":133,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -194,7 +194,7 @@
 },
 {
 	"filename": "portal0.png",
-	"frame": {"x":64,"y":35,"w":8,"h":8},
+	"frame": {"x":54,"y":47,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -202,7 +202,7 @@
 },
 {
 	"filename": "portal1.png",
-	"frame": {"x":74,"y":35,"w":8,"h":8},
+	"frame": {"x":54,"y":57,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -210,7 +210,63 @@
 },
 {
 	"filename": "ruby0.png",
-	"frame": {"x":84,"y":35,"w":8,"h":8},
+	"frame": {"x":54,"y":67,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimeIdle0.png",
+	"frame": {"x":54,"y":77,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimeIdle1.png",
+	"frame": {"x":54,"y":87,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimeSpike0.png",
+	"frame": {"x":35,"y":137,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimewalk0.png",
+	"frame": {"x":54,"y":77,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimewalk1.png",
+	"frame": {"x":35,"y":147,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimewalk2.png",
+	"frame": {"x":45,"y":145,"w":8,"h":8},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
+	"sourceSize": {"w":8,"h":8}
+},
+{
+	"filename": "spikeSlimewalk3.png",
+	"frame": {"x":54,"y":87,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -221,8 +277,8 @@
 	"version": "1.0",
 	"image": "tiles.atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":148,"h":64},
+	"size": {"w":63,"h":158},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:9592a6499d66693fcdc49160416f6dd8:d661bc0d625767542548d9fcaf4b2c06:5e5ef3518cc1a44e4ed4954a57ade08c$"
+	"smartupdate": "$TexturePacker:SmartUpdate:52b75ec730276e0ec88d40d5e52a63c1:a045e1649d89680eb550983418edcaea:5e5ef3518cc1a44e4ed4954a57ade08c$"
 }
 }
