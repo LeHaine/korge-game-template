@@ -1,130 +1,20 @@
 package com.lehaine.pixelheist
 
-import com.lehaine.lib.castRay
-import com.lehaine.lib.dist
-import com.lehaine.lib.enhancedSprite
+import com.lehaine.lib.component.UpdatableComponent
+import com.lehaine.lib.cooldown
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
-import com.soywiz.klock.milliseconds
-import com.soywiz.kmem.clamp
-import com.soywiz.korge.debug.uiCollapsibleSection
-import com.soywiz.korge.debug.uiEditableValue
-import com.soywiz.korge.view.*
-import com.soywiz.korim.text.TextAlignment
-import com.soywiz.korma.geom.Rectangle
-import com.soywiz.korma.geom.vector.rect
-import com.soywiz.korui.UiContainer
-import kotlin.math.*
+import com.soywiz.korge.view.Container
+import com.soywiz.korge.view.addTo
+import com.soywiz.korge.view.addUpdater
+import com.soywiz.korge.view.collidesWithShape
+import com.soywiz.korio.lang.Closeable
+import kotlin.collections.set
 
-
-open class Entity(
-    cx: Int,
-    cy: Int,
-    val level: GameLevel,
-    anchorX: Double = 0.5,
-    anchorY: Double = 1.0
-) : Container() {
-
-    val fx get() = level.fx
-    val hero get() = level.hero
-
-    var enHeight = GRID_SIZE.toDouble()
-    var enWidth = enHeight
-
+open class Entity(val container: Container) : UpdatableComponent {
     var destroyed = false
 
     private var onDestroyedCallback: ((Entity) -> Unit)? = null
-
-    /**
-     * Grid location
-     */
-    var cx = 0
-    var cy = 0
-    var xr = 0.5
-    var yr = 0.5
-
-    var dx = 0.0
-    var dy = 0.0
-
-    var frictX = 0.82
-    var frictY = 0.82
-
-    val assets get() = Assets
-    val tiles get() = Assets.tiles
-
-    val moveAngle get() = atan2(dy, dx)
-
-    /**
-     * Pixel location
-     */
-    val px get() = (cx + xr) * GRID_SIZE
-    val py get() = (cy + yr) * GRID_SIZE
-    val centerX get() = px + (0.5 - anchorX) * enWidth
-    val centerY get() = py + (0.5 - anchorY) * enHeight
-    private var _bounds = Rectangle()
-    val bounds: Rectangle
-        get() = _bounds.apply {
-            top = py - anchorY * enWidth
-            right = px + (1 - px) * enWidth
-            bottom = py + (1 - anchorY) * enHeight
-            left = px - anchorX * enWidth
-        }
-
-    private var _stretchX = 1.0
-    private var _stretchY = 1.0
-
-    var stretchX: Double
-        get() = _stretchX
-        set(value) {
-            _stretchX = value
-            _stretchY = 2 - value
-        }
-    var stretchY: Double
-        get() = _stretchY
-        set(value) {
-            _stretchX = 2 - value
-            _stretchY = value
-        }
-
-    var spriteScaleX = 1.0
-    var spriteScaleY = 1.0
-
-    val onGround get() = dy == 0.0 && level.hasCollision(cx, cy + 1)
-    var hasGravity = true
-    var gravityMul = 1.0
-
-    var dir = 1
-        set(value) {
-            field = value.clamp(-1, 1)
-        }
-
-    protected val gravityPulling get() = !onGround && hasGravity
-
-    var tmod = 1.0
-        private set
-
-    val sprite = enhancedSprite {
-        smoothing = false
-        this.anchorX = anchorX
-        this.anchorY = anchorY
-    }
-
-    val anchorX by sprite::anchorX
-    val anchorY by sprite::anchorY
-
-    val debugLabel = text("") {
-        smoothing = false
-        font = assets.pixelFont
-        fontSize = 8.0
-        alignment = TextAlignment.CENTER
-        alignTopToBottomOf(sprite)
-    }
-
-    val input get() = stage!!.views.input
-
-    private val canRayPass: (Int, Int) -> Boolean = { cx, cy ->
-        !level.hasCollision(cx, cy) || this.cx == cx && this.cy == cy
-    }
 
     private var initEntityCollisionChecks = false
     private var collisionFilter: () -> List<Entity> = { emptyList() }
@@ -133,64 +23,22 @@ open class Entity(
             addEntityCollisionChecks()
         }
 
+    val input get() = container.stage?.views?.input!!
+
     init {
-        toGridPosition(cx, cy)
-        sync()
-
-        hitShape {
-            rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
-        }
-
-        addUpdater {
-            if (stage == null) return@addUpdater
-            update(it)
-            postUpdate(it)
-        }
+//        container.hitShape {
+//            rect(width * 0.5, height * 0.5, width, height)
+//        }
     }
 
-    /**** Helper Functions ****/
-    fun anchor(ax: Double, ay: Double): Entity {
-        sprite.anchor(ax, ay)
-        return this
+    override var tmod: Double = 1.0
+
+    override fun update(dt: TimeSpan) {
     }
 
-    fun toGridPosition(cx: Int, cy: Int, xr: Double = 0.5, yr: Double = 1.0): Entity {
-        this.cx = cx
-        this.cy = cy
-        this.xr = xr
-        this.yr = yr
-        return this
-    }
-
-    fun collisionFilter(filter: () -> List<Entity>): Entity {
-        this.collisionFilter = filter
-        return this
-    }
-
-    /**
-     * Attempts to cast ray to target grid position. Can be used for Line-of-sight check.
-     * @return true if able to pass all the way through the the target point
-     */
-    fun castRayTo(tcx: Int, tcy: Int) = castRay(cx, cy, tcx, tcy, canRayPass)
-
-    fun castRayTo(entity: Entity) = castRayTo(entity.cx, entity.cy)
-
-    fun dirTo(entity: Entity) = if (entity.centerX > centerX) 1 else -1
-
-    fun distGridTo(tcx: Int, tcy: Int, txr: Double = 0.5, tyr: Double = 0.5) =
-        dist(cx + xr, cy + yr, tcx + txr, tcy + tyr)
-
-    fun distGridTo(entity: Entity) = distGridTo(entity.cx, entity.cy, entity.xr, entity.yr)
-
-    fun distPxTo(x: Double, y: Double) = dist(px, py, x, y)
-    fun distPxTo(entity: Entity) = distPxTo(entity.px, entity.py)
-
-    fun angleTo(x: Double, y: Double) = atan2(y - py, x - px)
-    fun angleTo(entity: Entity) = angleTo(entity.centerX, entity.centerY)
-
-    fun destroy() {
+    open fun destroy() {
         destroyed = true
-        removeFromParent()
+        container.removeFromParent()
         onDestroyedCallback?.invoke(this)
     }
 
@@ -198,115 +46,20 @@ open class Entity(
         onDestroyedCallback = action
     }
 
-    /**** Lifecycle and other callbacks ****/
     protected open fun onEntityCollision(entity: Entity) {}
 
     protected open fun onEntityColliding(entity: Entity) {}
 
     protected open fun onEntityCollisionExit(entity: Entity) {}
 
-    protected open fun update(dt: TimeSpan) {
-        tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
-
-        performXSteps()
-        performYSteps()
-    }
-
-    protected open fun postUpdate(dt: TimeSpan) {
-        sync()
-        _stretchX += (1 - _stretchX) * 0.2
-        _stretchY += (1 - _stretchY) * 0.2
-    }
-
-    private fun sync() {
-        x = (cx + xr) * GRID_SIZE
-        y = (cy + yr) * GRID_SIZE
-        sprite.scaleX = dir.toDouble() * spriteScaleX * stretchX
-        sprite.scaleY = spriteScaleY * stretchY
-    }
-
-    private fun performXSteps() {
-        var steps = ceil(abs(dx * tmod))
-        val step = dx * tmod / steps
-        while (steps > 0) {
-            xr += step
-
-            performXCollisionCheck()
-            while (xr > 1) {
-                xr--
-                cx++
-            }
-            while (xr < 0) {
-                xr++
-                cx--
-            }
-            steps--
-        }
-
-        dx *= frictX.pow(tmod)
-        if (abs(dx) <= 0.0005 * tmod) {
-            dx = 0.0
-        }
-    }
-
-    private fun performXCollisionCheck() {
-        if (level.hasCollision(cx + 1, cy) && xr >= 0.7) {
-            xr = 0.7
-            dx *= 0.5.pow(tmod)
-        }
-
-        if (level.hasCollision(cx - 1, cy) && xr <= 0.3) {
-            xr = 0.3
-            dx *= 0.5.pow(tmod)
-        }
-    }
-
-    private fun performYSteps() {
-        if (gravityPulling) {
-            dy += gravityMul * GRAVITY * tmod
-        }
-        var steps = ceil(abs(dy * tmod))
-        val step = dy * tmod / steps
-        while (steps > 0) {
-            yr += step
-            performYCollisionCheck()
-            while (yr > 1) {
-                yr--
-                cy++
-            }
-            while (yr < 0) {
-                yr++
-                cy--
-            }
-            steps--
-        }
-        dy *= frictY.pow(tmod)
-        if (abs(dy) <= 0.0005 * tmod) {
-            dy = 0.0
-        }
-    }
-
-
-    private fun performYCollisionCheck() {
-        val heightCoordDiff = floor(enHeight / GRID_SIZE)
-        if (level.hasCollision(cx, cy - 1) && yr <= heightCoordDiff) {
-            yr = heightCoordDiff
-            dy = 0.0
-        }
-        if (level.hasCollision(cx, cy + 1) && yr >= 1) {
-            dy = 0.0
-            yr = 1.0
-        }
-    }
-
     private fun addEntityCollisionChecks() {
         if (initEntityCollisionChecks) return
 
-        val collisionState = mutableMapOf<View, Boolean>()
-        addUpdater {
+        val collisionState = mutableMapOf<Entity, Boolean>()
+        container.addUpdater {
             collisionFilter().fastForEach {
                 if (this != it) {
-                    if (this.collidesWithShape(it)) {
+                    if (this.collidesWithShape(it.container)) {
                         if (collisionState[it] == true) {
                             onEntityColliding(it)
                         } else {
@@ -323,17 +76,19 @@ open class Entity(
         }
     }
 
-    override fun buildDebugComponent(views: Views, container: UiContainer) {
-        container.uiCollapsibleSection("Entity") {
-            uiEditableValue(listOf(this@Entity::cx, this@Entity::cy), name = "(cx, cy)", min = 0, max = 10000)
-            uiEditableValue(listOf(this@Entity::xr, this@Entity::yr), name = "(xr, yr)", min = 0.0, max = 1.0)
-            uiEditableValue(listOf(this@Entity::dx, this@Entity::dy), name = "Velocity (dx, dy)")
-            uiEditableValue(listOf(this@Entity::_stretchX, this@Entity::_stretchY), name = "Squash (x, y)")
-            uiEditableValue(this@Entity::hasGravity, name = "Gravity")
-            uiEditableValue(this@Entity::gravityMul, name = "Gravity Multiplier")
-            uiEditableValue(listOf(this@Entity::enWidth, this@Entity::enHeight), name = "Size (w, h)")
-        }
-        super.buildDebugComponent(views, container)
-    }
 }
 
+
+fun <T : Entity> T.addTo(parent: Container): T {
+    container.addTo(parent)
+    return this
+}
+
+val Entity.cooldown get() = container.cooldown
+val Entity.cd get() = cooldown
+
+fun Entity.cooldown(name: String, time: TimeSpan, callback: () -> Unit = {}): Closeable =
+    cooldown.timeout(name, time, callback)
+
+fun Entity.cd(name: String, time: TimeSpan, callback: () -> Unit = {}): Closeable =
+    cooldown(name, time, callback)

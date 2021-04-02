@@ -1,29 +1,48 @@
 package com.lehaine.pixelheist.entity
 
-import com.lehaine.lib.cd
+import com.lehaine.lib.component.GridPositionComponent
+import com.lehaine.lib.component.PlatformerDynamicComponent
+import com.lehaine.lib.component.PlatformerDynamicComponentDefault
+import com.lehaine.lib.component.SpriteComponent
+import com.lehaine.lib.component.ext.angleTo
+import com.lehaine.lib.component.ext.dirTo
 import com.lehaine.lib.random
 import com.lehaine.lib.stateMachine
-import com.lehaine.pixelheist.Entity
-import com.lehaine.pixelheist.GameLevel
-import com.lehaine.pixelheist.World
+import com.lehaine.pixelheist.*
+import com.lehaine.pixelheist.component.GameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korev.Key
 import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.ViewDslMarker
-import com.soywiz.korge.view.addTo
 import com.soywiz.korma.geom.degrees
 import com.soywiz.korma.geom.radians
 
-inline fun Container.hero(
+fun Container.hero(
     data: World.EntityHero,
-    level: GameLevel,
-    callback: @ViewDslMarker Hero.() -> Unit = {}
-): Hero = Hero(data, level).addTo(this, callback)
+    level: GameLevelComponent<LevelMark>
+): Hero {
+    val container = Container()
+    return Hero(
+        PlatformerDynamicComponentDefault(
+            level,
+            data.cx,
+            data.cy,
+            data.pivotX.toDouble(),
+            data.pivotY.toDouble()
+        ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
+    ).addTo(this)
+}
 
-class Hero(data: World.EntityHero, level: GameLevel) :
-    Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+class Hero(
+    private val platformerDynamic: PlatformerDynamicComponent,
+    private val level: GameLevelComponent<LevelMark>,
+    private val spriteComponent: SpriteComponent,
+    container: Container
+) : Entity(container),
+    PlatformerDynamicComponent by platformerDynamic,
+    GameLevelComponent<LevelMark> by level,
+    SpriteComponent by spriteComponent {
 
     private val moveSpeed = 0.03
 
@@ -59,7 +78,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
                 lastMobJumpedOn?.stun()
             }
             update {
-                dy -= 0.7
+                velocityY -= 0.7
                 lastMobJumpedOn = null
             }
         }
@@ -79,17 +98,17 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             }
         }
         state(HeroMovementState.Fall) {
-            reason { dy > 0.01 }
+            reason { velocityY > 0.01 }
             update { move() }
         }
         state(HeroMovementState.Run) {
             reason { runningLeft || runningRight }
-            begin { sprite.playAnimationLooped(assets.heroRun) }
+            begin { sprite.playAnimationLooped(Assets.heroRun) }
             update { move() }
         }
         state(HeroMovementState.Idle) {
             reason { true }
-            begin { sprite.playAnimationLooped(assets.heroIdle) }
+            begin { sprite.playAnimationLooped(Assets.heroIdle) }
         }
     }
 
@@ -106,8 +125,8 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             begin {
                 forceDropItem = false
                 heldItem?.let {
-                    it.dx = (0.6..0.75).random() * -dir
-                    it.dy = -(0.15..0.2).random()
+                    it.velocityX = (0.6..0.75).random() * -dir
+                    it.velocityY = -(0.15..0.2).random()
                 }
                 heldItem = null
                 cd(ITEM_THREW, 250.milliseconds)
@@ -118,8 +137,8 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             reason { input.keys.justPressed(Key.E) && heldItem != null }
             update {
                 heldItem?.let {
-                    it.dx = (1.2..1.5).random() * dir + dx
-                    it.dy = -(0.3..0.35).random() + dy
+                    it.velocityX = (1.2..1.5).random() * dir + velocityX
+                    it.velocityY = -(0.3..0.35).random() + velocityY
                 }
                 heldItem = null
                 cd(ITEM_THREW, 250.milliseconds)
@@ -157,7 +176,7 @@ class Hero(data: World.EntityHero, level: GameLevel) :
             && entity is Mob && entity.canStun
         ) {
             val angle = angleTo(entity).radians
-            if (angle.degrees in (0.0..180.0) && dy > 0) {
+            if (angle.degrees in (0.0..180.0) && velocityY > 0) {
                 lastMobJumpedOn = entity
             }
         }
@@ -183,11 +202,11 @@ class Hero(data: World.EntityHero, level: GameLevel) :
 //            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
     }
 
-    fun hit(from: Entity) {
+    fun hit(from: GridPositionComponent) {
         if (cd.has(HIT_IMMUNE)) return
         val hitDir = dirTo(from)
-        dx = -hitDir * 0.25
-        dy = -0.3
+        velocityX = -hitDir * 0.25
+        velocityY - 0.3
         forceDropItem = true
         cd(STUNNED, 500.milliseconds)
         cd(MOB_JUMP_LOCK, 500.milliseconds)
@@ -196,27 +215,27 @@ class Hero(data: World.EntityHero, level: GameLevel) :
 
     private fun move() {
         if (runningRight) {
-            dx += moveSpeed
+            velocityX += moveSpeed
             dir = 1
         }
         if (runningLeft) {
-            dx -= moveSpeed
+            velocityX -= moveSpeed
             dir = -1
         }
     }
 
     private fun jump() {
-        dy = -0.35
+        velocityY = -0.35
         cd(JUMP_FORCE, 100.milliseconds)
         cd(JUMP_EXTRA, 100.milliseconds)
     }
 
     private fun jumpExtra() {
-        dy -= 0.04 * tmod
+        velocityY -= 0.04 * tmod
     }
 
     private fun jumpForce() {
-        dy -= 0.05 * cd.ratio(JUMP_FORCE) * tmod
+        velocityY -= 0.05 * cd.ratio(JUMP_FORCE) * tmod
     }
 
 }

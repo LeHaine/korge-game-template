@@ -6,6 +6,7 @@ import com.lehaine.lib.ldtk.ldtkMapView
 import com.lehaine.lib.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
+import com.soywiz.klock.milliseconds
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -104,8 +105,13 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             gameLevel._camera = it
         }
 
-        addUpdater {
-            fx.update(it)
+        addUpdater { dt ->
+            val tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
+            fx.update(dt)
+            entities.fastForEach {
+                it.tmod = tmod
+                it.update(dt)
+            }
         }
 
         keys {

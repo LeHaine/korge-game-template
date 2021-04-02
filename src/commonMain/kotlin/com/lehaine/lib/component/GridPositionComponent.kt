@@ -12,8 +12,8 @@ interface GridPositionComponent : Component {
     var yr: Double
 
     var gridCellSize: Int
-    var gridPosWidth: Double
-    var gridPosHeight: Double
+    var width: Double
+    var height: Double
 
     var anchorX: Double
     var anchorY: Double
@@ -24,7 +24,7 @@ interface GridPositionComponent : Component {
     val centerY: Double
     val bounds: Rectangle
 
-    override fun updateComponent(tmod: Double) {
+    fun updateGridPosition(tmod: Double) {
         updateX(tmod)
         updateY(tmod)
     }
@@ -52,7 +52,7 @@ interface GridPositionComponent : Component {
     }
 
 
-    override fun createDebugInfo(container: UiContainer) {
+    fun createDebugInfo(container: UiContainer) {
         container.uiCollapsibleSection("Grid Position") {
             uiEditableValue(this@GridPositionComponent::gridCellSize, name = "Grid Cell Size", min = 1)
             uiEditableValue(
@@ -68,11 +68,10 @@ interface GridPositionComponent : Component {
                 max = 1.0
             )
             uiEditableValue(
-                listOf(this@GridPositionComponent::gridPosWidth, this@GridPositionComponent::gridPosHeight),
+                listOf(this@GridPositionComponent::width, this@GridPositionComponent::height),
                 name = "Size (w, h)"
             )
         }
-        super.createDebugInfo(container)
     }
 
     companion object {
@@ -86,16 +85,15 @@ open class GridPositionComponentDefault(
     override var cx: Int = 0,
     override var cy: Int = 0,
     override var xr: Double = 0.5,
-    override var yr: Double = 0.5
+    override var yr: Double = 0.5,
+    override var anchorX: Double = 0.5,
+    override var anchorY: Double = 0.5
 ) : GridPositionComponent {
 
-
     override var gridCellSize: Int = 16
-    override var gridPosWidth: Double = 16.0
-    override var gridPosHeight: Double = 16.0
+    override var width: Double = 16.0
+    override var height: Double = 16.0
 
-    override var anchorX: Double = 0.5
-    override var anchorY: Double = 0.5
 
     override val px get() = (cx + xr) * gridCellSize
     override val py get() = (cy + yr) * gridCellSize

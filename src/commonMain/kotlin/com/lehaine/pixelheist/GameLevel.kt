@@ -1,22 +1,23 @@
 package com.lehaine.pixelheist
 
 import com.lehaine.lib.CameraContainer
+import com.lehaine.pixelheist.component.GameLevelComponent
 import com.lehaine.pixelheist.entity.Hero
 import com.soywiz.kmem.clamp
 
-class GameLevel(val level: World.WorldLevel) {
+class GameLevel(val level: World.WorldLevel) : GameLevelComponent<LevelMark> {
     var _hero: Hero? = null
     var _camera: CameraContainer? = null
     var _fx: Fx? = null
 
-    val hero get() = _hero!!
-    val camera get() = _camera!!
-    val fx get() = _fx!!
+    override val hero get() = _hero!!
+    override val camera get() = _camera!!
+    override val fx get() = _fx!!
 
-    val entities: ArrayList<Entity> = arrayListOf()
+    override val entities: ArrayList<Entity> = arrayListOf()
 
-    val width get() = level.layerCollisions.cWidth
-    val height get() = level.layerCollisions.cHeight
+    override val levelWidth get() = level.layerCollisions.cWidth
+    override val levelHeight get() = level.layerCollisions.cHeight
 
     private val marks = mutableMapOf<LevelMark, MutableMap<Int, Int>>()
     private val collisionLayers = intArrayOf(1)
@@ -26,10 +27,10 @@ class GameLevel(val level: World.WorldLevel) {
         createLevelMarks()
     }
 
-    fun isValid(cx: Int, cy: Int) = collisionLayer.isCoordValid(cx, cy)
-    fun getCoordId(cx: Int, cy: Int) = collisionLayer.getCoordId(cx, cy)
+    override fun isValid(cx: Int, cy: Int) = collisionLayer.isCoordValid(cx, cy)
+    override fun getCoordId(cx: Int, cy: Int) = collisionLayer.getCoordId(cx, cy)
 
-    fun hasCollision(cx: Int, cy: Int): Boolean {
+    override fun hasCollision(cx: Int, cy: Int): Boolean {
         return if (isValid(cx, cy)) {
             collisionLayers.contains(collisionLayer.getInt(cx, cy))
         } else {
@@ -37,17 +38,17 @@ class GameLevel(val level: World.WorldLevel) {
         }
     }
 
-    fun hasMark(cx: Int, cy: Int, mark: LevelMark, dir: Int = 0): Boolean {
+    override fun hasMark(cx: Int, cy: Int, mark: LevelMark, dir: Int): Boolean {
         return marks[mark]?.get(getCoordId(cx, cy)) == dir && isValid(cx, cy)
     }
 
-    fun setMarks(cx: Int, cy: Int, marks: List<LevelMark>) {
+    override fun setMarks(cx: Int, cy: Int, marks: List<LevelMark>) {
         marks.forEach {
             setMark(cx, cy, it)
         }
     }
 
-    fun setMark(cx: Int, cy: Int, mark: LevelMark, dir: Int = 0) {
+    override fun setMark(cx: Int, cy: Int, mark: LevelMark, dir: Int) {
         if (isValid(cx, cy) && !hasMark(cx, cy, mark)) {
             if (!marks.contains(mark)) {
                 marks[mark] = mutableMapOf()
@@ -58,8 +59,8 @@ class GameLevel(val level: World.WorldLevel) {
     }
 
     private fun createLevelMarks() {
-        for (cy in 0 until height) {
-            for (cx in 0 until width) {
+        for (cy in 0 until levelHeight) {
+            for (cx in 0 until levelWidth) {
                 // no collision at current pos or north but has collision south.
                 if (!hasCollision(cx, cy) && hasCollision(cx, cy + 1) && !hasCollision(cx, cy - 1)) {
                     // if collision to the east of current pos and no collision to the northeast

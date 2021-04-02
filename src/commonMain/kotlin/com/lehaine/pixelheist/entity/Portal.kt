@@ -1,12 +1,10 @@
 package com.lehaine.pixelheist.entity
 
 import com.lehaine.pixelheist.Assets
-import com.lehaine.pixelheist.Entity
 import com.lehaine.pixelheist.GameLevel
 import com.lehaine.pixelheist.World
 import com.soywiz.korge.view.Container
 import com.soywiz.korge.view.ViewDslMarker
-import com.soywiz.korge.view.addTo
 
 inline fun Container.portal(
     data: World.EntityPortal,

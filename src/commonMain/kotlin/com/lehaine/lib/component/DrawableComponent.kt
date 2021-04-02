@@ -1,44 +1,25 @@
 package com.lehaine.lib.component
 
 import com.lehaine.lib.EnhancedSprite
+import com.lehaine.lib.enhancedSprite
 import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.addTo
 
-interface DrawableComponent : Component {
+interface DrawableComponent {
+    var dir: Int
     val sprite: EnhancedSprite
-    var stretchX: Double
-    var stretchY: Double
-
-    var scaleX: Double
-    var scaleY: Double
 
     companion object {
-        operator fun invoke(container: Container): DrawableComponent {
-            return DrawableComponentDefault(container)
+        operator fun invoke(container: Container, anchorX: Double, anchorY: Double): DrawableComponent {
+            return DrawableComponentDefault(container, anchorX, anchorY)
         }
     }
 }
 
-
-class DrawableComponentDefault(container: Container) : DrawableComponent {
-    override val sprite = EnhancedSprite().addTo(container)
-
-    private var _stretchX = 1.0
-    private var _stretchY = 1.0
-
-    override var stretchX: Double
-        get() = _stretchX
-        set(value) {
-            _stretchX = value
-            _stretchY = 2 - value
-        }
-    override var stretchY: Double
-        get() = _stretchY
-        set(value) {
-            _stretchX = 2 - value
-            _stretchY = value
-        }
-
-    override var scaleX = 1.0
-    override var scaleY = 1.0
+class DrawableComponentDefault(container: Container, anchorX: Double, anchorY: Double) : DrawableComponent {
+    override var dir = 0
+    override val sprite: EnhancedSprite = container.enhancedSprite {
+        smoothing = false
+        this.anchorX = anchorX
+        this.anchorY = anchorY
+    }
 }
