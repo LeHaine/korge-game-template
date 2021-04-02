@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist.components
+package com.lehaine.lib.components
 
 import com.soywiz.korma.geom.Rectangle
 

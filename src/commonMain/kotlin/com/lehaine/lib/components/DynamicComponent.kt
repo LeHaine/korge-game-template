@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist.components
+package com.lehaine.lib.components
 
 import com.soywiz.korma.geom.Rectangle
 import kotlin.math.abs
@@ -126,19 +126,19 @@ open class DynamicComponentDefault : DynamicComponent {
 }
 
 
-class PlatformerDynamicComponent(private val levelCollisionComponent: LevelCollisionComponent) :
+class PlatformerDynamicComponent(private val levelComponent: LevelComponent) :
     DynamicComponentDefault() {
     var hasGravity = true
     private val gravityPulling get() = !onGround && hasGravity
-    val onGround get() = deltaX == 0.0 && levelCollisionComponent.hasCollision(cx, cy + 1)
+    val onGround get() = deltaX == 0.0 && levelComponent.hasCollision(cx, cy + 1)
 
     override fun checkXCollision(tmod: Double) {
-        if (levelCollisionComponent.hasCollision(cx + 1, cy) && xr >= 0.7) {
+        if (levelComponent.hasCollision(cx + 1, cy) && xr >= 0.7) {
             xr = 0.7
             deltaX *= 0.5.pow(tmod)
         }
 
-        if (levelCollisionComponent.hasCollision(cx - 1, cy) && xr <= 0.3) {
+        if (levelComponent.hasCollision(cx - 1, cy) && xr <= 0.3) {
             xr = 0.3
             deltaY *= 0.5.pow(tmod)
         }
@@ -150,11 +150,11 @@ class PlatformerDynamicComponent(private val levelCollisionComponent: LevelColli
 
     override fun checkYCollision(tmod: Double) {
         val heightCoordDiff = floor(height / gridCellSize.toDouble())
-        if (levelCollisionComponent.hasCollision(cx, cy - 1) && yr <= heightCoordDiff) {
+        if (levelComponent.hasCollision(cx, cy - 1) && yr <= heightCoordDiff) {
             yr = heightCoordDiff
             deltaX = 0.0
         }
-        if (levelCollisionComponent.hasCollision(cx, cy + 1) && yr >= 1) {
+        if (levelComponent.hasCollision(cx, cy + 1) && yr >= 1) {
             deltaY = 0.0
             yr = 1.0
         }
