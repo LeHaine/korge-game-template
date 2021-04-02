@@ -2,24 +2,12 @@ package com.lehaine.pixelheist.component
 
 import com.lehaine.lib.component.GridPositionComponent
 import com.soywiz.kds.iterators.fastForEach
-import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.View
-import com.soywiz.korge.view.addUpdater
-import com.soywiz.korge.view.collidesWithShape
+import com.soywiz.korge.view.*
+import com.soywiz.korma.geom.vector.rect
+import kotlin.collections.set
 
-class Entity(private val position: GridPositionComponent) : Container(),
+open class Entity(private val position: GridPositionComponent) : Container(),
     GridPositionComponent by position {
-
-    override var width: Double
-        get() = position.width
-        set(value) {
-            position.height = height
-        }
-    override var height: Double
-        get() = position.height
-        set(value) {
-            position.width = value
-        }
 
     var destroyed = false
 
@@ -32,8 +20,27 @@ class Entity(private val position: GridPositionComponent) : Container(),
             addEntityCollisionChecks()
         }
 
+    init {
+//        position(cx, cy)
+//        sync()
+
+        hitShape {
+            rect(enWidth * 0.5, enHeight * 0.5, enWidth, enHeight)
+        }
+
+    }
+
     fun update(tmod: Double) {
         position.updateComponent(tmod)
+    }
+
+    fun postUpdate(tmod: Double) {
+        syncPosition()
+    }
+
+    private fun syncPosition() {
+        x = px
+        y = py
     }
 
     fun destroy() {

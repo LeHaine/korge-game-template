@@ -1,16 +1,19 @@
 package com.lehaine.lib.component
 
+import com.soywiz.korge.debug.uiCollapsibleSection
+import com.soywiz.korge.debug.uiEditableValue
 import com.soywiz.korma.geom.Rectangle
+import com.soywiz.korui.UiContainer
 
-interface GridPositionComponent : UpdatableComponent {
+interface GridPositionComponent : Component {
     var cx: Int
     var cy: Int
     var xr: Double
     var yr: Double
 
     var gridCellSize: Int
-    var width: Double
-    var height: Double
+    var gridPosWidth: Double
+    var gridPosHeight: Double
 
     var anchorX: Double
     var anchorY: Double
@@ -49,6 +52,29 @@ interface GridPositionComponent : UpdatableComponent {
     }
 
 
+    override fun createDebugInfo(container: UiContainer) {
+        container.uiCollapsibleSection("Grid Position") {
+            uiEditableValue(this@GridPositionComponent::gridCellSize, name = "Grid Cell Size", min = 1)
+            uiEditableValue(
+                listOf(this@GridPositionComponent::cx, this@GridPositionComponent::cy),
+                name = "(cx, cy)",
+                min = 0,
+                max = 10000
+            )
+            uiEditableValue(
+                listOf(this@GridPositionComponent::xr, this@GridPositionComponent::yr),
+                name = "(xr, yr)",
+                min = 0.0,
+                max = 1.0
+            )
+            uiEditableValue(
+                listOf(this@GridPositionComponent::gridPosWidth, this@GridPositionComponent::gridPosHeight),
+                name = "Size (w, h)"
+            )
+        }
+        super.createDebugInfo(container)
+    }
+
     companion object {
         operator fun invoke(): GridPositionComponent {
             return GridPositionComponentDefault()
@@ -56,15 +82,17 @@ interface GridPositionComponent : UpdatableComponent {
     }
 }
 
-open class GridPositionComponentDefault : GridPositionComponent {
-    override var cx: Int = 0
-    override var cy: Int = 0
-    override var xr: Double = 0.5
+open class GridPositionComponentDefault(
+    override var cx: Int = 0,
+    override var cy: Int = 0,
+    override var xr: Double = 0.5,
     override var yr: Double = 0.5
+) : GridPositionComponent {
+
 
     override var gridCellSize: Int = 16
-    override var width: Double = 16.0
-    override var height: Double = 16.0
+    override var gridPosWidth: Double = 16.0
+    override var gridPosHeight: Double = 16.0
 
     override var anchorX: Double = 0.5
     override var anchorY: Double = 0.5

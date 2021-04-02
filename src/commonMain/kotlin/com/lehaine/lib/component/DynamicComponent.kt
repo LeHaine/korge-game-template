@@ -15,51 +15,6 @@ interface DynamicComponent : GridPositionComponent {
     var frictionX: Double
     var frictionY: Double
 
-    fun checkXCollision(tmod: Double)
-    fun checkYCollision(tmod: Double)
-
-    companion object {
-        operator fun invoke(): GridPositionComponent {
-            return DynamicComponentDefault()
-        }
-    }
-}
-
-open class DynamicComponentDefault : DynamicComponent {
-    override var gravityX: Double = 0.0
-    override var gravityY: Double = 0.0
-    override var gravityMultiplier: Double = 1.0
-    override var deltaX: Double = 0.0
-    override var deltaY: Double = 0.0
-    override var frictionX: Double = 0.82
-    override var frictionY: Double = 0.82
-
-    override var cx: Int = 0
-    override var cy: Int = 0
-    override var xr: Double = 0.5
-    override var yr: Double = 0.5
-
-    override var gridCellSize: Int = 16
-    override var width: Int = 16
-    override var height: Int = 16
-
-    override var anchorX: Double = 0.5
-    override var anchorY: Double = 0.5
-
-    override val px get() = (cx + xr) * gridCellSize
-    override val py get() = (cy + yr) * gridCellSize
-    override val centerX get() = px + (0.5 - anchorX) * gridCellSize
-    override val centerY get() = py + (0.5 - anchorY) * gridCellSize
-
-    private var _bounds = Rectangle()
-    override val bounds: Rectangle
-        get() = _bounds.apply {
-            top = py - anchorY * width
-            right = px + (1 - px) * width
-            bottom = py + (1 - anchorY) * height
-            left = px - anchorX * height
-        }
-
     override fun updateComponent(tmod: Double) {
         updateX(tmod)
         updateY(tmod)
@@ -89,12 +44,6 @@ open class DynamicComponentDefault : DynamicComponent {
         }
     }
 
-    open override fun checkXCollision(tmod: Double) {}
-
-    protected open fun calculateDeltaXGravity(tmod: Double): Double {
-        return 0.0
-    }
-
     override fun updateY(tmod: Double) {
         deltaY += calculateDeltaYGravity(tmod)
         var steps = ceil(abs(deltaY * tmod))
@@ -118,11 +67,59 @@ open class DynamicComponentDefault : DynamicComponent {
         }
     }
 
-    protected open fun calculateDeltaYGravity(tmod: Double): Double {
+    fun calculateDeltaXGravity(tmod: Double): Double {
         return 0.0
     }
 
-    open override fun checkYCollision(tmod: Double) {}
+    fun calculateDeltaYGravity(tmod: Double): Double {
+        return 0.0
+    }
+
+    fun checkXCollision(tmod: Double) {}
+    fun checkYCollision(tmod: Double) {}
+
+    companion object {
+        operator fun invoke(): GridPositionComponent {
+            return DynamicComponentDefault()
+        }
+    }
+}
+
+open class DynamicComponentDefault(
+    override var cx: Int = 0,
+    override var cy: Int = 0,
+    override var xr: Double = 0.5,
+    override var yr: Double = 0.5
+) : DynamicComponent {
+    override var gravityX: Double = 0.0
+    override var gravityY: Double = 0.0
+    override var gravityMultiplier: Double = 1.0
+    override var deltaX: Double = 0.0
+    override var deltaY: Double = 0.0
+    override var frictionX: Double = 0.82
+    override var frictionY: Double = 0.82
+
+
+    override var gridCellSize: Int = 16
+    override var gridPosWidth: Double = 16.0
+    override var gridPosHeight: Double = 16.0
+
+    override var anchorX: Double = 0.5
+    override var anchorY: Double = 0.5
+
+    override val px get() = (cx + xr) * gridCellSize
+    override val py get() = (cy + yr) * gridCellSize
+    override val centerX get() = px + (0.5 - anchorX) * gridCellSize
+    override val centerY get() = py + (0.5 - anchorY) * gridCellSize
+
+    private var _bounds = Rectangle()
+    override val bounds: Rectangle
+        get() = _bounds.apply {
+            top = py - anchorY * width
+            right = px + (1 - px) * width
+            bottom = py + (1 - anchorY) * height
+            left = px - anchorX * height
+        }
 }
 
 
@@ -144,12 +141,8 @@ class PlatformerDynamicComponent(private val levelComponent: LevelComponent) :
         }
     }
 
-    override fun calculateDeltaXGravity(tmod: Double): Double {
-        return 0.0
-    }
-
     override fun checkYCollision(tmod: Double) {
-        val heightCoordDiff = floor(height / gridCellSize.toDouble())
+        val heightCoordDiff = floor(gridPosHeight / gridCellSize.toDouble())
         if (levelComponent.hasCollision(cx, cy - 1) && yr <= heightCoordDiff) {
             yr = heightCoordDiff
             deltaX = 0.0

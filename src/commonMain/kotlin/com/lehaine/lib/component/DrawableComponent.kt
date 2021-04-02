@@ -12,11 +12,6 @@ interface DrawableComponent : Component {
     var scaleX: Double
     var scaleY: Double
 
-    fun syncPosition(x:Double, y:Double) {
-        sprite.x = x
-        sprite.y = y
-    }
-
     companion object {
         operator fun invoke(container: Container): DrawableComponent {
             return DrawableComponentDefault(container)
@@ -25,7 +20,7 @@ interface DrawableComponent : Component {
 }
 
 
-private class DrawableComponentDefault(container: Container) : DrawableComponent {
+class DrawableComponentDefault(container: Container) : DrawableComponent {
     override val sprite = EnhancedSprite().addTo(container)
 
     private var _stretchX = 1.0
