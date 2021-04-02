@@ -5,6 +5,9 @@ import com.lehaine.lib.enhancedSprite
 import com.soywiz.korge.view.Container
 
 interface SpriteComponent : DrawableComponent, ScaleAndStretchComponent {
+
+    fun updateSprite()
+
     companion object {
         operator fun invoke(container: Container, anchorX: Double, anchorY: Double): SpriteComponent {
             return SpriteComponentDefault(container, anchorX, anchorY)
@@ -41,5 +44,11 @@ class SpriteComponentDefault(container: Container, anchorX: Double, anchorY: Dou
     override fun updateStretchAndScale() {
         _stretchX += (1 - _stretchX) * 0.2
         _stretchY += (1 - _stretchY) * 0.2
+    }
+
+    override fun updateSprite() {
+        updateStretchAndScale()
+        sprite.scaleX = dir.toDouble() * scaleX * stretchX
+        sprite.scaleY = scaleY * stretchY
     }
 }

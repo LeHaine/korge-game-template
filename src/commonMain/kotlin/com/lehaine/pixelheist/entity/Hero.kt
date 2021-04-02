@@ -203,9 +203,8 @@ class Hero(
         itemFsm.update(dt)
 
         updateGridPosition(tmod)
-        updateStretchAndScale()
-        println("$cx,$cy --- $px,$py")
-        println(movementFsm.currentState!!.type::class.simpleName)
+
+
 
 //        debugLabel.text =
 //            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
@@ -215,6 +214,7 @@ class Hero(
     override fun postUpdate(dt: TimeSpan) {
         super.postUpdate(dt)
         sync()
+        updateSprite()
     }
 
     fun <T> hit(from: T) where T : Entity, T : GridPositionComponent {

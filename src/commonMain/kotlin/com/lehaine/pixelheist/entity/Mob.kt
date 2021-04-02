@@ -182,12 +182,12 @@ class Mob(
         super.update(dt)
         movementFsm.update(dt)
         updateGridPosition(tmod)
-        updateStretchAndScale()
     }
 
     override fun postUpdate(dt: TimeSpan) {
         super.postUpdate(dt)
         sync()
+        updateSprite()
     }
 
     fun stun() {

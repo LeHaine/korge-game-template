@@ -54,11 +54,11 @@ class Item(
     override fun update(dt: TimeSpan) {
         super.update(dt)
         updateGridPosition(tmod)
-        updateStretchAndScale()
     }
 
     override fun postUpdate(dt: TimeSpan) {
         super.postUpdate(dt)
         sync()
+        updateSprite()
     }
 }
