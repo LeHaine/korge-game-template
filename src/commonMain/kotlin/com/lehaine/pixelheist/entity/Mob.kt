@@ -1,33 +1,54 @@
 package com.lehaine.pixelheist.entity
 
-import com.lehaine.lib.cd
+import com.lehaine.lib.component.GridPositionComponent
+import com.lehaine.lib.component.PlatformerDynamicComponent
+import com.lehaine.lib.component.PlatformerDynamicComponentDefault
+import com.lehaine.lib.component.SpriteComponent
+import com.lehaine.lib.component.ext.dirTo
+import com.lehaine.lib.component.ext.distGridTo
 import com.lehaine.lib.getByPrefix
 import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
+import com.lehaine.pixelheist.component.GameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.ViewDslMarker
-import com.soywiz.korge.view.addTo
 
 
 inline fun Container.mob(
     data: World.EntityMob,
-    level: GameLevel,
-    callback: @ViewDslMarker Mob.() -> Unit = {}
-): Mob = Mob(data, level).addTo(this, callback)
+    level: GameLevelComponent<LevelMark>,
+    callback: Mob.() -> Unit = {}
+): Mob {
+    val container = Container()
+    return Mob(
+        PlatformerDynamicComponentDefault(
+            level,
+            data.cx,
+            data.cy,
+            data.pivotX.toDouble(),
+            data.pivotY.toDouble()
+        ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
+    ).addTo(this).also(callback)
+}
 
 class Mob(
-    data: World.EntityMob, level: GameLevel,
-) : Entity(data.cx, data.cy, level, data.pivotX.toDouble(), data.pivotY.toDouble()) {
+    private val platformerDynamic: PlatformerDynamicComponent,
+    level: GameLevelComponent<LevelMark>,
+    private val spriteComponent: SpriteComponent,
+    container: Container
+) : Entity(level, container),
+    PlatformerDynamicComponent by platformerDynamic,
+    SpriteComponent by spriteComponent {
+
 
     private val moveSpeed = 0.015
 
-    private val hasPlatformLeft get() = level.hasMark(cx, cy, LevelMark.PLATFORM_END_LEFT) && dir == -1 && xr < 0.5
-    private val hasPlatformRight get() = level.hasMark(cx, cy, LevelMark.PLATFORM_END_RIGHT) && dir == 1 && xr > 0.5
+    private val hasPlatformLeft get() = hasMark(cx, cy, LevelMark.PLATFORM_END_LEFT) && dir == -1 && xr < 0.5
+    private val hasPlatformRight get() = hasMark(cx, cy, LevelMark.PLATFORM_END_RIGHT) && dir == 1 && xr > 0.5
     private val hasSmallStep
-        get() = level.hasMark(
+        get() = hasMark(
             cx,
             cy,
             LevelMark.SMALL_STEP,
@@ -38,7 +59,7 @@ class Mob(
     private val nearHero: Boolean get() = canSeeHero && distGridTo(hero) <= 1
 
     private var attackRange = 2 // grid cells
-    private var aggroTarget: Entity? = null
+    private var aggroTarget: GridPositionComponent? = null
     private var attack = false
 
     val canStun get() = !cd.has(STUN_IMMUNE)
@@ -86,7 +107,7 @@ class Mob(
                     attack = true
                 }
                 sprite.playOverlap(Assets.tiles.getByPrefix("mobIdle"), 500.milliseconds)
-                dx = 0.0
+                velocityX = 0.0
             }
             update {
                 stretchY = 1.25
@@ -129,15 +150,15 @@ class Mob(
         }
         state(MobState.Patrol) {
             reason { !cd.has(LOCK) }
-            begin { sprite.playAnimationLooped(assets.mobRun) }
+            begin { sprite.playAnimationLooped(Assets.mobRun) }
             update { autoPatrol() }
         }
         state(MobState.Idle) {
             reason { true }
-            begin { sprite.playAnimationLooped(assets.mobIdle) }
+            begin { sprite.playAnimationLooped(Assets.mobIdle) }
         }
         stateChanged {
-            debugLabel.text = it::class.simpleName ?: ""
+            //debugLabel.text = it::class.simpleName ?: ""
         }
     }
 
@@ -153,9 +174,20 @@ class Mob(
         private const val STUN_IMMUNE = "stunImmune"
     }
 
+    init {
+        sync()
+    }
+
     override fun update(dt: TimeSpan) {
         super.update(dt)
         movementFsm.update(dt)
+        updateGridPosition(tmod)
+        updateStretchAndScale()
+    }
+
+    override fun postUpdate(dt: TimeSpan) {
+        super.postUpdate(dt)
+        sync()
     }
 
     fun stun() {
@@ -165,7 +197,7 @@ class Mob(
     }
 
     private fun autoPatrol() {
-        dx += moveSpeed * dir * tmod
+        velocityX += moveSpeed * dir * tmod
 
         if ((hasPlatformLeft || hasPlatformRight) && !hasSmallStep) {
             cd(LOCK, 500.milliseconds)
@@ -177,7 +209,7 @@ class Mob(
     private fun chaseTarget() {
         aggroTarget?.let {
             dir = dirTo(it)
-            dx += moveSpeed * 1.5 * dir * tmod
+            velocityX += moveSpeed * 1.5 * dir * tmod
         }
     }
 
@@ -189,13 +221,13 @@ class Mob(
         }
 
         if (cd.has(SEARCH)) {
-            dx += moveSpeed * 2 * dir * tmod
+            velocityX += moveSpeed * 2 * dir * tmod
         }
     }
 
     private fun hopSmallStep() {
-        dy = -0.25
-        dx = dir * 0.1
+        velocityY = -0.25
+        velocityX = dir * 0.1
         xr = if (dir == 1) 0.7 else 0.3
     }
 }

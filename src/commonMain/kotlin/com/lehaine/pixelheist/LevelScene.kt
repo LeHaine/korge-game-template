@@ -55,7 +55,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                     name = "MobContainer"
                     worldLevel.layerEntities.allMob.fastForEach { entityMob ->
                         entities += mob(entityMob, gameLevel) {
-                            collisionFilter { entities }
                             onDestroy { removeEntity(it) }
                         }.also {
                             entities += it
@@ -80,7 +79,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                     name = "PortalContainer"
                     worldLevel.layerEntities.allPortal.fastForEach { entityPortal ->
                         entities += portal(entityPortal, gameLevel) {
-                            collisionFilter { items }
                             onDestroy { removeEntity(it) }
                         }
                     }
@@ -89,9 +87,7 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 hero = hero(
                     worldLevel.layerEntities.allHero[0],
                     gameLevel
-                ) {
-                    collisionFilter { entities }
-                }.also {
+                ).also {
                     entities += it
                     gameLevel._hero = it
                 }
@@ -111,6 +107,9 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             entities.fastForEach {
                 it.tmod = tmod
                 it.update(dt)
+            }
+            entities.fastForEach {
+                it.postUpdate(dt)
             }
         }
 

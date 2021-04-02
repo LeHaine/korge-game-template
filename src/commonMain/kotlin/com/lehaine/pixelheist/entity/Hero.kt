@@ -6,6 +6,7 @@ import com.lehaine.lib.component.PlatformerDynamicComponentDefault
 import com.lehaine.lib.component.SpriteComponent
 import com.lehaine.lib.component.ext.angleTo
 import com.lehaine.lib.component.ext.dirTo
+import com.lehaine.lib.component.ext.toGridPosition
 import com.lehaine.lib.random
 import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
@@ -18,9 +19,10 @@ import com.soywiz.korge.view.Container
 import com.soywiz.korma.geom.degrees
 import com.soywiz.korma.geom.radians
 
-fun Container.hero(
+inline fun Container.hero(
     data: World.EntityHero,
-    level: GameLevelComponent<LevelMark>
+    level: GameLevelComponent<LevelMark>,
+    callback: Hero.() -> Unit = {}
 ): Hero {
     val container = Container()
     return Hero(
@@ -31,7 +33,7 @@ fun Container.hero(
             data.pivotX.toDouble(),
             data.pivotY.toDouble()
         ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
-    ).addTo(this)
+    ).addTo(this).also(callback)
 }
 
 class Hero(
@@ -39,9 +41,8 @@ class Hero(
     private val level: GameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
-) : Entity(container),
+) : Entity(level, container),
     PlatformerDynamicComponent by platformerDynamic,
-    GameLevelComponent<LevelMark> by level,
     SpriteComponent by spriteComponent {
 
     private val moveSpeed = 0.03
@@ -169,6 +170,9 @@ class Hero(
         private const val HIT_IMMUNE = "hitImmune"
     }
 
+    init {
+        sync()
+    }
 
     override fun onEntityCollision(entity: Entity) {
         super.onEntityCollision(entity)
@@ -198,11 +202,22 @@ class Hero(
         movementFsm.update(dt)
         itemFsm.update(dt)
 
+        updateGridPosition(tmod)
+        updateStretchAndScale()
+        println("$cx,$cy --- $px,$py")
+        println(movementFsm.currentState!!.type::class.simpleName)
+
 //        debugLabel.text =
 //            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
     }
 
-    fun hit(from: GridPositionComponent) {
+
+    override fun postUpdate(dt: TimeSpan) {
+        super.postUpdate(dt)
+        sync()
+    }
+
+    fun <T> hit(from: T) where T : Entity, T : GridPositionComponent {
         if (cd.has(HIT_IMMUNE)) return
         val hitDir = dirTo(from)
         velocityX = -hitDir * 0.25

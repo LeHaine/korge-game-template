@@ -9,6 +9,9 @@ import kotlin.math.atan2
 fun GridPositionComponent.castRayTo(tcx: Int, tcy: Int, canRayPass: (Int, Int) -> Boolean) =
     castRay(cx, cy, tcx, tcy, canRayPass)
 
+fun GridPositionComponent.castRayTo(gridPositionComponent: GridPositionComponent, canRayPass: (Int, Int) -> Boolean) =
+    castRay(cx, cy, gridPositionComponent.cx, gridPositionComponent.cy, canRayPass)
+
 fun GridPositionComponent.toGridPosition(cx: Int, cy: Int, xr: Double = 0.5, yr: Double = 1.0) {
     this.cx = cx
     this.cy = cy

@@ -75,8 +75,15 @@ interface GridPositionComponent : Component {
     }
 
     companion object {
-        operator fun invoke(): GridPositionComponent {
-            return GridPositionComponentDefault()
+        operator fun invoke(
+            cx: Int = 0,
+            cy: Int = 0,
+            xr: Double = 0.5,
+            yr: Double = 0.5,
+            anchorX: Double = 0.5,
+            anchorY: Double = 0.5
+        ): GridPositionComponent {
+            return GridPositionComponentDefault(cx, cy, xr, yr, anchorX, anchorY)
         }
     }
 }
