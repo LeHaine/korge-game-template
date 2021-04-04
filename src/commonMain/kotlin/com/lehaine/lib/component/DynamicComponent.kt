@@ -123,7 +123,7 @@ interface PlatformerDynamicComponent : DynamicComponent {
     var hasGravity: Boolean
 }
 
-class PlatformerDynamicComponentDefault(
+class PlatformerDynamicComponentDefault<LevelMark>(
     private val levelComponent: LevelComponent<LevelMark>,
     override var cx: Int = 0,
     override var cy: Int = 0,

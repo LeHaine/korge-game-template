@@ -7,11 +7,9 @@ import com.lehaine.lib.cooldown
 import com.lehaine.pixelheist.component.GameLevelComponent
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
-import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.addTo
-import com.soywiz.korge.view.addUpdater
-import com.soywiz.korge.view.collidesWithShape
+import com.soywiz.korge.view.*
 import com.soywiz.korio.lang.Closeable
+import com.soywiz.korma.geom.vector.rect
 import kotlin.collections.set
 
 open class Entity(val level: GameLevelComponent<LevelMark>, val container: Container) : UpdatableComponent {

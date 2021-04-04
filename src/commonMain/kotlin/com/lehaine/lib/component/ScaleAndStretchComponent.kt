@@ -16,7 +16,6 @@ interface ScaleAndStretchComponent : Component {
     }
 }
 
-
 class ScaleAndStretchComponentDefault : ScaleAndStretchComponent {
     private var _stretchX = 1.0
     private var _stretchY = 1.0
