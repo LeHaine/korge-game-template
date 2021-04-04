@@ -16,7 +16,7 @@ interface SpriteComponent : DrawableComponent, ScaleAndStretchComponent {
 }
 
 class SpriteComponentDefault(container: Container, anchorX: Double, anchorY: Double) : SpriteComponent {
-    override var dir = 0
+    override var dir = 1
     override val sprite: EnhancedSprite = container.enhancedSprite {
         smoothing = false
         this.anchorX = anchorX

@@ -14,15 +14,17 @@ import com.soywiz.korge.view.collidesWithShape
 import com.soywiz.korio.lang.Closeable
 import kotlin.collections.set
 
-open class Entity(private val level: GameLevelComponent<LevelMark>, val container: Container) : UpdatableComponent,
-    GameLevelComponent<LevelMark> by level {
+open class Entity(val level: GameLevelComponent<LevelMark>, val container: Container) : UpdatableComponent {
     var destroyed = false
 
     private var onDestroyedCallback: ((Entity) -> Unit)? = null
 
     private var initEntityCollisionChecks = false
 
-    val input get() = container.stage?.views?.input!!
+    val fx get() = level.fx
+    val hero get() = level.hero
+
+    val input get() = container.stage!!.views.input
 
     init {
 //        if (this is GridPositionComponent) {
@@ -36,6 +38,7 @@ open class Entity(private val level: GameLevelComponent<LevelMark>, val containe
     override var tmod: Double = 1.0
 
     override fun update(dt: TimeSpan) {}
+
     override fun postUpdate(dt: TimeSpan) {}
 
     open fun destroy() {
@@ -59,7 +62,7 @@ open class Entity(private val level: GameLevelComponent<LevelMark>, val containe
 
         val collisionState = mutableMapOf<Entity, Boolean>()
         container.addUpdater {
-            entities.fastForEach {
+            level.entities.fastForEach {
                 if (this != it) {
                     if (this.collidesWithShape(it.container)) {
                         if (collisionState[it] == true) {
@@ -91,7 +94,7 @@ fun <T> T.castRayTo(position: GridPositionComponent) where T : Entity, T : GridP
 
 val <T> T.canRayPass: (Int, Int) -> Boolean where T : Entity, T : GridPositionComponent
     get() = { cx, cy ->
-        !hasCollision(cx, cy) || this.cx == cx && this.cy == cy
+        !level.hasCollision(cx, cy) || this.cx == cx && this.cy == cy
     }
 
 fun <T> T.sync() where T : Entity, T : GridPositionComponent {

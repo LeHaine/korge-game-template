@@ -81,9 +81,10 @@ interface GridPositionComponent : Component {
             xr: Double = 0.5,
             yr: Double = 0.5,
             anchorX: Double = 0.5,
-            anchorY: Double = 0.5
+            anchorY: Double = 0.5,
+            gridCellSize: Int = 16
         ): GridPositionComponent {
-            return GridPositionComponentDefault(cx, cy, xr, yr, anchorX, anchorY)
+            return GridPositionComponentDefault(cx, cy, xr, yr, anchorX, anchorY, gridCellSize)
         }
     }
 }
@@ -94,10 +95,10 @@ open class GridPositionComponentDefault(
     override var xr: Double = 0.5,
     override var yr: Double = 0.5,
     override var anchorX: Double = 0.5,
-    override var anchorY: Double = 0.5
+    override var anchorY: Double = 0.5,
+    override var gridCellSize: Int = 16
 ) : GridPositionComponent {
 
-    override var gridCellSize: Int = 16
     override var width: Double = 16.0
     override var height: Double = 16.0
 

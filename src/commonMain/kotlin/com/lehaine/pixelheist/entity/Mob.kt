@@ -28,7 +28,8 @@ inline fun Container.mob(
             data.cx,
             data.cy,
             data.pivotX.toDouble(),
-            data.pivotY.toDouble()
+            data.pivotY.toDouble(),
+            gridCellSize = GRID_SIZE
         ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
     ).addTo(this).also(callback)
 }
@@ -43,12 +44,12 @@ class Mob(
     SpriteComponent by spriteComponent {
 
 
-    private val moveSpeed = 0.015
+    private val moveSpeed = 0.0075
 
-    private val hasPlatformLeft get() = hasMark(cx, cy, LevelMark.PLATFORM_END_LEFT) && dir == -1 && xr < 0.5
-    private val hasPlatformRight get() = hasMark(cx, cy, LevelMark.PLATFORM_END_RIGHT) && dir == 1 && xr > 0.5
+    private val hasPlatformLeft get() = level.hasMark(cx, cy, LevelMark.PLATFORM_END_LEFT) && dir == -1 && xr < 0.5
+    private val hasPlatformRight get() = level.hasMark(cx, cy, LevelMark.PLATFORM_END_RIGHT) && dir == 1 && xr > 0.5
     private val hasSmallStep
-        get() = hasMark(
+        get() = level.hasMark(
             cx,
             cy,
             LevelMark.SMALL_STEP,

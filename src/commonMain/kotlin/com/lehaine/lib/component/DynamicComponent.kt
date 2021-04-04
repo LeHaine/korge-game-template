@@ -87,7 +87,8 @@ open class DynamicComponentDefault(
     override var xr: Double = 0.5,
     override var yr: Double = 0.5,
     override var anchorX: Double = 0.5,
-    override var anchorY: Double = 0.5
+    override var anchorY: Double = 0.5,
+    override var gridCellSize: Int = 16
 ) : DynamicComponent {
     override var gravityX: Double = 0.0
     override var gravityY: Double = 0.0
@@ -97,7 +98,6 @@ open class DynamicComponentDefault(
     override var frictionX: Double = 0.82
     override var frictionY: Double = 0.82
 
-    override var gridCellSize: Int = 16
     override var width: Double = 16.0
     override var height: Double = 16.0
 
@@ -130,17 +130,17 @@ class PlatformerDynamicComponentDefault(
     override var xr: Double = 0.5,
     override var yr: Double = 0.5,
     override var anchorX: Double = 0.5,
-    override var anchorY: Double = 0.5
+    override var anchorY: Double = 0.5,
+    override var gridCellSize: Int = 16
 ) : PlatformerDynamicComponent {
     override var gravityX: Double = 0.0
-    override var gravityY: Double = 0.0
+    override var gravityY: Double = 0.028
     override var gravityMultiplier: Double = 1.0
     override var velocityX: Double = 0.0
     override var velocityY: Double = 0.0
     override var frictionX: Double = 0.82
     override var frictionY: Double = 0.82
 
-    override var gridCellSize: Int = 16
     override var width: Double = 16.0
     override var height: Double = 16.0
 
@@ -161,7 +161,7 @@ class PlatformerDynamicComponentDefault(
 
 
     override var hasGravity = true
-    override val onGround get() = velocityX == 0.0 && levelComponent.hasCollision(cx, cy + 1)
+    override val onGround get() = velocityY == 0.0 && levelComponent.hasCollision(cx, cy + 1)
 
     private val gravityPulling get() = !onGround && hasGravity
 
@@ -173,7 +173,7 @@ class PlatformerDynamicComponentDefault(
 
         if (levelComponent.hasCollision(cx - 1, cy) && xr <= 0.3) {
             xr = 0.3
-            velocityY *= 0.5.pow(tmod)
+            velocityX *= 0.5.pow(tmod)
         }
     }
 
@@ -181,7 +181,7 @@ class PlatformerDynamicComponentDefault(
         val heightCoordDiff = floor(height / gridCellSize.toDouble())
         if (levelComponent.hasCollision(cx, cy - 1) && yr <= heightCoordDiff) {
             yr = heightCoordDiff
-            velocityX = 0.0
+            velocityY = 0.0
         }
         if (levelComponent.hasCollision(cx, cy + 1) && yr >= 1) {
             velocityY = 0.0

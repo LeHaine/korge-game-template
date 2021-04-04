@@ -31,14 +31,15 @@ inline fun Container.hero(
             data.cx,
             data.cy,
             data.pivotX.toDouble(),
-            data.pivotY.toDouble()
+            data.pivotY.toDouble(),
+            gridCellSize = GRID_SIZE
         ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
     ).addTo(this).also(callback)
 }
 
 class Hero(
     private val platformerDynamic: PlatformerDynamicComponent,
-    private val level: GameLevelComponent<LevelMark>,
+    level: GameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
 ) : Entity(level, container),
@@ -203,8 +204,6 @@ class Hero(
         itemFsm.update(dt)
 
         updateGridPosition(tmod)
-
-
 
 //        debugLabel.text =
 //            "${movementFsm.currentState!!.type::class.simpleName}\n${itemFsm.currentState!!.type::class.simpleName}"
