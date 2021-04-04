@@ -1,11 +1,12 @@
 package com.lehaine.pixelheist
 
+import com.lehaine.lib.BaseGameEntity
 import com.lehaine.lib.CameraContainer
-import com.lehaine.pixelheist.component.GameLevelComponent
+import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.lehaine.pixelheist.entity.Hero
 import com.soywiz.kmem.clamp
 
-class GameLevel(val level: World.WorldLevel) : GameLevelComponent<LevelMark> {
+class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark> {
     var _hero: Hero? = null
     var _camera: CameraContainer? = null
     var _fx: Fx? = null

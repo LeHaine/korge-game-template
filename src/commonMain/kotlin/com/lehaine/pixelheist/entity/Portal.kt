@@ -1,16 +1,17 @@
 package com.lehaine.pixelheist.entity
 
+import com.lehaine.lib.*
 import com.lehaine.lib.component.GridPositionComponent
 import com.lehaine.lib.component.SpriteComponent
 import com.lehaine.pixelheist.*
-import com.lehaine.pixelheist.component.GameLevelComponent
+import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korge.view.Container
 
 
 inline fun Container.portal(
     data: World.EntityPortal,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     callback: Portal.() -> Unit = {}
 ): Portal {
     val container = Container()
@@ -27,7 +28,7 @@ inline fun Container.portal(
 
 class Portal(
     private val gridPositionComponent: GridPositionComponent,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
 ) : Entity(level, container),
@@ -41,7 +42,7 @@ class Portal(
         addCollision()
     }
 
-    override fun onCollisionEnter(entity: Entity) {
+    override fun onCollisionEnter(entity: BaseGameEntity) {
         super.onCollisionEnter(entity)
         if (entity is Item) {
             entity.teleport()

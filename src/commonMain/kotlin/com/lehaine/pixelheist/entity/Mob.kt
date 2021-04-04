@@ -1,15 +1,14 @@
 package com.lehaine.pixelheist.entity
 
+import com.lehaine.lib.*
 import com.lehaine.lib.component.GridPositionComponent
 import com.lehaine.lib.component.PlatformerDynamicComponent
 import com.lehaine.lib.component.PlatformerDynamicComponentDefault
 import com.lehaine.lib.component.SpriteComponent
 import com.lehaine.lib.component.ext.dirTo
 import com.lehaine.lib.component.ext.distGridTo
-import com.lehaine.lib.getByPrefix
-import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
-import com.lehaine.pixelheist.component.GameLevelComponent
+import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -18,7 +17,7 @@ import com.soywiz.korge.view.Container
 
 inline fun Container.mob(
     data: World.EntityMob,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     callback: Mob.() -> Unit = {}
 ): Mob {
     val container = Container()
@@ -36,7 +35,7 @@ inline fun Container.mob(
 
 class Mob(
     private val platformerDynamic: PlatformerDynamicComponent,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
 ) : Entity(level, container),

@@ -1,16 +1,12 @@
 package com.lehaine.pixelheist.entity
 
-import com.lehaine.lib.component.GridPositionComponent
-import com.lehaine.lib.component.PlatformerDynamicComponent
-import com.lehaine.lib.component.PlatformerDynamicComponentDefault
-import com.lehaine.lib.component.SpriteComponent
+import com.lehaine.lib.*
+import com.lehaine.lib.component.*
 import com.lehaine.lib.component.ext.angleTo
 import com.lehaine.lib.component.ext.dirTo
 import com.lehaine.lib.component.ext.toGridPosition
-import com.lehaine.lib.random
-import com.lehaine.lib.stateMachine
 import com.lehaine.pixelheist.*
-import com.lehaine.pixelheist.component.GameLevelComponent
+import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
@@ -21,7 +17,7 @@ import com.soywiz.korma.geom.radians
 
 inline fun Container.hero(
     data: World.EntityHero,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     callback: Hero.() -> Unit = {}
 ): Hero {
     val container = Container()
@@ -39,7 +35,7 @@ inline fun Container.hero(
 
 class Hero(
     private val platformerDynamic: PlatformerDynamicComponent,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
 ) : Entity(level, container),
@@ -177,7 +173,7 @@ class Hero(
         addCollision()
     }
 
-    override fun onCollisionEnter(entity: Entity) {
+    override fun onCollisionEnter(entity: BaseGameEntity) {
         super.onCollisionEnter(entity)
         if (lastMobJumpedOn == null && !cd.has(MOB_JUMP_LOCK)
             && entity is Mob && entity.canStun
@@ -189,7 +185,7 @@ class Hero(
         }
     }
 
-    override fun onCollisionUpdate(entity: Entity) {
+    override fun onCollisionUpdate(entity: BaseGameEntity) {
         super.onCollisionUpdate(entity)
         if (heldItem == null && !cd.has(ITEM_THREW) && entity is Item) {
             heldItem = entity
@@ -218,7 +214,7 @@ class Hero(
         updateSprite()
     }
 
-    fun <T> hit(from: T) where T : Entity, T : GridPositionComponent {
+    fun <T> hit(from: T) where T : BaseGameEntity, T : GridPositionComponent {
         if (cd.has(HIT_IMMUNE)) return
         val hitDir = dirTo(from)
         velocityX = -hitDir * 0.25

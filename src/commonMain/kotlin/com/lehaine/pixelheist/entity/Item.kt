@@ -1,11 +1,11 @@
 package com.lehaine.pixelheist.entity
 
+import com.lehaine.lib.*
 import com.lehaine.lib.component.PlatformerDynamicComponent
 import com.lehaine.lib.component.PlatformerDynamicComponentDefault
 import com.lehaine.lib.component.SpriteComponent
-import com.lehaine.lib.getByPrefix
 import com.lehaine.pixelheist.*
-import com.lehaine.pixelheist.component.GameLevelComponent
+import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korge.view.Container
 import com.soywiz.korim.color.Colors
@@ -13,7 +13,7 @@ import com.soywiz.korim.color.Colors
 
 inline fun Container.item(
     data: World.EntityItem,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     callback: Item.() -> Unit = {}
 ): Item {
     val container = Container()
@@ -33,7 +33,7 @@ inline fun Container.item(
 class Item(
     data: World.EntityItem,
     private val platformerDynamic: PlatformerDynamicComponent,
-    level: GameLevelComponent<LevelMark>,
+    level: PixelGameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
     container: Container
 ) : Entity(level, container),

@@ -1,6 +1,6 @@
 package com.lehaine.lib.component
 
-import com.soywiz.korui.UiContainer
+import com.lehaine.lib.BaseGameEntity
 
 interface LevelComponent<LevelMark> : Component {
     fun hasCollision(cx: Int, cy: Int): Boolean
@@ -9,4 +9,8 @@ interface LevelComponent<LevelMark> : Component {
     fun setMarks(cx: Int, cy: Int, marks: List<LevelMark>)
     fun isValid(cx: Int, cy: Int): Boolean
     fun getCoordId(cx: Int, cy: Int): Int
+}
+
+interface GameLevelComponent<LevelMark> : LevelComponent<LevelMark> {
+    val entities: ArrayList<out BaseGameEntity>
 }
