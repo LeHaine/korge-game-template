@@ -9,6 +9,7 @@ import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korge.view.*
 import com.soywiz.korio.lang.Closeable
+import com.soywiz.korma.geom.vector.VectorBuilder
 import com.soywiz.korma.geom.vector.rect
 import kotlin.collections.set
 
@@ -17,21 +18,10 @@ open class Entity(val level: GameLevelComponent<LevelMark>, val container: Conta
 
     private var onDestroyedCallback: ((Entity) -> Unit)? = null
 
-    private var initEntityCollisionChecks = false
-
     val fx get() = level.fx
     val hero get() = level.hero
 
     val input get() = container.stage!!.views.input
-
-    init {
-//        if (this is GridPositionComponent) {
-//            container.hitShape {
-//                rect(width * 0.5, height * 0.5, width, height)
-//            }
-//            addEntityCollisionChecks()
-//        }
-    }
 
     override var tmod: Double = 1.0
 
@@ -49,38 +39,12 @@ open class Entity(val level: GameLevelComponent<LevelMark>, val container: Conta
         onDestroyedCallback = action
     }
 
-    protected open fun onEntityCollision(entity: Entity) {}
+    open fun onCollisionEnter(entity: Entity) {}
 
-    protected open fun onEntityColliding(entity: Entity) {}
+    open fun onCollisionUpdate(entity: Entity) {}
 
-    protected open fun onEntityCollisionExit(entity: Entity) {}
-
-    private fun addEntityCollisionChecks() {
-        if (initEntityCollisionChecks) return
-
-        val collisionState = mutableMapOf<Entity, Boolean>()
-        container.addUpdater {
-            level.entities.fastForEach {
-                if (this != it) {
-                    if (this.collidesWithShape(it.container)) {
-                        if (collisionState[it] == true) {
-                            onEntityColliding(it)
-                        } else {
-                            // we only need to call it once
-                            onEntityCollision(it)
-                            collisionState[it] = true
-                        }
-                    } else if (collisionState[it] == true) {
-                        onEntityCollisionExit(it)
-                        collisionState[it] = false
-                    }
-                }
-            }
-        }
-    }
-
+    open fun onCollisionExit(entity: Entity) {}
 }
-
 
 fun <T : Entity> T.addTo(parent: Container): T {
     container.addTo(parent)
@@ -98,6 +62,36 @@ val <T> T.canRayPass: (Int, Int) -> Boolean where T : Entity, T : GridPositionCo
 fun <T> T.sync() where T : Entity, T : GridPositionComponent {
     container.x = px
     container.y = py
+}
+
+inline fun <T> T.addShape(crossinline block: (VectorBuilder.() -> Unit)) where T : Entity, T : GridPositionComponent {
+    container.hitShape(block)
+}
+
+fun <T> T.addRectShape() where T : Entity, T : GridPositionComponent {
+    addShape { rect(width * 0.5, height * 0.5, width, height) }
+}
+
+fun <T> T.addCollision() where T : Entity, T : GridPositionComponent {
+    val collisionState = mutableMapOf<Entity, Boolean>()
+    container.addUpdater {
+        level.entities.fastForEach {
+            if (this@addCollision != it) {
+                if (collidesWithShape(it.container)) {
+                    if (collisionState[it] == true) {
+                        onCollisionUpdate(it)
+                    } else {
+                        // we only need to call it once
+                        onCollisionEnter(it)
+                        collisionState[it] = true
+                    }
+                } else if (collisionState[it] == true) {
+                    onCollisionExit(it)
+                    collisionState[it] = false
+                }
+            }
+        }
+    }
 }
 
 val Entity.cooldown get() = container.cooldown

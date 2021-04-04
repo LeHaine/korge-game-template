@@ -177,6 +177,8 @@ class Mob(
 
     init {
         sync()
+        addRectShape()
+        addCollision()
     }
 
     override fun update(dt: TimeSpan) {
@@ -193,7 +195,7 @@ class Mob(
 
     fun stun() {
         stretchX = 2.0
-        fx.bloodSplatter(centerX, bounds.top)
+        fx.bloodSplatter(centerX, top)
         cd(STUNNED, 100.milliseconds)
     }
 

@@ -173,10 +173,12 @@ class Hero(
 
     init {
         sync()
+        addRectShape()
+        addCollision()
     }
 
-    override fun onEntityCollision(entity: Entity) {
-        super.onEntityCollision(entity)
+    override fun onCollisionEnter(entity: Entity) {
+        super.onCollisionEnter(entity)
         if (lastMobJumpedOn == null && !cd.has(MOB_JUMP_LOCK)
             && entity is Mob && entity.canStun
         ) {
@@ -187,8 +189,8 @@ class Hero(
         }
     }
 
-    override fun onEntityColliding(entity: Entity) {
-        super.onEntityColliding(entity)
+    override fun onCollisionUpdate(entity: Entity) {
+        super.onCollisionUpdate(entity)
         if (heldItem == null && !cd.has(ITEM_THREW) && entity is Item) {
             heldItem = entity
         }

@@ -2,7 +2,6 @@ package com.lehaine.lib.component
 
 import com.soywiz.korge.debug.uiCollapsibleSection
 import com.soywiz.korge.debug.uiEditableValue
-import com.soywiz.korma.geom.Rectangle
 import com.soywiz.korui.UiContainer
 
 interface GridPositionComponent : Component {
@@ -18,11 +17,14 @@ interface GridPositionComponent : Component {
     var anchorX: Double
     var anchorY: Double
 
-    val px: Double
-    val py: Double
-    val centerX: Double
-    val centerY: Double
-    val bounds: Rectangle
+    val px get() = (cx + xr) * gridCellSize
+    val py get() = (cy + yr) * gridCellSize
+    val centerX get() = px + (0.5 - anchorX) * gridCellSize
+    val centerY get() = py + (0.5 - anchorY) * gridCellSize
+    val top get() = py - anchorY * height
+    val right get() = px + (1 - px) * width
+    val bottom get() = py + (1 - anchorY) * height
+    val left get() = px - anchorX * width
 
     fun updateGridPosition(tmod: Double) {
         updateX(tmod)
@@ -101,19 +103,4 @@ open class GridPositionComponentDefault(
 
     override var width: Double = 16.0
     override var height: Double = 16.0
-
-
-    override val px get() = (cx + xr) * gridCellSize
-    override val py get() = (cy + yr) * gridCellSize
-    override val centerX get() = px + (0.5 - anchorX) * gridCellSize
-    override val centerY get() = py + (0.5 - anchorY) * gridCellSize
-
-    private var _bounds = Rectangle()
-    override val bounds: Rectangle
-        get() = _bounds.apply {
-            top = py - anchorY * width
-            right = px + (1 - px) * width
-            bottom = py + (1 - anchorY) * height
-            left = px - anchorX * height
-        }
 }

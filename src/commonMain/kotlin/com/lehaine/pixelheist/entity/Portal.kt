@@ -37,10 +37,12 @@ class Portal(
     init {
         sprite.playAnimationLooped(Assets.portalIdle)
         sync()
+        addRectShape()
+        addCollision()
     }
 
-    override fun onEntityCollision(entity: Entity) {
-        super.onEntityCollision(entity)
+    override fun onCollisionEnter(entity: Entity) {
+        super.onCollisionEnter(entity)
         if (entity is Item) {
             entity.teleport()
         }

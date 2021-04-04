@@ -45,6 +45,8 @@ class Item(
             World.ItemType.Ruby -> sprite.bitmap = Assets.tiles.getByPrefix("ruby")
         }
         sync()
+        addRectShape()
+        addCollision()
     }
 
     fun teleport() {
