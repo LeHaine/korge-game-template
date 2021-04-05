@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.CameraContainer
 

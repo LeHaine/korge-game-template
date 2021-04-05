@@ -1,20 +1,16 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
-import com.lehaine.kiwi.getByPrefix
 import com.lehaine.kiwi.getRandomByPrefix
 import com.lehaine.kiwi.particle.Particle
 import com.lehaine.kiwi.particle.ParticleSimulator
 import com.lehaine.kiwi.random
 import com.lehaine.kiwi.randomd
 import com.soywiz.klock.TimeSpan
-import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.RGBA
 import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 class Fx(val level: GameLevel, private val particleContainer: FastSpriteContainer) {
 

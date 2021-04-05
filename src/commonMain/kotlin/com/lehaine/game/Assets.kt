@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.soywiz.korim.atlas.Atlas
 import com.soywiz.korim.atlas.readAtlas

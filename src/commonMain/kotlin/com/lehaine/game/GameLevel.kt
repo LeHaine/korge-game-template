@@ -1,10 +1,10 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.CameraContainer
-import com.lehaine.pixelheist.component.PixelGameLevelComponent
+import com.lehaine.game.component.GenericGameLevelComponent
 import com.soywiz.kmem.clamp
 
-class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark> {
+class GameLevel(val level: World.WorldLevel) : GenericGameLevelComponent<LevelMark> {
     var _camera: CameraContainer? = null
     var _fx: Fx? = null
 

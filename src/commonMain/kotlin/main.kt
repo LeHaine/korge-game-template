@@ -1,6 +1,6 @@
-import com.lehaine.pixelheist.Assets
-import com.lehaine.pixelheist.LevelScene
-import com.lehaine.pixelheist.World
+import com.lehaine.game.Assets
+import com.lehaine.game.LevelScene
+import com.lehaine.game.World
 import com.soywiz.korge.Korge
 import com.soywiz.korge.scene.Module
 import com.soywiz.korim.color.Colors

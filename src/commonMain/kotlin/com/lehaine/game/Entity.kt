@@ -1,11 +1,11 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.component.BaseGameEntity
-import com.lehaine.pixelheist.component.PixelGameLevelComponent
+import com.lehaine.game.component.GenericGameLevelComponent
 import com.soywiz.korge.view.Container
 
 /**
- * A very base Entity that only uses has a [GridPositionComponent] and a [PixelGameLevelComponent].
+ * A very base Entity that only uses has a [GridPositionComponent] and a [GenericGameLevelComponent].
  *
  * Create more entities that extend this class by adding different components.
  *
@@ -20,7 +20,7 @@ import com.soywiz.korge.view.Container
  *     SpriteComponent by spriteComponent
  * ```
  */
-open class Entity(override val level: PixelGameLevelComponent<LevelMark>, container: Container) :
+open class Entity(override val level: GenericGameLevelComponent<LevelMark>, container: Container) :
     BaseGameEntity(level, container) {
     val fx get() = level.fx
 }
