@@ -4,5 +4,6 @@ If you are making an animation, make sure you create tags for them all in order 
 
 Example:
 
-If you have a file called `hero.ase` or `hero.aseprite` and you have 3 tags in that file called `Idle`, `Run`, `Jump` they will be exported as
+If you have a file called `hero.ase` or `hero.aseprite` and you have 3 tags in that file called `Idle`, `Run`, `Jump` they will be exported as:
+
 `heroRun0, heroRun1, ...`, `heroIdle0, heroIdle1, ...`, and `heroJump0.png, heroJump1.png, ...`
