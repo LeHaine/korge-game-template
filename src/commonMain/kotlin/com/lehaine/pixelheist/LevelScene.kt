@@ -1,9 +1,9 @@
 package com.lehaine.pixelheist
 
 import GameModule
-import com.lehaine.lib.cameraContainer
-import com.lehaine.lib.ldtk.ldtkMapView
-import com.lehaine.lib.ldtk.toLDtkLevel
+import com.lehaine.kiwi.cameraContainer
+import com.lehaine.kiwi.ldtk.ldtkMapView
+import com.lehaine.kiwi.ldtk.toLDtkLevel
 import com.lehaine.pixelheist.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.milliseconds

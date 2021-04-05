@@ -1,10 +1,11 @@
 package com.lehaine.pixelheist.entity
 
-import com.lehaine.lib.*
-import com.lehaine.lib.component.*
-import com.lehaine.lib.component.ext.angleTo
-import com.lehaine.lib.component.ext.dirTo
-import com.lehaine.lib.component.ext.toGridPosition
+import com.lehaine.kiwi.component.*
+import com.lehaine.kiwi.component.ext.angleTo
+import com.lehaine.kiwi.component.ext.dirTo
+import com.lehaine.kiwi.component.ext.toGridPosition
+import com.lehaine.kiwi.random
+import com.lehaine.kiwi.stateMachine
 import com.lehaine.pixelheist.*
 import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan

@@ -13,6 +13,7 @@ repositories {
 }
 
 val ldtkApiVersion: String by project
+val kiwiVersion: String by project
 
 kotlin {
     sourceSets {
@@ -20,6 +21,7 @@ kotlin {
             kotlin.srcDir("$buildDir/generated/source/kaptKotlin/main")
             dependencies {
                 implementation("com.lehaine.kt-ldtk-api:ldtk-api:$ldtkApiVersion")
+                implementation("com.lehaine:kiwi:$kiwiVersion")
                 //implementation("com.lehaine:ldtk-api:$ldtkApiVersion") // local repo
             }
         }

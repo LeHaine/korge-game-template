@@ -1,11 +1,11 @@
 package com.lehaine.pixelheist
 
-import com.lehaine.lib.getByPrefix
-import com.lehaine.lib.getRandomByPrefix
-import com.lehaine.lib.particle.Particle
-import com.lehaine.lib.particle.ParticleSimulator
-import com.lehaine.lib.random
-import com.lehaine.lib.randomd
+import com.lehaine.kiwi.getByPrefix
+import com.lehaine.kiwi.getRandomByPrefix
+import com.lehaine.kiwi.particle.Particle
+import com.lehaine.kiwi.particle.ParticleSimulator
+import com.lehaine.kiwi.random
+import com.lehaine.kiwi.randomd
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds

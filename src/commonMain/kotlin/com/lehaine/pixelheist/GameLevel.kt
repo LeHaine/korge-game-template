@@ -1,7 +1,6 @@
 package com.lehaine.pixelheist
 
-import com.lehaine.lib.BaseGameEntity
-import com.lehaine.lib.CameraContainer
+import com.lehaine.kiwi.CameraContainer
 import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.lehaine.pixelheist.entity.Hero
 import com.soywiz.kmem.clamp

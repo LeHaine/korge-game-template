@@ -1,6 +1,6 @@
 package com.lehaine.pixelheist
 
-import com.lehaine.lib.BaseGameEntity
+import com.lehaine.kiwi.component.BaseGameEntity
 import com.lehaine.pixelheist.component.PixelGameLevelComponent
 import com.soywiz.korge.view.Container
 
