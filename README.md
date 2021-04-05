@@ -8,6 +8,7 @@ To create new components extend the `Component` interface or one of many other e
 * `DynamicComponent` - A simple physics movement with no checks to collision. Override the collision checks to add your own
 * `PlatformerDynamicComponent` - A platformer dynamic component that handles collision and gravity for platformers
 * `SpriteComponent` - This is a `DrawableComponent` and a `StretchAndScaleComponent` in one that allows stretching and scaling of a `EnhancedSprite`.
+
 And many others.
   
 Use these components to create new entities by using composition vs inheritance.
