@@ -29,6 +29,8 @@ inline fun Container.hero(
             data.cy,
             data.pivotX.toDouble(),
             data.pivotY.toDouble(),
+            data.pivotX.toDouble(),
+            data.pivotY.toDouble(),
             gridCellSize = GRID_SIZE
         ), level, SpriteComponent(container, data.pivotX.toDouble(), data.pivotY.toDouble()), container
     ).addTo(this).also(callback)
