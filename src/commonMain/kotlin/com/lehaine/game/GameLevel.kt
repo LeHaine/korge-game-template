@@ -3,6 +3,7 @@ package com.lehaine.game
 import com.lehaine.kiwi.CameraContainer
 import com.lehaine.game.component.PixelGameLevelComponent
 import com.lehaine.game.entity.Hero
+import com.lehaine.kiwi.component.BaseGameEntity
 import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark> {
@@ -14,7 +15,7 @@ class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark
     override val camera get() = _camera!!
     override val fx get() = _fx!!
 
-    override val entities: ArrayList<Entity> = arrayListOf()
+    override val entities: ArrayList<BaseGameEntity> = arrayListOf()
 
     override val levelWidth get() = level.layerCollisions.cWidth
     override val levelHeight get() = level.layerCollisions.cHeight
