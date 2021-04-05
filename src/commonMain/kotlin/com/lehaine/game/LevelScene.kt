@@ -1,10 +1,10 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import GameModule
 import com.lehaine.kiwi.cameraContainer
 import com.lehaine.kiwi.ldtk.ldtkMapView
 import com.lehaine.kiwi.ldtk.toLDtkLevel
-import com.lehaine.pixelheist.entity.*
+import com.lehaine.game.entity.*
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.milliseconds
 import com.soywiz.korev.Key

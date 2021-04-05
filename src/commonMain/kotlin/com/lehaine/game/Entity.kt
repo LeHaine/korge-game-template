@@ -1,7 +1,7 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.component.BaseGameEntity
-import com.lehaine.pixelheist.component.PixelGameLevelComponent
+import com.lehaine.game.component.PixelGameLevelComponent
 import com.soywiz.korge.view.Container
 
 open class Entity(override val level: PixelGameLevelComponent<LevelMark>, container: Container) :

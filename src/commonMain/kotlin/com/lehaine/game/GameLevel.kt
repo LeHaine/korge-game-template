@@ -1,8 +1,8 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.CameraContainer
-import com.lehaine.pixelheist.component.PixelGameLevelComponent
-import com.lehaine.pixelheist.entity.Hero
+import com.lehaine.game.component.PixelGameLevelComponent
+import com.lehaine.game.entity.Hero
 import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark> {

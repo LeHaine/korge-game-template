@@ -1,9 +1,9 @@
-package com.lehaine.pixelheist.component
+package com.lehaine.game.component
 
 import com.lehaine.kiwi.CameraContainer
 import com.lehaine.kiwi.component.GameLevelComponent
-import com.lehaine.pixelheist.Fx
-import com.lehaine.pixelheist.entity.Hero
+import com.lehaine.game.Fx
+import com.lehaine.game.entity.Hero
 
 interface PixelGameLevelComponent<LevelMark> : GameLevelComponent<LevelMark> {
     val fx: Fx

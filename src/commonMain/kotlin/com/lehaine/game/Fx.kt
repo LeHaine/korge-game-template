@@ -1,4 +1,4 @@
-package com.lehaine.pixelheist
+package com.lehaine.game
 
 import com.lehaine.kiwi.getByPrefix
 import com.lehaine.kiwi.getRandomByPrefix
@@ -27,7 +27,6 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
         particleSimulator.simulate(dt)
         frame++
     }
-
 
     fun itemTeleported(x: Double, y: Double, color: RGBA) {
         create(20) {

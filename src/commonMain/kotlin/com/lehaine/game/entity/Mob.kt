@@ -1,11 +1,11 @@
-package com.lehaine.pixelheist.entity
+package com.lehaine.game.entity
 
 import com.lehaine.kiwi.*
 import com.lehaine.kiwi.component.*
 import com.lehaine.kiwi.component.ext.dirTo
 import com.lehaine.kiwi.component.ext.distGridTo
-import com.lehaine.pixelheist.*
-import com.lehaine.pixelheist.component.PixelGameLevelComponent
+import com.lehaine.game.*
+import com.lehaine.game.component.PixelGameLevelComponent
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
