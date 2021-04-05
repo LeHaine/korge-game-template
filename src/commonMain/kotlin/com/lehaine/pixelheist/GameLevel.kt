@@ -2,15 +2,12 @@ package com.lehaine.pixelheist
 
 import com.lehaine.kiwi.CameraContainer
 import com.lehaine.pixelheist.component.PixelGameLevelComponent
-import com.lehaine.pixelheist.entity.Hero
 import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark> {
-    var _hero: Hero? = null
     var _camera: CameraContainer? = null
     var _fx: Fx? = null
 
-    override val hero get() = _hero!!
     override val camera get() = _camera!!
     override val fx get() = _fx!!
 
@@ -20,6 +17,8 @@ class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark
     override val levelHeight get() = level.layerCollisions.cHeight
 
     private val marks = mutableMapOf<LevelMark, MutableMap<Int, Int>>()
+
+    // a list of collision layers indices from LDtk world
     private val collisionLayers = intArrayOf(1)
     private val collisionLayer = level.layerCollisions
 
@@ -58,6 +57,7 @@ class GameLevel(val level: World.WorldLevel) : PixelGameLevelComponent<LevelMark
         }
     }
 
+    // set level marks at start of level creation to react to certain tiles
     private fun createLevelMarks() {
         for (cy in 0 until levelHeight) {
             for (cx in 0 until levelWidth) {

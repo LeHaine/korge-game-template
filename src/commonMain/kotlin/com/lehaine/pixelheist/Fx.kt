@@ -28,44 +28,9 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
         frame++
     }
 
-
-    fun itemTeleported(x: Double, y: Double, color: RGBA) {
-        create(20) {
-            val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
-            p.color = color
-            p.alphaDelta = 0.05
-            p.alpha = (0.8f..1f).random()
-            p.scaleX = (0.2..0.4).random()
-            p.scaleY = (0.2..0.4).random()
-            p.xDelta = cos(PI / 8 * it) * 2
-            p.yDelta = sin(PI / 8 * it) * 2
-            p.scaleDelta = 0.05
-            p.life = 100.milliseconds
-        }
-    }
-
-
-    fun swipe(x: Double, y: Double, dir: Int) {
-        val p = alloc(
-            Assets.tiles.getRandomByPrefix("fxSwipe"),
-            x + dir + (0..8).random(), y + (0..4).random()
-        )
-        p.scaleX = (0.8..1.2).random()
-        p.scaleY = (0.7..0.9).random()
-        p.rotationDelta = (0.2..0.3).random() * dir
-        p.rotationFriction = 0.8
-        if (dir == 1) {
-            p.rotation = -1 + (0.0..0.5).random()
-        } else {
-            p.rotation = PI + 1 - (0.0..0.5).random()
-        }
-        p.life = (0.03..0.06).random().seconds
-
-    }
-
     fun gutsSplatter(x: Double, y: Double, dir: Int) {
         create(50) {
-            val p = alloc(Assets.tiles.getRandomByPrefix("fxGib"), x, y)
+            val p = alloc(Assets.tiles.getRandomByPrefix("fxDot"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
             p.xDelta = dir * (3..7).randomd()
             p.yDelta = (-1..0).randomd()
@@ -75,20 +40,6 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
             p.rotation = (0.0..PI * 2).random()
             p.scale(0.7)
             p.life = (3..10).random().seconds
-            p.onUpdate = ::bloodPhysics
-        }
-    }
-
-    fun bloodSplatter(x: Double, y: Double) {
-        create(10) {
-            val p = alloc(Assets.tiles.getByPrefix("fxDot"), x, y)
-            p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
-            p.xDelta = sin(x + frame * 0.03) * 0.5
-            p.gravityY = (0.1..0.2).random()
-            p.friction = (0.85..0.96).random()
-            p.rotation = (0.0..PI * 2).random()
-            p.life = (1..3).random().seconds
-            p.delay = (0.0..0.1).random().seconds
             p.onUpdate = ::bloodPhysics
         }
     }

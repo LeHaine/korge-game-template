@@ -23,19 +23,10 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         val ldtkLevel = worldLevel.toLDtkLevel()
         val gameLevel = GameLevel(worldLevel)
 
-        lateinit var hero: Hero
         lateinit var fx: Fx
-
-        val mobs = arrayListOf<Mob>()
-        val items = arrayListOf<Item>()
 
         fun removeEntity(entity: Entity) {
             gameLevel.entities.remove(entity)
-            if (entity is Mob) {
-                mobs.remove(entity)
-            } else if (entity is Item) {
-                items.remove(entity)
-            }
         }
 
         val cam = cameraContainer(
@@ -50,55 +41,13 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             container EntityContainer@{
                 name = "EntityContainer"
 
-                container MobContainer@{
-                    name = "MobContainer"
-                    worldLevel.layerEntities.allMob.fastForEach { entityMob ->
-                        mob(entityMob, gameLevel) {
-                            onDestroy { removeEntity(it as Entity) }
-                        }.also {
-                            gameLevel.entities += it
-                            mobs += it
-                        }
-                    }
-                }
-
-                container ItemContainer@{
-                    name = "ItemContainer"
-                    worldLevel.layerEntities.allItem.fastForEach { entityItem ->
-                        item(entityItem, gameLevel) {
-                            onDestroy { removeEntity(it as Entity) }
-                        }.also {
-                            gameLevel.entities += it
-                            items += it
-                        }
-                    }
-                }
-
-                container PortalContainer@{
-                    name = "PortalContainer"
-                    worldLevel.layerEntities.allPortal.fastForEach { entityPortal ->
-                        portal(entityPortal, gameLevel) {
-                            onDestroy { removeEntity(it as Entity) }
-                        }.also {
-                            gameLevel.entities += it
-
-                        }
-                    }
-                }
-
-                hero = hero(
-                    worldLevel.layerEntities.allHero[0],
-                    gameLevel
-                ).also {
-                    gameLevel.entities += it
-                    gameLevel._hero = it
-                }
+                // instantiate and add entities to game level list here
             }
 
             val particleContainer = fastSpriteContainer(useRotation = true, smoothing = false)
             fx = Fx(gameLevel, particleContainer).also { gameLevel._fx = it }
         }.apply {
-            follow(hero, true)
+            // follow newly created entity or do something with camera
         }.also {
             gameLevel._camera = it
         }
