@@ -34,7 +34,7 @@ open class Entity(override val level: GenericGameLevelComponent<LevelMark>, cont
 
     fun hasAffect(affect: Affect) = affects.containsKey(affect)
 
-    fun addAffect(affect: Affect, duration: TimeSpan, addToCurrentDuration: Boolean = true) {
+    fun addAffect(affect: Affect, duration: TimeSpan, addToCurrentDuration: Boolean = false) {
         if (affects.containsKey(affect)) {
             if (addToCurrentDuration) {
                 affects[affect] = affects[affect]?.plus(duration) ?: duration
