@@ -18,8 +18,8 @@ Example:
 ```kotlin
 class Hero(
     private val platformerDynamic: PlatformerDynamicComponent,
-    level: GenericGameLevelComponent<LevelMark>,
     private val spriteComponent: SpriteComponent,
+    level: GenericGameLevelComponent<LevelMark>,
     container: Container
 ) : Entity(level, container),
     PlatformerDynamicComponent by platformerDynamic,
