@@ -36,8 +36,10 @@ open class GameEntity(
         levelComponent = level,
         anchorX = 0.5,
         anchorY = 1.0
-    )
-) : SpriteLevelEntity(level, spriteComponent, position) {
+    ),
+    scaleComponent: ScaleAndStretchComponent = ScaleAndStretchComponentDefault()
+) : SpriteLevelEntity(level, spriteComponent, position, scaleComponent),
+    ScaleAndStretchComponent by scaleComponent {
 
     val fx get() = level.fx
     val camera get() = level.camera
