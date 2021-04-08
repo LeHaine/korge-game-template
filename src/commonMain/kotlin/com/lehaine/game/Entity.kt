@@ -3,6 +3,8 @@ package com.lehaine.game
 import com.lehaine.game.component.GenericGameLevelComponent
 import com.lehaine.kiwi.component.*
 import com.soywiz.klock.TimeSpan
+import com.soywiz.korma.geom.radians
+import kotlin.math.atan2
 
 /**
  * An example [Entity] that extends the [SpriteLevelEntity] class.
@@ -42,6 +44,15 @@ open class GameEntity(
 
     // TODO maybe add a component or something to handle creating inputs
     val input get() = container.stage!!.views.input
+
+    val mouseX get() = level.camera.content.localMouseX(container.stage!!.views)
+    val mouseY get() = level.camera.content.localMouseY(container.stage!!.views)
+
+    val angleToMouse
+        get() = atan2(
+            mouseY - gridPositionComponent.centerY,
+            mouseX - gridPositionComponent.centerX
+        ).radians
 
     private val affects = hashMapOf<Affect, TimeSpan>()
 
