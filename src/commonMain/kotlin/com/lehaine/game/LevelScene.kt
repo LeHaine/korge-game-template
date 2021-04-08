@@ -1,7 +1,6 @@
 package com.lehaine.game
 
 import GameModule
-import com.lehaine.kiwi.component.Entity
 import com.lehaine.kiwi.korge.view.cameraContainer
 import com.lehaine.kiwi.korge.view.ldtk.ldtkMapView
 import com.lehaine.kiwi.korge.view.ldtk.toLDtkLevel
@@ -24,10 +23,6 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
         val gameLevel = GameLevel(worldLevel)
 
         lateinit var fx: Fx
-
-        fun removeEntity(entity: Entity) {
-            gameLevel.entities.remove(entity)
-        }
 
         val cam = cameraContainer(
             GameModule.size.width.toDouble(), GameModule.size.height.toDouble(),

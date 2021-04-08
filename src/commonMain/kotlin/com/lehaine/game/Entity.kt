@@ -19,6 +19,13 @@ import com.soywiz.klock.TimeSpan
  *      PlatformerDynamicComponent by platformerDynamic,
  *      SpriteComponent by spriteComponent {}
  * ```
+ *
+ * When instantiated make sure to add it to a container and to the level! Entities
+ * are automatically removed the level entities list when destroyed.
+ *
+ * ```
+ * val hero = Hero(level, sprite, plaformer).addTo(parentContainer).addToLevel()
+ * ```
  */
 open class GameEntity(
     override val level: GenericGameLevelComponent<LevelMark>,
