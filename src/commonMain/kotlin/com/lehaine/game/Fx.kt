@@ -1,8 +1,8 @@
 package com.lehaine.game
 
-import com.lehaine.kiwi.getRandomByPrefix
-import com.lehaine.kiwi.particle.Particle
-import com.lehaine.kiwi.particle.ParticleSimulator
+import com.lehaine.kiwi.korge.getRandomByPrefix
+import com.lehaine.kiwi.korge.particle.Particle
+import com.lehaine.kiwi.korge.particle.ParticleSimulator
 import com.lehaine.kiwi.random
 import com.lehaine.kiwi.randomd
 import com.soywiz.klock.TimeSpan

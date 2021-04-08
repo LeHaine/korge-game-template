@@ -1,29 +1,40 @@
 package com.lehaine.game
 
-import com.lehaine.kiwi.component.BaseGameEntity
 import com.lehaine.game.component.GenericGameLevelComponent
+import com.lehaine.kiwi.component.*
 import com.soywiz.klock.TimeSpan
-import com.soywiz.korge.view.Container
 
 /**
- * A very base Entity that only uses has a [GridPositionComponent] and a [GenericGameLevelComponent].
+ * An example [Entity] that extends the [SpriteLevelEntity] class.
  *
  * Create more entities that extend this class by adding different components.
  *
  * Example:
  * ```
- * class Hero(private val spriteComponent SpriteComponent,
- *      level:PixelGameLevelComponent<LevelMark>,
- *      private val platformerDynamic: PlatformerDynamicComponent,
- *      container: Container
- * ) : Entity(level, container),
- *     PlatformerDynamicComponent by platformerDynamic,
- *     SpriteComponent by spriteComponent
+ *  class Hero(
+ *      level: GenericGameLevelComponent<LevelMark>,
+ *      spriteComponent: SpriteComponent,
+ *      platformerDynamic: PlatformerDynamicComponent
+ *  ) : GameEntity(level, spriteComponent, platformerDynamic),
+ *      PlatformerDynamicComponent by platformerDynamic,
+ *      SpriteComponent by spriteComponent {}
  * ```
  */
-open class Entity(override val level: GenericGameLevelComponent<LevelMark>, container: Container) :
-    BaseGameEntity(level, container) {
+open class GameEntity(
+    override val level: GenericGameLevelComponent<LevelMark>,
+    spriteComponent: SpriteComponent = SpriteComponentDefault(anchorX = 0.5, anchorY = 1.0),
+    position: LevelDynamicComponent = LevelDynamicComponentDefault(
+        levelComponent = level,
+        anchorX = 0.5,
+        anchorY = 1.0
+    )
+) : SpriteLevelEntity(level, spriteComponent, position) {
+
     val fx get() = level.fx
+    val camera get() = level.camera
+
+    // TODO maybe add a component or something to handle creating inputs
+    val input get() = container.stage!!.views.input
 
     private val affects = hashMapOf<Affect, TimeSpan>()
 

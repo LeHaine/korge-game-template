@@ -1,7 +1,8 @@
 package com.lehaine.game
 
-import com.lehaine.kiwi.CameraContainer
 import com.lehaine.game.component.GenericGameLevelComponent
+import com.lehaine.kiwi.component.Entity
+import com.lehaine.kiwi.korge.view.CameraContainer
 import com.soywiz.kmem.clamp
 
 class GameLevel(val level: World.WorldLevel) : GenericGameLevelComponent<LevelMark> {

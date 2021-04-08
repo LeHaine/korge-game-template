@@ -1,9 +1,10 @@
 package com.lehaine.game
 
 import GameModule
-import com.lehaine.kiwi.cameraContainer
-import com.lehaine.kiwi.ldtk.ldtkMapView
-import com.lehaine.kiwi.ldtk.toLDtkLevel
+import com.lehaine.kiwi.component.Entity
+import com.lehaine.kiwi.korge.view.cameraContainer
+import com.lehaine.kiwi.korge.view.ldtk.ldtkMapView
+import com.lehaine.kiwi.korge.view.ldtk.toLDtkLevel
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.milliseconds
 import com.soywiz.korev.Key
