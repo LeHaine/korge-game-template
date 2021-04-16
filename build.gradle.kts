@@ -48,6 +48,7 @@ tasks.getByName("compileKotlinMetadata").dependsOn("kaptKotlinJvm")
 tasks {
     create("regenerateLDtkCode") {
         dependsOn("removeLDtkGeneratedCode")
+        dependsOn("jvmProcessResources")
         dependsOn("generateLDtkCode")
     }
 
