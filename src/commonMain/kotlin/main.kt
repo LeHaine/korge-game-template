@@ -3,6 +3,7 @@ import com.lehaine.game.LevelScene
 import com.lehaine.game.World
 import com.soywiz.korge.Korge
 import com.soywiz.korge.scene.Module
+import com.soywiz.korge.view.views
 import com.soywiz.korim.color.Colors
 import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korma.geom.ScaleMode
@@ -20,7 +21,7 @@ object GameModule : Module() {
     override val scaleMode = ScaleMode.COVER
 
     override suspend fun AsyncInjector.configure() {
-        Assets.init()
+        Assets.init(views())
         mapSingleton { World().apply { loadAsync() } }
         mapInstance(0) // load first level
         mapPrototype { LevelScene(get(), get()) }

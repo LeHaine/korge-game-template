@@ -13,6 +13,7 @@ class GameLevel(val level: World.WorldLevel) : GenericGameLevelComponent<LevelMa
     override val fx get() = _fx!!
 
     override val entities: ArrayList<Entity> = arrayListOf()
+    override val staticEntities: ArrayList<Entity> = arrayListOf()
 
     override val levelWidth get() = level.layerCollisions.cWidth
     override val levelHeight get() = level.layerCollisions.cHeight
@@ -90,6 +91,7 @@ class GameLevel(val level: World.WorldLevel) : GenericGameLevelComponent<LevelMa
             }
         }
     }
+
 }
 
 enum class LevelMark {
