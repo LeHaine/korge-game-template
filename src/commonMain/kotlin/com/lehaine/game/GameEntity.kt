@@ -2,8 +2,10 @@ package com.lehaine.game
 
 import com.lehaine.game.component.GenericGameLevelComponent
 import com.lehaine.kiwi.component.*
+import com.lehaine.kiwi.component.ext.dirTo
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korma.geom.radians
+import com.soywiz.korui.UiContainer
 import kotlin.math.atan2
 
 /**
@@ -43,6 +45,7 @@ open class GameEntity(
 
     val fx get() = level.fx
     val camera get() = level.camera
+    val sfx get() = Assets.Sfx
 
     // TODO maybe add a component or something to handle creating inputs
     val input get() = container.stage!!.views.input
@@ -56,11 +59,20 @@ open class GameEntity(
             mouseX - gridPositionComponent.centerX
         ).radians
 
+    val dirToMouse
+        get() = gridPositionComponent.dirTo(mouseX)
+
     private val affects = hashMapOf<Affect, TimeSpan>()
 
     override fun update(dt: TimeSpan) {
         super.update(dt)
         updateAffects(dt)
+    }
+
+    protected fun debugComponents(container: UiContainer) {
+        spriteComponent.buildDebugInfo(container)
+        gridPositionComponent.buildDebugInfo(container)
+        scaleComponent.buildDebugInfo(container)
     }
 
     fun hasAffect(affect: Affect) = affects.containsKey(affect)
