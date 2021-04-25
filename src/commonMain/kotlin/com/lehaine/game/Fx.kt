@@ -60,7 +60,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
     }
 
     private fun create(num: Int, createParticle: (index: Int) -> Unit) {
-        for (i in 0..num) {
+        for (i in 0 until num) {
             createParticle(i)
         }
     }
