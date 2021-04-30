@@ -3,21 +3,45 @@ package com.lehaine.game
 import com.lehaine.kiwi.korge.getRandomByPrefix
 import com.lehaine.kiwi.korge.particle.Particle
 import com.lehaine.kiwi.korge.particle.ParticleSimulator
+import com.lehaine.kiwi.korge.view.Layers
+import com.lehaine.kiwi.korge.view.addToLayer
 import com.lehaine.kiwi.random
 import com.lehaine.kiwi.randomd
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.seconds
+import com.soywiz.korge.view.BlendMode
 import com.soywiz.korge.view.fast.*
 import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.RGBA
 import kotlin.math.PI
 
-class Fx(val level: GameLevel, private val particleContainer: FastSpriteContainer) {
+class Fx(val level: GameLevel, layers: Layers) {
 
     private val particleSimulator = ParticleSimulator(2048)
     private var frame = 0
 
-    private fun alloc(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(particleContainer, slice, x, y)
+    private val bgAdd = FastSpriteContainer(useRotation = true, smoothing = false).apply {
+        name = "BG Add FX"
+        blendMode = BlendMode.ADD
+    }
+        .addToLayer(layers, LAYER_FX_BG)
+
+    private val bgNormal = FastSpriteContainer(useRotation = true, smoothing = false).apply { name = "BG Normal FX" }
+        .addToLayer(layers, LAYER_FX_BG)
+
+    private val topAdd = FastSpriteContainer(useRotation = true, smoothing = false).apply {
+        name = "Top Add FX"
+        blendMode = BlendMode.ADD
+    }
+        .addToLayer(layers, LAYER_FX_FRONT)
+
+    private val topNormal = FastSpriteContainer(useRotation = true, smoothing = false).apply { name = "Top Normal FX" }
+        .addToLayer(layers, LAYER_FX_FRONT)
+
+    private fun allocBgAdd(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(bgAdd, slice, x, y)
+    private fun allocBgNormal(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(bgNormal, slice, x, y)
+    private fun allocTopAdd(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(topAdd, slice, x, y)
+    private fun allocTopNormal(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(topNormal, slice, x, y)
 
     fun update(dt: TimeSpan) {
         particleSimulator.simulate(dt)
@@ -26,7 +50,7 @@ class Fx(val level: GameLevel, private val particleContainer: FastSpriteContaine
 
     fun gutsSplatter(x: Double, y: Double, dir: Int) {
         create(50) {
-            val p = alloc(Assets.tiles.getRandomByPrefix("fxDot"), x, y)
+            val p = allocTopNormal(Assets.tiles.getRandomByPrefix("fxDot"), x, y)
             p.color = RGBA((111..255).random(), 0, 0, (0..255).random())
             p.xDelta = dir * (3..7).randomd()
             p.yDelta = (-1..0).randomd()

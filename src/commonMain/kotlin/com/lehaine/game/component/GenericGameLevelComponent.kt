@@ -1,6 +1,7 @@
 package com.lehaine.game.component
 
 import com.lehaine.game.Fx
+import com.lehaine.game.entity.Debugger
 import com.lehaine.kiwi.component.LevelComponent
 import com.lehaine.kiwi.korge.view.CameraContainer
 
@@ -10,6 +11,7 @@ import com.lehaine.kiwi.korge.view.CameraContainer
 interface GenericGameLevelComponent<LevelMark> : LevelComponent<LevelMark> {
     val fx: Fx
     val camera: CameraContainer
+    var debugger: Debugger?
     val levelWidth: Int
     val levelHeight: Int
 }
