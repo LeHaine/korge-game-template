@@ -73,30 +73,38 @@ class Debugger(
         level.camera.follow(this)
     }
 
+    private var moveSpeedX: Double = 0.0
+    private var moveSpeedY: Double = 0.0
+
     override fun update(dt: TimeSpan) {
         super.update(dt)
 
+        moveSpeedX = 0.0
+        moveSpeedY = 0.0
+
         val speedMultiplier = if (input.keys.pressing(Key.LEFT_SHIFT)) 3 else 1
-        val speed = 0.02 * speedMultiplier
+        val speed = 0.05 * speedMultiplier
 
         if (input.keys.pressing(Key.A)) {
-            velocityX -= speed * tmod
+            moveSpeedX = -speed
         }
         if (input.keys.pressing(Key.D)) {
-            velocityX += speed * tmod
+            moveSpeedX = speed
         }
         if (input.keys.pressing(Key.W)) {
-            velocityY -= speed * tmod
+            moveSpeedY = -speed
         }
         if (input.keys.pressing(Key.S)) {
-            velocityY += speed * tmod
+            moveSpeedY = speed
         }
+        moveSpeedX *= speedMultiplier
+        moveSpeedY *= speedMultiplier
 
         if (input.keys.pressing(Key.PAGE_UP)) {
-            level.camera.cameraZoom += 0.02 * tmod
+            level.camera.cameraZoom += 2 * dt.seconds
         }
         if (input.keys.pressing(Key.PAGE_DOWN)) {
-            level.camera.cameraZoom -= 0.02 * tmod
+            level.camera.cameraZoom -= 2 * dt.seconds
         }
 
         if (input.keys.justPressed(Key.F1) && initialized) {
@@ -110,6 +118,12 @@ class Debugger(
         }
 
         initialized = true
+    }
+
+    override fun fixedUpdate() {
+        super.fixedUpdate()
+        velocityX += moveSpeedX
+        velocityY += moveSpeedY
     }
 
     override fun destroy() {

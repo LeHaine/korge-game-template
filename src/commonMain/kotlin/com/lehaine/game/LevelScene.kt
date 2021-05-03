@@ -2,6 +2,7 @@ package com.lehaine.game
 
 import GameModule
 import com.lehaine.game.entity.debugger
+import com.lehaine.kiwi.korge.addFixedInterpUpdater
 import com.lehaine.kiwi.korge.container
 import com.lehaine.kiwi.korge.view.Layers
 import com.lehaine.kiwi.korge.view.cameraContainer
@@ -9,7 +10,7 @@ import com.lehaine.kiwi.korge.view.layers
 import com.lehaine.kiwi.korge.view.ldtk.ldtkMapView
 import com.lehaine.kiwi.korge.view.ldtk.toLDtkLevel
 import com.soywiz.kds.iterators.fastForEach
-import com.soywiz.klock.milliseconds
+import com.soywiz.klock.timesPerSecond
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -53,18 +54,28 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
 
         fx = Fx(gameLevel, content).also { gameLevel._fx = it }
         addUpdater { dt ->
-            val tmod = if (dt == 0.milliseconds) 0.0 else (dt / 16.666666.milliseconds)
             fx.update(dt)
             gameLevel.entities.fastForEach {
-                it.tmod = tmod
                 it.update(dt)
             }
             gameLevel.entities.fastForEach {
                 it.postUpdate(dt)
             }
-
         }
 
+
+        addFixedInterpUpdater(30.timesPerSecond,
+            interpolate = { ratio ->
+                gameLevel.entities.fastForEach {
+                    it.gridPositionComponent.fixedProgressionRatio = ratio
+                }
+            },
+            updatable = {
+                gameLevel.entities.fastForEach {
+                    it.fixedUpdate()
+                }
+            }
+        )
         keys {
             down(Key.ESCAPE) {
                 stage?.views?.debugViews = false
