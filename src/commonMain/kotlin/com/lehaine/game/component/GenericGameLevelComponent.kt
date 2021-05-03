@@ -9,9 +9,6 @@ import com.lehaine.kiwi.korge.view.CameraContainer
  * Add any extra references to this LevelComponent such as Hero reference for easier access in other entities.
  */
 interface GenericGameLevelComponent<LevelMark> : LevelComponent<LevelMark> {
-    val fx: Fx
-    val camera: CameraContainer
-    var debugger: Debugger?
     val levelWidth: Int
     val levelHeight: Int
 }

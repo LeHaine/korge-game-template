@@ -1,7 +1,6 @@
 package com.lehaine.game.entity
 
-import com.lehaine.game.LevelMark
-import com.lehaine.game.component.GenericGameLevelComponent
+import com.lehaine.game.Game
 import com.lehaine.game.follow
 import com.lehaine.kiwi.component.*
 import com.lehaine.kiwi.component.ext.toPixelPosition
@@ -16,43 +15,41 @@ import com.soywiz.korim.color.Colors
 import com.soywiz.korma.geom.Anchor
 
 inline fun Container.debugger(
-    level: GenericGameLevelComponent<LevelMark>, callback: Debugger.() -> Unit = {}
+    game: Game, callback: Debugger.() -> Unit = {}
 ): Debugger = Debugger(
-    level = level,
+    game = game,
     position = DynamicComponentDefault(
         anchorX = 0.5,
         anchorY = 0.5,
     )
-).apply { toPixelPosition(px, py) }.addTo(this).also {
-    level.entities += it
-    level.debugger = it
+).apply { toPixelPosition(px, py) }.addTo(this).addToGame().also {
+    game.debugger = it
 }.also(callback)
 
 inline fun Layers.debugger(
     layer: Int,
-    level: GenericGameLevelComponent<LevelMark>,
+    game: Game,
     callback: Debugger.() -> Unit = {}
 ): Debugger = Debugger(
-    level = level,
+    game = game,
     position = DynamicComponentDefault(
         anchorX = 0.5,
         anchorY = 0.5,
     )
-).addToLayer(this, layer).also {
-    level.entities += it
-    level.debugger = it
+).addToLayer(this, layer).addToGame().also {
+    game.debugger = it
 }.also(callback)
 
 class Debugger(
-    val level: GenericGameLevelComponent<LevelMark>,
+    override val game: Game,
     position: DynamicComponent
-) : Entity(position),
+) : Entity(game, position),
     DynamicComponent by position {
 
     private val input get() = container.stage?.views?.input!!
 
-    private val prevCamTarget = level.camera.following
-    private val prevCameraZoom = level.camera.cameraZoom
+    private val prevCamTarget = game.camera.following
+    private val prevCameraZoom = game.camera.cameraZoom
 
     private val circle = Circle(4.0, fill = Colors.RED).apply {
         anchor(Anchor.MIDDLE_CENTER)
@@ -67,10 +64,10 @@ class Debugger(
         height = 8.0
 
         toPixelPosition(
-            level.camera.cameraX, level.camera.cameraY
+            game.camera.cameraX, game.camera.cameraY
         )
 
-        level.camera.follow(this)
+        game.camera.follow(this)
     }
 
     private var moveSpeedX: Double = 0.0
@@ -101,10 +98,10 @@ class Debugger(
         moveSpeedY *= speedMultiplier
 
         if (input.keys.pressing(Key.PAGE_UP)) {
-            level.camera.cameraZoom += 2 * dt.seconds
+            game.camera.cameraZoom += 2 * dt.seconds
         }
         if (input.keys.pressing(Key.PAGE_DOWN)) {
-            level.camera.cameraZoom -= 2 * dt.seconds
+            game.camera.cameraZoom -= 2 * dt.seconds
         }
 
         if (input.keys.justPressed(Key.F1) && initialized) {
@@ -128,9 +125,9 @@ class Debugger(
 
     override fun destroy() {
         super.destroy()
-        level.camera.follow(prevCamTarget)
-        level.camera.cameraZoom = prevCameraZoom
-        level.entities.remove(this)
-        level.debugger = null
+        game.camera.follow(prevCamTarget)
+        game.camera.cameraZoom = prevCameraZoom
+        game.entities.remove(this)
+        game.debugger = null
     }
 }

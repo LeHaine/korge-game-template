@@ -1,5 +1,6 @@
 package com.lehaine.game
 
+import com.lehaine.ldtk.LDtkProject
 import com.soywiz.korau.sound.PlaybackTimes
 import com.soywiz.korau.sound.Sound
 import com.soywiz.korau.sound.playbackTimes
@@ -57,3 +58,6 @@ object Assets {
         Sfx.init(views)
     }
 }
+
+@LDtkProject("world.ldtk", name = "World")
+class _World()

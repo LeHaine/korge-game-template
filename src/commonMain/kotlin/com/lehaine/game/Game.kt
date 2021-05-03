@@ -1,9 +1,13 @@
 package com.lehaine.game
 
 import GameModule
+import com.lehaine.game.entity.Debugger
 import com.lehaine.game.entity.debugger
+import com.lehaine.kiwi.component.Entity
+import com.lehaine.kiwi.component.GameComponent
 import com.lehaine.kiwi.korge.addFixedInterpUpdater
 import com.lehaine.kiwi.korge.container
+import com.lehaine.kiwi.korge.view.CameraContainer
 import com.lehaine.kiwi.korge.view.Layers
 import com.lehaine.kiwi.korge.view.cameraContainer
 import com.lehaine.kiwi.korge.view.layers
@@ -20,17 +24,26 @@ import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korma.geom.Rectangle
 
 
-class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scene() {
+class Game(private val world: World, private val levelIdx: Int = 0) : Scene(), GameComponent {
+
+    lateinit var camera: CameraContainer
+    lateinit var fx: Fx
+    override lateinit var level: GameLevel
+    var debugger: Debugger? = null
+
+    override val entities: ArrayList<Entity> = arrayListOf()
+    override val staticEntities: ArrayList<Entity> = arrayListOf()
+
+    lateinit var content: Layers
+
+    override var fixedProgressionRatio: Double = 1.0
 
     override suspend fun Container.sceneInit() {
         val worldLevel = world.allLevels[levelIdx]
         val ldtkLevel = worldLevel.toLDtkLevel()
-        val gameLevel = GameLevel(worldLevel)
+        level = GameLevel(worldLevel)
 
-        lateinit var fx: Fx
-        lateinit var content: Layers
-
-        cameraContainer(
+        camera = cameraContainer(
             GameModule.size.width.toDouble(), GameModule.size.height.toDouble(),
             deadZone = 10,
             viewBounds = Rectangle(0, 0, worldLevel.pxWidth, worldLevel.pxHeight),
@@ -48,17 +61,15 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
             }
         }.apply {
             // follow newly created entity or do something with camera
-        }.also {
-            gameLevel._camera = it
         }
 
-        fx = Fx(gameLevel, content).also { gameLevel._fx = it }
+        fx = Fx(level, content)
         addUpdater { dt ->
             fx.update(dt)
-            gameLevel.entities.fastForEach {
+            entities.fastForEach {
                 it.update(dt)
             }
-            gameLevel.entities.fastForEach {
+            entities.fastForEach {
                 it.postUpdate(dt)
             }
         }
@@ -66,12 +77,10 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
 
         addFixedInterpUpdater(30.timesPerSecond,
             interpolate = { ratio ->
-                gameLevel.entities.fastForEach {
-                    it.gridPositionComponent.fixedProgressionRatio = ratio
-                }
+                fixedProgressionRatio = ratio
             },
             updatable = {
-                gameLevel.entities.fastForEach {
+                entities.fastForEach {
                     it.fixedUpdate()
                 }
             }
@@ -85,13 +94,15 @@ class LevelScene(private val world: World, private val levelIdx: Int = 0) : Scen
                 }
             }
             justDown(Key.F1) {
-                if (gameLevel.debugger == null) {
-                    content.apply { debugger(LAYER_FRONT, gameLevel) }
+                if (debugger == null) {
+                    content.apply {
+                        debugger(LAYER_FRONT, this@Game)
+                    }
                 }
             }
             down(Key.R) {
                 launchImmediately {
-                    sceneContainer.changeTo<LevelScene>(world, levelIdx)
+                    sceneContainer.changeTo<Game>(world, levelIdx)
                 }
             }
         }
