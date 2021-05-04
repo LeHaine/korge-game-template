@@ -7,6 +7,7 @@ import com.lehaine.kiwi.component.Entity
 import com.lehaine.kiwi.component.GameComponent
 import com.lehaine.kiwi.korge.InputController
 import com.lehaine.kiwi.korge.addFixedInterpUpdater
+import com.lehaine.kiwi.korge.addTmodUpdater
 import com.lehaine.kiwi.korge.container
 import com.lehaine.kiwi.korge.view.CameraContainer
 import com.lehaine.kiwi.korge.view.Layers
@@ -40,6 +41,8 @@ class Game(private val world: World, private val levelIdx: Int = 0) : Scene(), G
     lateinit var content: Layers
 
     override var fixedProgressionRatio: Double = 1.0
+    var tmod = 1.0
+        private set
 
     override suspend fun Container.sceneInit() {
         controller = InputController(views)
@@ -69,8 +72,9 @@ class Game(private val world: World, private val levelIdx: Int = 0) : Scene(), G
             // follow newly created entity or do something with camera
         }
 
-        fx = Fx(level, content)
-        addUpdater { dt ->
+        fx = Fx(this@Game, content)
+        addTmodUpdater(60) { dt, tmod ->
+            this@Game.tmod = tmod
             fx.update(dt)
             entities.fastForEach {
                 it.update(dt)

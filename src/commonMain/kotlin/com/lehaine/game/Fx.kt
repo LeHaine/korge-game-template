@@ -15,7 +15,9 @@ import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.color.RGBA
 import kotlin.math.PI
 
-class Fx(val level: GameLevel, layers: Layers) {
+class Fx(val game: Game, layers: Layers) {
+
+    private val level get() = game.level
 
     private val particleSimulator = ParticleSimulator(2048)
     private var frame = 0
@@ -44,7 +46,7 @@ class Fx(val level: GameLevel, layers: Layers) {
     private fun allocTopNormal(slice: BmpSlice, x: Double, y: Double) = particleSimulator.alloc(topNormal, slice, x, y)
 
     fun update(dt: TimeSpan) {
-        particleSimulator.simulate(dt)
+        particleSimulator.simulate(dt, game.tmod)
         frame++
     }
 

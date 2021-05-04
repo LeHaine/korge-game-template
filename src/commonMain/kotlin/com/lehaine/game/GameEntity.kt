@@ -42,6 +42,7 @@ open class GameEntity(
 ) : SpriteLevelEntity(game, spriteComponent, position, scaleComponent),
     ScaleAndStretchComponent by scaleComponent {
 
+    val tmod get() = game.tmod
     val fx get() = game.fx
     val camera get() = game.camera
     val sfx get() = Assets.Sfx
