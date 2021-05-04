@@ -83,15 +83,8 @@ class Debugger(
         val speedMultiplier = if (input.keyDown(Key.LEFT_SHIFT)) 3 else 1
         val speed = 0.05 * speedMultiplier
 
-        if (input.down(GameInput.Horizontal)) {
-            moveSpeedX = speed * input.strength(GameInput.Horizontal)
-        }
-        if (input.down(GameInput.Vertical)) {
-            moveSpeedY = speed * input.strength(GameInput.Vertical)
-        }
-
-        moveSpeedX *= speedMultiplier
-        moveSpeedY *= speedMultiplier
+        moveSpeedX = speed * input.strength(GameInput.Horizontal)
+        moveSpeedY = speed * input.strength(GameInput.Vertical)
 
         if (input.keyDown(Key.PAGE_UP)) {
             game.camera.cameraZoom += 2 * dt.seconds
