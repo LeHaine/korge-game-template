@@ -1,6 +1,7 @@
 package com.lehaine.game.entity
 
 import com.lehaine.game.Game
+import com.lehaine.game.GameInput
 import com.lehaine.game.follow
 import com.lehaine.kiwi.component.*
 import com.lehaine.kiwi.component.ext.toPixelPosition
@@ -46,8 +47,6 @@ class Debugger(
 ) : Entity(game, position),
     DynamicComponent by position {
 
-    private val input get() = container.stage?.views?.input!!
-
     private val prevCamTarget = game.camera.following
     private val prevCameraZoom = game.camera.cameraZoom
 
@@ -56,6 +55,8 @@ class Debugger(
     }.addTo(container)
 
     private var initialized = false
+
+    private val input = game.controller.createAccess("debugger", true)
 
     init {
         frictionX = 0.86
@@ -79,32 +80,27 @@ class Debugger(
         moveSpeedX = 0.0
         moveSpeedY = 0.0
 
-        val speedMultiplier = if (input.keys.pressing(Key.LEFT_SHIFT)) 3 else 1
+        val speedMultiplier = if (input.keyDown(Key.LEFT_SHIFT)) 3 else 1
         val speed = 0.05 * speedMultiplier
 
-        if (input.keys.pressing(Key.A)) {
-            moveSpeedX = -speed
+        if (input.down(GameInput.Horizontal)) {
+            moveSpeedX = speed * input.strength(GameInput.Horizontal)
         }
-        if (input.keys.pressing(Key.D)) {
-            moveSpeedX = speed
+        if (input.down(GameInput.Vertical)) {
+            moveSpeedY = speed * input.strength(GameInput.Vertical)
         }
-        if (input.keys.pressing(Key.W)) {
-            moveSpeedY = -speed
-        }
-        if (input.keys.pressing(Key.S)) {
-            moveSpeedY = speed
-        }
+
         moveSpeedX *= speedMultiplier
         moveSpeedY *= speedMultiplier
 
-        if (input.keys.pressing(Key.PAGE_UP)) {
+        if (input.keyDown(Key.PAGE_UP)) {
             game.camera.cameraZoom += 2 * dt.seconds
         }
-        if (input.keys.pressing(Key.PAGE_DOWN)) {
+        if (input.keyDown(Key.PAGE_DOWN)) {
             game.camera.cameraZoom -= 2 * dt.seconds
         }
 
-        if (input.keys.justPressed(Key.F1) && initialized) {
+        if (input.keyPressed(Key.F1) && initialized) {
             destroy()
         }
 

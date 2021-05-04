@@ -46,9 +46,6 @@ open class GameEntity(
     val camera get() = game.camera
     val sfx get() = Assets.Sfx
 
-    // TODO maybe add a component or something to handle creating inputs
-    val input get() = container.stage!!.views.input
-
     val mouseX get() = camera.content.localMouseX(container.stage!!.views)
     val mouseY get() = camera.content.localMouseY(container.stage!!.views)
 

@@ -5,6 +5,7 @@ import com.lehaine.game.entity.Debugger
 import com.lehaine.game.entity.debugger
 import com.lehaine.kiwi.component.Entity
 import com.lehaine.kiwi.component.GameComponent
+import com.lehaine.kiwi.korge.InputController
 import com.lehaine.kiwi.korge.addFixedInterpUpdater
 import com.lehaine.kiwi.korge.container
 import com.lehaine.kiwi.korge.view.CameraContainer
@@ -15,6 +16,7 @@ import com.lehaine.kiwi.korge.view.ldtk.ldtkMapView
 import com.lehaine.kiwi.korge.view.ldtk.toLDtkLevel
 import com.soywiz.kds.iterators.fastForEach
 import com.soywiz.klock.timesPerSecond
+import com.soywiz.korev.GameButton
 import com.soywiz.korev.Key
 import com.soywiz.korge.input.keys
 import com.soywiz.korge.scene.Scene
@@ -34,11 +36,15 @@ class Game(private val world: World, private val levelIdx: Int = 0) : Scene(), G
     override val entities: ArrayList<Entity> = arrayListOf()
     override val staticEntities: ArrayList<Entity> = arrayListOf()
 
+    lateinit var controller: InputController<GameInput>
     lateinit var content: Layers
 
     override var fixedProgressionRatio: Double = 1.0
 
     override suspend fun Container.sceneInit() {
+        controller = InputController(views)
+        createControllerBindings()
+
         val worldLevel = world.allLevels[levelIdx]
         val ldtkLevel = worldLevel.toLDtkLevel()
         level = GameLevel(worldLevel)
@@ -106,5 +112,23 @@ class Game(private val world: World, private val levelIdx: Int = 0) : Scene(), G
                 }
             }
         }
+    }
+
+    private fun createControllerBindings() {
+        controller.addAxis(
+            GameInput.Horizontal,
+            positiveKeys = listOf(Key.D, Key.RIGHT),
+            positiveButtons = listOf(GameButton.LX),
+            negativeKeys = listOf(Key.A, Key.LEFT),
+            negativeButtons = listOf(GameButton.LX)
+        )
+
+        controller.addAxis(
+            GameInput.Vertical,
+            positiveKeys = listOf(Key.S, Key.DOWN),
+            positiveButtons = listOf(GameButton.LY),
+            negativeKeys = listOf(Key.W, Key.UP),
+            negativeButtons = listOf(GameButton.LY)
+        )
     }
 }
