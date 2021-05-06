@@ -8,10 +8,7 @@ import com.lehaine.kiwi.component.ext.toPixelPosition
 import com.lehaine.kiwi.korge.view.Layers
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korev.Key
-import com.soywiz.korge.view.Circle
-import com.soywiz.korge.view.Container
-import com.soywiz.korge.view.addTo
-import com.soywiz.korge.view.anchor
+import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korma.geom.Anchor
 
@@ -50,7 +47,7 @@ class Debugger(
     private val prevCamTarget = game.camera.following
     private val prevCameraZoom = game.camera.cameraZoom
 
-    private val circle = Circle(4.0, fill = Colors.RED).apply {
+    private val rect = SolidRect(width = 8.0, height = 8.0, color = Colors.RED).apply {
         anchor(Anchor.MIDDLE_CENTER)
     }.addTo(container)
 
@@ -98,9 +95,9 @@ class Debugger(
         }
 
         if (level.hasCollision(cx, cy)) {
-            circle.fill = Colors.YELLOW
+            rect.color = Colors.YELLOW
         } else {
-            circle.fill = Colors.RED
+            rect.color = Colors.RED
         }
 
         initialized = true
