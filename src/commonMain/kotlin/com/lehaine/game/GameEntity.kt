@@ -36,7 +36,8 @@ open class GameEntity(
     position: LevelDynamicComponent = LevelDynamicComponentDefault(
         levelComponent = game.level,
         anchorX = 0.5,
-        anchorY = 1.0
+        anchorY = 1.0,
+        gridCellSize = GRID_SIZE
     ),
     scaleComponent: ScaleAndStretchComponent = ScaleAndStretchComponentDefault()
 ) : SpriteLevelEntity(game, spriteComponent, position, scaleComponent),

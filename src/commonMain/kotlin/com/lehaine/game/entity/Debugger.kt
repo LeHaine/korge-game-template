@@ -1,5 +1,6 @@
 package com.lehaine.game.entity
 
+import com.lehaine.game.GRID_SIZE
 import com.lehaine.game.Game
 import com.lehaine.game.GameInput
 import com.lehaine.game.follow
@@ -8,7 +9,10 @@ import com.lehaine.kiwi.component.ext.toPixelPosition
 import com.lehaine.kiwi.korge.view.Layers
 import com.soywiz.klock.TimeSpan
 import com.soywiz.korev.Key
-import com.soywiz.korge.view.*
+import com.soywiz.korge.view.Container
+import com.soywiz.korge.view.SolidRect
+import com.soywiz.korge.view.addTo
+import com.soywiz.korge.view.anchor
 import com.soywiz.korim.color.Colors
 import com.soywiz.korma.geom.Anchor
 
@@ -19,6 +23,7 @@ inline fun Container.debugger(
     position = DynamicComponentDefault(
         anchorX = 0.5,
         anchorY = 0.5,
+        gridCellSize = GRID_SIZE
     )
 ).apply { toPixelPosition(px, py) }.addTo(this).addToGame().also {
     game.debugger = it
