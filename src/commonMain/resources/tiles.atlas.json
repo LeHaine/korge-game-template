@@ -2,7 +2,7 @@
 
 {
 	"filename": "fxCircle0.png",
-	"frame": {"x":86,"y":74,"w":16,"h":16},
+	"frame": {"x":95,"y":72,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -10,7 +10,7 @@
 },
 {
 	"filename": "fxDot0.png",
-	"frame": {"x":118,"y":15,"w":3,"h":3},
+	"frame": {"x":59,"y":106,"w":3,"h":3},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
@@ -18,31 +18,31 @@
 },
 {
 	"filename": "fxGib0.png",
-	"frame": {"x":106,"y":15,"w":8,"h":5},
+	"frame": {"x":39,"y":104,"w":6,"h":5},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":6,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxGib1.png",
-	"frame": {"x":106,"y":24,"w":8,"h":5},
+	"frame": {"x":49,"y":104,"w":6,"h":5},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":6,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxGib2.png",
-	"frame": {"x":106,"y":33,"w":8,"h":5},
+	"frame": {"x":107,"y":60,"w":5,"h":5},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":5},
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":5,"h":5},
 	"sourceSize": {"w":8,"h":5}
 },
 {
 	"filename": "fxImpact0.png",
-	"frame": {"x":106,"y":2,"w":15,"h":9},
+	"frame": {"x":95,"y":92,"w":15,"h":9},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":9},
@@ -50,7 +50,7 @@
 },
 {
 	"filename": "fxLine0.png",
-	"frame": {"x":50,"y":110,"w":33,"h":3},
+	"frame": {"x":2,"y":104,"w":33,"h":3},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":3},
@@ -58,15 +58,15 @@
 },
 {
 	"filename": "fxLineDir0.png",
-	"frame": {"x":87,"y":109,"w":33,"h":3},
+	"frame": {"x":70,"y":65,"w":32,"h":3},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":3},
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":32,"h":3},
 	"sourceSize": {"w":33,"h":3}
 },
 {
 	"filename": "fxSmallCircle0.png",
-	"frame": {"x":106,"y":42,"w":6,"h":6},
+	"frame": {"x":107,"y":50,"w":6,"h":6},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":6,"h":6},
@@ -74,7 +74,7 @@
 },
 {
 	"filename": "fxSmoke0.png",
-	"frame": {"x":2,"y":70,"w":44,"h":44},
+	"frame": {"x":70,"y":2,"w":44,"h":44},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":44},
@@ -90,31 +90,31 @@
 },
 {
 	"filename": "fxSwipe0.png",
-	"frame": {"x":70,"y":2,"w":32,"h":32},
+	"frame": {"x":2,"y":70,"w":27,"h":30},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":27,"h":30},
 	"sourceSize": {"w":32,"h":32}
 },
 {
 	"filename": "fxSwipe1.png",
-	"frame": {"x":70,"y":38,"w":32,"h":32},
+	"frame": {"x":33,"y":70,"w":27,"h":30},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":1,"w":27,"h":30},
 	"sourceSize": {"w":32,"h":32}
 },
 {
 	"filename": "fxSwipe2.png",
-	"frame": {"x":50,"y":74,"w":32,"h":32},
+	"frame": {"x":64,"y":72,"w":27,"h":30},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":1,"w":27,"h":30},
 	"sourceSize": {"w":32,"h":32}
 },
 {
 	"filename": "fxTail0.png",
-	"frame": {"x":86,"y":94,"w":33,"h":11},
+	"frame": {"x":70,"y":50,"w":33,"h":11},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":11},
@@ -125,8 +125,8 @@
 	"version": "1.0",
 	"image": "tiles.atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":123,"h":116},
+	"size": {"w":116,"h":111},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:eead92c82f4f970e658fefea32ed699e:3c01050d11cf739105bca164a0cd6024:5e5ef3518cc1a44e4ed4954a57ade08c$"
+	"smartupdate": "$TexturePacker:SmartUpdate:182af369f5b72cfc84b861119ce797f3:3c01050d11cf739105bca164a0cd6024:5e5ef3518cc1a44e4ed4954a57ade08c$"
 }
 }
