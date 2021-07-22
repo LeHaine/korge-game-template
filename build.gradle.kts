@@ -21,7 +21,8 @@ kotlin {
             kotlin.srcDir("$buildDir/generated/source/kaptKotlin/main")
             dependencies {
                 implementation("com.lehaine.kt-ldtk-api:ldtk-api:$ldtkApiVersion")
-                implementation("com.lehaine:kiwi:$kiwiVersion")
+                implementation("com.lehaine.kiwi:kiwi:$kiwiVersion")
+                //implementation("com.lehaine:kiwi:$kiwiVersion") // local repo
                 //implementation("com.lehaine:ldtk-api:$ldtkApiVersion") // local repo
             }
         }
