@@ -1,3 +1,8 @@
+# NO LONGER MAINTAINED
+**Consider checking out [LittleKt - A Kotlin Mutliplatform game framework inspired by libGDX](https://github.com/LittleKtOrg/LittleKt).**
+
+---
+
 A base game template project for getting Korge games up and running quickly.
 
 ## How to use
